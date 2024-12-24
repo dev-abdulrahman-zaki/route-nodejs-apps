@@ -1,0 +1,70 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background-image: linear-gradient(135deg, #8052ec, #d161ff);
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  margin: 0;
+  padding: 0;
+  padding: 20px;
+}
+
+#app {
+  font-family: "Oswald", sans-serif;
+  border-radius: 30px;
+  background-color: rgb(216, 218, 216);
+  height: 100%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  justify-content: center;
+  text-align: center;
+}
+
+.holder.headline {
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.entry {
+  background: rgba(145, 157, 184, 0.4);
+  border-radius: 30px;
+}
+
+label {
+  visibility: hidden;
+}
+
+#generate {
+  margin: 10px;
+  height: 60px;
+  width: 120px;
+  font-size: 25px;
+}
+
+textarea {
+  resize: none;
+}
+
+.holder ::placeholder {
+  font-size: 20px;
+}
+
+.title {
+  font-size: 20px;
+  color: #5113e0;
+  font-weight: bold;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+i {
+  color: #5113e0;
+}
+
+.holder.entry {
+  font-size: 20px;
+}
