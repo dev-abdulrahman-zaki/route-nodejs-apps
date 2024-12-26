@@ -23,7 +23,7 @@ const userSchema = mongoose.Schema({
 });
 
 // 03. Define the model
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema); // User is the name of the collection in the "localhost:27017/mongoose" database, which is "users" by default.
 
 // 04. Create a new user
 app.post(`/users`, async (req, res) => {
