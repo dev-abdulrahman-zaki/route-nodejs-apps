@@ -1,35 +1,17 @@
 import { Note } from "../../../database/models/note.model.js";
+import { User } from "../../../database/models/user.model.js";
 
 const addNote = async (req, res) => {
-  const note = await Note.insertMany(
-    req.body
-    /*
-or:
-{
-    title: req.body.title,
-    description: req.body.description,
-    createdBy: req.body.createdBy,
+  const isUserExist = await User.findById(req.body.user);
+  if (!isUserExist) {
+    return res.status(401).json({ message: "User not found" });
   }
-*/
-  ); // req.body is the data sent by the client
+  const note = await Note.insertMany(req.body);
   res.status(201).json({ message: "success", note });
 };
 
 const getAllNotes = async (req, res) => {
-  const notes = await Note.find().populate("user"); // populate("user") is used to get the user who created the note.
-  /*
-  or:
-  const notes = await Note.find().populate({
-    path: "createdBy",
-    select: "name email",
-  });
-
-  or:
-  populate("createdBy", "name email")
-
-  - to exclude a field from the populated data, use the - sign:
-  populate("createdBy", "-password")
-  */
+  const notes = await Note.find().populate("user");
   res.status(200).json({ message: "success", notes });
 };
 
