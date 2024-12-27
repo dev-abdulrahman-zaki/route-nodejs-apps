@@ -1,3 +1,5 @@
+import { User } from "../../database/models/user.model.js";
+
 const isUserExist = async (req, res, next) => {
   const isUserExist = await User.findOne({
     email: req.body.email.toLowerCase(),

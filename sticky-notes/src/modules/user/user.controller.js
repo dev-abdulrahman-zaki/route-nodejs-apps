@@ -2,7 +2,6 @@ import { User } from "../../../database/models/user.model.js";
 import bcrypt from "bcrypt";
 
 const signup = async (req, res) => {
-  const isUserExist = await isUserExist(req, res, next);
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   const user = await User.insertMany({ ...req.body, password: hashedPassword });
   user[0].password = undefined; // to hide the password from the response
