@@ -4,7 +4,13 @@ import mongoose from "mongoose"; // or: import {Schema, model} from "mongoose";
 const userSchema = mongoose.Schema(
   {
     name: String,
-    email: String,
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+      lowercase: true,
+      trim: true,
+    },
     password: String,
     confirmEmail: {
       type: Boolean,
@@ -13,7 +19,7 @@ const userSchema = mongoose.Schema(
   },
   {
     timestamps: {
-      createdAt: true,
+      updatedAt: false,
     },
     versionKey: false,
   }

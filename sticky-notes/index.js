@@ -8,7 +8,7 @@ const port = 4000;
 app.use(express.json());
 
 // 01. Define the base path
-app.use("/users", userRoutes);
+app.use("/auth", userRoutes);
 app.use("/notes", noteRoutes);
 
 // Start the server

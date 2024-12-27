@@ -1,4 +1,4 @@
-import { Post } from "../../../database/models/note.model.js";
+import { Note } from "../../../database/models/note.model.js";
 
 const addNote = async (req, res) => {
   const note = await Note.insertMany(
