@@ -3,7 +3,11 @@ import mongoose from "mongoose"; // or: import {Schema, model} from "mongoose";
 // 02. Define the schema
 const userSchema = mongoose.Schema(
   {
-    name: String,
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     email: {
       type: String,
       unique: true,
@@ -11,7 +15,11 @@ const userSchema = mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    password: String,
+    password: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     confirmEmail: {
       type: Boolean,
       default: false,
