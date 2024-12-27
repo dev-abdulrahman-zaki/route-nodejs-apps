@@ -15,10 +15,9 @@ const signin = async (req, res) => {
     user.password
   );
   if (user && isPasswordCorrect) {
-    res.status(200).json({ message: "success", user });
-  } else {
-    return res.status(401).json({ message: "Invalid email or password" }); // security best practice: do not reveal the reason for the failure
+    return res.status(200).json({ message: "success", user });
   }
+  return res.status(401).json({ message: "Invalid email or password" }); // security best practice: do not reveal the reason for the failure
 };
 
 export { signup, signin };
