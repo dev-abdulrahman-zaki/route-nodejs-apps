@@ -8,9 +8,19 @@ const signup = async (req, res) => {
   res.status(201).json({ message: "success", user: user[0] }); //insertMany returns an array of the inserted documents, so we need to access the first element of the array.
 };
 
-const login = async (req, res) => {
+const signin = async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return res.status(401).json({ message: "Invalid email" });
+  }
+  const isPasswordCorrect = await bcrypt.compare(
+    req.body.password,
+    user.password
+  );
+  if (!isPasswordCorrect) {
+    return res.status(401).json({ message: "Invalid password" });
+  }
   res.status(200).json({ message: "success", user });
 };
 
-export { signup, login };
+export { signup, signin };
