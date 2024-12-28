@@ -22,7 +22,7 @@ const getAllUsers = async (req, res) => {
 const deleteUser = async (req, res) => {
   // todo: findByIdAndDelete VS findOneAndDelete
   const user = await User.findByIdAndDelete(req.params.id);
-  res.json({ message: "success", user });
+  res.json({ message: "success", user }); // return the deleted user
 };
 
 // 07 Update a user

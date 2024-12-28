@@ -15,4 +15,19 @@ const getAllNotes = async (req, res) => {
   res.status(200).json({ message: "success", notes });
 };
 
-export { addNote, getAllNotes };
+const updateNote = async (req, res) => {
+  const note = await Note.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  res.status(200).json({ message: "success", note });
+};
+
+const deleteNote = async (req, res) => {
+  const note = await Note.findByIdAndDelete(req.params.id);
+  if (!note) {
+    return res.status(404).json({ message: "Note not found" });
+  }
+  res.status(200).json({ message: "success", note });
+};
+
+export { addNote, getAllNotes, updateNote, deleteNote };
