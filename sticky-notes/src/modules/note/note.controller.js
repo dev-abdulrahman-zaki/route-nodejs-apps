@@ -11,7 +11,7 @@ const addNote = async (req, res) => {
 };
 
 const getAllNotes = async (req, res) => {
-  const notes = await Note.find().populate("user");
+  const notes = await Note.find().populate("user", "-password"); // or : const notes = await Note.find().populate("user", { password: 0 });
   res.status(200).json({ message: "success", notes });
 };
 
