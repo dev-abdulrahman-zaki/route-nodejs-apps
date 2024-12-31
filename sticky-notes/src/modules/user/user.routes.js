@@ -1,6 +1,6 @@
 import express from "express";
 import { isUserExist } from "../../middlewares/isUserExist.js";
-import { signup, signin } from "./user.controller.js";
+import { signup, signin, verifyEmail } from "./user.controller.js";
 
 const userRoutes = express.Router();
 userRoutes.post(`/signup`, isUserExist, signup);
