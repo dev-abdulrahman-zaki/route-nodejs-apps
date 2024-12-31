@@ -8,6 +8,10 @@ import {
   deleteNote,
 } from "./note.controller.js";
 
+// index.js: app.use("/notes", checkAuth, noteRoutes); // check auth before accessing the routes
+/*
+or: noteRoutes.use(checkAuth);
+*/
 noteRoutes.post(`/`, addNote);
 noteRoutes.get(`/`, getAllNotes);
 noteRoutes.put(`/:id`, updateNote);

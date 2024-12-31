@@ -17,7 +17,7 @@ const signin = async (req, res) => {
     return res.status(401).json({ message: "Invalid email or password" }); // security best practice: do not reveal the reason for the failure
   }
   user.password = undefined; // to hide the password from the response
-
+  // generate token
   jwt.sign(
     { id: user._id, name: user.name, email: user.email, role: user.role },
     process.env.JWT_SECRET,
