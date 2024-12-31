@@ -1,3 +1,8 @@
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
+  console.error(err?.stack);
+});
+
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
@@ -24,6 +29,12 @@ app.use("*", (req, res, next) => {
 
 // 03. Error handling middleware
 app.use(globalError);
+
+// 04. Unhandled Rejection
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled Rejection:", err);
+  console.error(err?.stack);
+});
 
 // Start the server
 app.get("/", (req, res) => res.send("Hello World!"));
