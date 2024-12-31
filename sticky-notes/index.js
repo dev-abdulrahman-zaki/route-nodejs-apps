@@ -19,6 +19,7 @@ const port = 4000;
 app.use(express.json());
 
 // 01. Define the base path
+app.get("/", (req, res) => res.send("Hello World!"));
 app.use("/auth", userRoutes);
 app.use("/notes", checkAuth, noteRoutes);
 
@@ -37,5 +38,4 @@ process.on("unhandledRejection", (err) => {
 });
 
 // Start the server
-app.get("/", (req, res) => res.send("Hello World!"));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
