@@ -35,9 +35,9 @@ const signin = async (req, res) => {
 };
 
 const verifyEmail = async (req, res) => {
-  jwt.verify(req.params.token, process.env.JWT_SECRET, async (err, decoded) => {
+  jwt.verify(req.params.token, process.env.JWT_SECRET, async (err, decoded) => { 
     if (err) {
-      return res.status(401).json({ message: "Invalid token", error: err });
+      return res.status(401).json({ message: "Invalid token" });
     }
     const user = await User.findOne({ email: decoded.email });
     if (!user) {

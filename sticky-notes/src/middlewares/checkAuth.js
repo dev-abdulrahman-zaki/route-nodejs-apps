@@ -8,7 +8,7 @@ export const checkAuth = (req, res, next) => {
     return res.status(401).json({ message: "No token provided" });
   }
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) return res.status(401).json({ message: "Invalid token", error: err });
+    if (err) return res.status(401).json({ message: "Invalid token"});
     // add the decoded user to the request object
     req.user = decoded;
     next();
