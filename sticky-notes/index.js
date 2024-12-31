@@ -1,4 +1,6 @@
 import express from "express";
+import dotenv from "dotenv";
+dotenv.config();
 import { dbConnection } from "./database/dbConnection.js"; // Import the dbConnection to connect to MongoDB even if the dbConnection import is not used in the code.
 import userRoutes from "./src/modules/user/user.routes.js";
 import noteRoutes from "./src/modules/note/note.routes.js";
