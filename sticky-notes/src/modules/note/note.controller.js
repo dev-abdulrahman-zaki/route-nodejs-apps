@@ -1,14 +1,16 @@
 import { Note } from "../../../database/models/note.model.js";
 import { User } from "../../../database/models/user.model.js";
+import { catchError } from "../../middlewares/catchError.js";
+import { SystemError } from "../../utils/systemError.js";
 
-const addNote = async (req, res) => {
+const addNote = catchError(async (req, res, next) => {
   const isUserExist = await User.findById(req.body.user);
   if (!isUserExist) {
-    return res.status(401).json({ message: "User not found" });
+    return next(new SystemError("User not found", 401));
   }
   const note = await Note.insertMany(req.body);
   res.status(201).json({ message: "success", note });
-};
+});
 
 const getAllNotes = async (req, res) => {
   const notes = await Note.find({ user: req.user.id }).populate(
@@ -25,12 +27,12 @@ const updateNote = async (req, res) => {
   res.status(200).json({ message: "success", note });
 };
 
-const deleteNote = async (req, res) => {
+const deleteNote = catchError(async (req, res, next) => {
   const note = await Note.findByIdAndDelete(req.params.id);
   if (!note) {
-    return res.status(404).json({ message: "Note not found" });
+    return next(new SystemError("Note not found", 404));
   }
   res.status(200).json({ message: "success", note });
-};
+});
 
 export { addNote, getAllNotes, updateNote, deleteNote };

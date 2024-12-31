@@ -5,6 +5,7 @@ import { dbConnection } from "./database/dbConnection.js"; // Import the dbConne
 import userRoutes from "./src/modules/user/user.routes.js";
 import noteRoutes from "./src/modules/note/note.routes.js";
 import { checkAuth } from "./src/middlewares/checkAuth.js";
+import { SystemError } from "./src/utils/systemError.js";
 const app = express();
 const port = 4000;
 
@@ -17,19 +18,14 @@ app.use("/notes", checkAuth, noteRoutes);
 
 // 02. Catch all routes
 app.use("*", (req, res, next) => {
-  // res.status(404).json({ message: `Route not found: ${req.originalUrl}` });
-  next(
-    new Error(
-      `Route not found: ${req.originalUrl}`
-      // ,{cause}
-    )
-  );
+  next(new SystemError(`Route not found: ${req.originalUrl}`, 404));
 });
 
 // 03. Error handling middleware
 app.use((err, req, res, next) => {
+//   console.error(err);
   console.error(err.stack);
-  res.status(500).json({ message: "Internal server error" });
+  res.status(err.statusCode || 500).json({ message: err.message, statusCode: err.statusCode });
 });
 
 // Start the server
