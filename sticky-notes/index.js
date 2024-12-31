@@ -22,11 +22,7 @@ app.use("*", (req, res, next) => {
 });
 
 // 03. Error handling middleware
-app.use((err, req, res, next) => {
-//   console.error(err);
-  console.error(err.stack);
-  res.status(err.statusCode || 500).json({ message: err.message, statusCode: err.statusCode });
-});
+app.use(globalError);
 
 // Start the server
 app.get("/", (req, res) => res.send("Hello World!"));
