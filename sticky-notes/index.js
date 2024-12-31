@@ -6,6 +6,7 @@ import userRoutes from "./src/modules/user/user.routes.js";
 import noteRoutes from "./src/modules/note/note.routes.js";
 import { checkAuth } from "./src/middlewares/checkAuth.js";
 import { SystemError } from "./src/utils/systemError.js";
+import { globalError } from "./src/middlewares/globalError.js";
 const app = express();
 const port = 4000;
 
