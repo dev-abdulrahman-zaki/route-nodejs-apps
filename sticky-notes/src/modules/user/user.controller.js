@@ -9,12 +9,13 @@ const signup = async (req, res) => {
 };
 
 const signin = async (req, res) => {
-  const user = await User.findOne({ email: req.body.email }); // object or null
+  const user = await User.findOne({ email: req.body.email },); // object or null
   const isPasswordCorrect =
     user && (await bcrypt.compare(req.body.password, user.password)); // fix bug: check if user is exist before comparing the password to avoid error user?.password is undefined
   if (!user || !isPasswordCorrect) {
     return res.status(401).json({ message: "Invalid email or password" }); // security best practice: do not reveal the reason for the failure
   }
+  user.password = undefined; // to hide the password from the response
   return res.status(200).json({ message: "success", user });
 };
 
