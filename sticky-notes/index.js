@@ -5,7 +5,7 @@ import { dbConnection } from "./database/dbConnection.js"; // Import the dbConne
 import userRoutes from "./src/modules/user/user.routes.js";
 import noteRoutes from "./src/modules/note/note.routes.js";
 import { checkAuth } from "./src/middlewares/checkAuth.js";
-import { sendEmail } from "./src/services/sendEmails.js";
+
 const app = express();
 const port = 4000;
 // 00. Middleware
@@ -15,7 +15,6 @@ app.use(express.json());
 app.use("/auth", userRoutes);
 app.use("/notes", checkAuth, noteRoutes);
 
-// sendEmail();
 // Start the server
 app.get("/", (req, res) => res.send("Hello World!"));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

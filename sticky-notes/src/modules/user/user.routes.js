@@ -5,5 +5,6 @@ import { signup, signin } from "./user.controller.js";
 const userRoutes = express.Router();
 userRoutes.post(`/signup`, isUserExist, signup);
 userRoutes.post(`/signin`, signin);
+userRoutes.get(`/verify/:token`, verifyEmail);
 
 export default userRoutes;
