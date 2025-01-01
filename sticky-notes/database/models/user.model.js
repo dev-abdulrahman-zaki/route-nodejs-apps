@@ -7,6 +7,7 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      minlength: [3, "Name must be at least 3 characters long"],
     },
     email: {
       type: String,
@@ -24,6 +25,7 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
+      minlength: [8, "Password must be at least 8 characters long"], // Not used since the password is hashed
       required: true,
       trim: true,
     },
@@ -35,6 +37,11 @@ const userSchema = mongoose.Schema(
       type: String,
       enum: ["user", "admin"],
       default: "user",
+    },
+    age: {
+      type: Number,
+      min: [18, "You must be at least 18 years old"],
+      max: [100, "You must be less than 100 years old"],
     },
   },
   {

@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import { emailTemplate } from "./emailTemplate.js";
+import jwt from "jsonwebtoken";
 
 export const sendEmail = async (email) => {
   // 01 - create a transporter
