@@ -1,4 +1,4 @@
-// 00. Uncaught Exception
+// 00. Uncaught Exception - catches synchronous errors
 process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
   console.error(err?.stack);
@@ -35,9 +35,9 @@ app.use("*", (req, res, next) => {
 // 06. Error handling middleware
 app.use(globalError);
 
-// 07. Unhandled Rejection
-process.on("unhandledRejection", (err) => {
-  console.error("Unhandled Rejection:", err);
+// 07. Unhandled Rejection - catches async errors
+process.on("unhandledRejection", (err, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'error:', err);
   console.error(err?.stack);
 });
 
