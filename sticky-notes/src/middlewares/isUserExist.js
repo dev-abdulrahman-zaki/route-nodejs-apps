@@ -2,9 +2,6 @@ import { User } from "../../database/models/user.model.js";
 import { SystemError } from "../utils/systemError.js";
 
 const isUserExist = async (req, res, next) => {
-  if (!req.body.email) {
-    return next(new SystemError("Email is required", 400));
-  }
   const isUserExist = await User.findOne({
     email: req.body.email.toLowerCase(),
   });
