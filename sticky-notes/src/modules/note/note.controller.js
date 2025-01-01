@@ -4,12 +4,16 @@ import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 
 const addNote = catchError(async (req, res, next) => {
-  const isUserExist = await User.findById(req.body.user);
+  // 01. send the user id from the request body
+  // const isUserExist = await User.findById(req.body.user);
+  // 02. send the user id from the request headers (checkAuth middleware)
+  const isUserExist = await User.findById(req.user.id);
   if (!isUserExist) {
     return next(new SystemError("User not found", 401));
   }
+  req.body.user = isUserExist._id; // used with 02 to add the user id to the note, because the user is required in the note schema.
   const note = await Note.insertMany(req.body);
-  res.status(201).json({ message: "success", note });
+  res.status(201).json({ message: "success", note: note[0] });
 });
 
 const getAllNotes = catchError(async (req, res) => {
