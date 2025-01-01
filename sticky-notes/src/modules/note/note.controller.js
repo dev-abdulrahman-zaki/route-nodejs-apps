@@ -3,8 +3,7 @@ import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 
 const addNote = catchError(async (req, res) => {
-  req.body.user = req.user.id;
-  const note = await Note.create(req.body);
+  const note = await Note.create({ ...req.body, user: req.user.id });
   res.status(201).json({ message: "success", note });
 });
 
