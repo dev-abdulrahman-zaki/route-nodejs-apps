@@ -26,6 +26,7 @@ const updateNote = catchError(async (req, res) => {
   });
   res.status(200).json({ message: "success", note });
 });
+
 const deleteNote = catchError(async (req, res, next) => {
   const note = await Note.findByIdAndDelete(req.params.id);
   if (!note) {
