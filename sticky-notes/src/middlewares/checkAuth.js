@@ -9,7 +9,7 @@ export const checkAuth = (req, res, next) => {
   }
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) return res.status(401).json({ message: "Invalid token"});
-    // add the decoded user to the request object
+    // add the decoded user to the request object (modify the request object in middleware)
     req.user = decoded;
     next();
   });
