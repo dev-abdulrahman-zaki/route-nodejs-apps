@@ -4,40 +4,8 @@ import jwt from "jsonwebtoken";
 import { sendEmail } from "../../services/emails/sendEmail.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
-import Joi from "joi";
 
-// ===== Start Validation Schema ======
-const signupValidationSchema = Joi.object({
-  name: Joi.string().required().trim(),
-  email: Joi.string().lowercase().trim().email().required(),
-  password: Joi.string().min(8).required().messages({
-    "string.min": "Password must be at least 8 characters long - from Joi",
-  }),
-  // repassword: Joi.string().valid(Joi.ref("password")).required(),
-  age: Joi.number().min(18).max(100),
-});
-
-const signinValidationSchema = Joi.object({
-  email: Joi.string().email().required(),
-  password: Joi.string().min(8).required(),
-});
-// ===== End Validation Schema ======
-
-const signup = catchError(async (req, res, next) => {
-  // 01 - validate the request body
-  const { error } = signupValidationSchema.validate(req.body, {
-    abortEarly: true,
-    /*
-      abortEarly: true (default) - stops validation on the first error
-      abortEarly: false - collects all validation errors
-    */
-  });
-  if (error) {
-    // return next(new SystemError(error.message, 400)); // error.message is the error message from Joi - or: err.details
-    // return res.status(400).json({ message: error }); // error.message is the error message from Joi - or: err.details
-    // return res.status(400).json({ message: error.details }); // error.message is the error message from Joi - or: err.details
-    return next(new SystemError(error.details[0].message, 400)); // error.message is the error message from Joi - or: err.details
-  }
+const signup = catchError(async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   const user = await User.insertMany({ ...req.body, password: hashedPassword });
   sendEmail(req.body.email);
