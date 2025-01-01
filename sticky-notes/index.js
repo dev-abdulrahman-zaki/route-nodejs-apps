@@ -37,7 +37,7 @@ app.use(globalError);
 
 // 07. Unhandled Rejection - catches async errors
 process.on("unhandledRejection", (err, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'error:', err);
+  console.error("Unhandled Rejection at:", promise, "error:", err);
   console.error(err?.stack);
 });
 
