@@ -25,7 +25,13 @@ const signinValidationSchema = Joi.object({
 
 const signup = catchError(async (req, res, next) => {
   // 01 - validate the request body
-  const { error } = signupValidationSchema.validate(req.body);
+  const { error } = signupValidationSchema.validate(req.body, {
+    abortEarly: true,
+    /*
+      abortEarly: true (default) - stops validation on the first error
+      abortEarly: false - collects all validation errors
+    */
+  });
   if (error) {
     // return next(new SystemError(error.message, 400)); // error.message is the error message from Joi - or: err.details
     // return res.status(400).json({ message: error }); // error.message is the error message from Joi - or: err.details
