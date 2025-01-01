@@ -2,8 +2,7 @@ import Joi from "joi";
 
 const addNoteValidationSchema = Joi.object({
   title: Joi.string().required().trim(),
-  description: Joi.string().required().trim(),
-  // user: Joi.string().required().trim(), // send the user id from the request headers (checkAuth middleware) instead of the request body
+  description: Joi.string().required().trim()
 });
 
 const updateNoteValidationSchema = Joi.object({
