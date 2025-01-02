@@ -15,14 +15,11 @@ const getAllComments = async (req, res) => {
 
 /*
   - to exclude a field from Comment itself not from the populated data:
-    // Alternative 1: Using string projection in .select() method
-    Comment.find({}).select("-__v")
+    // Alternative 1: Using string/object projection in .select() method
+    Comment.find({}).select("-__v") or Comment.find({}).select({__v: 0})
 
-    // Alternative 2: Using string projection as second argument
-    Comment.find({}, "-__v")
-
-    // Alternative 3: Using object projection as second argument
-    Comment.find({}, { __v: 0 })
+    // Alternative 2: Using string/object projection as second argument of find() method without using .select() method
+    Comment.find({}, "-__v") or Comment.find({}, { __v: 0 })    
 */
 
 export { addComment, getAllComments };
