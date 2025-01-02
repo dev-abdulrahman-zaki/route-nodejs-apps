@@ -8,7 +8,7 @@ import { SystemError } from "../../utils/systemError.js";
 const signup = catchError(async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   const user = await User.insertMany({ ...req.body, password: hashedPassword });
-  sendEmail(req.body.email);
+  await sendEmail(req.body.email, "Verify your email", "Click here to verify your email", next);
   user[0].password = undefined; // to hide the password from the response
   return res.status(201).json({ message: "success", user: user[0] }); //insertMany returns an array of the inserted documents, so we need to access the first element of the array.
 });

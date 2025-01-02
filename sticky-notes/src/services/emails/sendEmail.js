@@ -1,8 +1,9 @@
 import nodemailer from "nodemailer";
 import { emailTemplate } from "./emailTemplate.js";
 import jwt from "jsonwebtoken";
+import { catchError } from "../../middlewares/catchError.js";
 
-export const sendEmail = async (email) => {
+export const sendEmail = catchError(async (email, subject, text, next) => {
   // 01 - create a transporter
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -19,16 +20,16 @@ export const sendEmail = async (email) => {
     async (err, token) => {
       if (err) {
         console.error("JWT Sign Error:", err);
-        return res.status(500).json({ message: "Error generating token" });
+        return next(new SystemError("Error generating token", 500));
       }
       const info = await transporter.sendMail({
-        from: `Hi :) <${process.env.EMAIL_USER}>`, // sender address
+        from: `StickyNotes Inc. <${process.env.EMAIL_USER}>`, // sender address
         to: email, // list of receivers
-        subject: "Hello ✔", // Subject line
-        text: "Hello world?", // plain text body
+        subject: subject, // Subject line
+        text: text, // plain text body
         html: emailTemplate(token), // html body
       });
       console.log(`sendMail info:`, info);
     }
   );
-};
+});
