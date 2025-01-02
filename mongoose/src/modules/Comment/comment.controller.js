@@ -15,7 +15,7 @@ const getAllComments = async (req, res) => {
 
 /*
   - to exclude a field from Comment itself not from the populated data:
-    // Alternative 1: Using .select() method
+    // Alternative 1: Using string projection in .select() method
     Comment.find({}).select("-__v")
 
     // Alternative 2: Using string projection as second argument
