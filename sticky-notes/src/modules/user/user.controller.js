@@ -5,7 +5,7 @@ import { sendEmail } from "../../services/emails/sendEmail.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 
-const signup = catchError(async (req, res) => {
+const signup = catchError(async (req, res, next) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   const user = await User.insertMany({ ...req.body, password: hashedPassword });
   await sendEmail(req.body.email, "Verify your email", "Click here to verify your email", next);

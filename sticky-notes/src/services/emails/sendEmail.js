@@ -13,23 +13,25 @@ export const sendEmail = catchError(async (email, subject, text, next) => {
     },
   });
   // 02 - send the email
-  jwt.sign(
-    { email },
-    process.env.JWT_SECRET,
-    { expiresIn: "1h" },
-    async (err, token) => {
-      if (err) {
-        console.error("JWT Sign Error:", err);
-        return next(new SystemError("Error generating token", 500));
+  return new Promise((resolve, reject) => {
+    jwt.sign(
+      { email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" },
+      async (err, token) => {
+        if (err) {
+          console.error("JWT Sign Error:", err);
+          return next(new SystemError("Error generating token", 500));
+        }
+        const info = await transporter.sendMail({
+          from: `StickyNotes Inc. <${process.env.EMAIL_USER}>`, // sender address
+          to: email, // list of receivers
+          subject: subject, // Subject line
+          text: text, // plain text body
+          html: emailTemplate(token), // html body
+        });
+        console.log(`sendMail info:`, info);
       }
-      const info = await transporter.sendMail({
-        from: `StickyNotes Inc. <${process.env.EMAIL_USER}>`, // sender address
-        to: email, // list of receivers
-        subject: subject, // Subject line
-        text: text, // plain text body
-        html: emailTemplate(token), // html body
-      });
-      console.log(`sendMail info:`, info);
-    }
-  );
+    );
+  });
 });
