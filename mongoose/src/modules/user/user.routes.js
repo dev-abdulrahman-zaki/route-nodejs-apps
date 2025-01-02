@@ -31,7 +31,15 @@ userRoutes.put(`/:id`, updateUser);
 
 /*
 or:
-userRoutes.route("/").post(addUser).get(getAllUsers).delete(deleteUser).put(updateUser);
+// 1. Group routes with same path '/'
+userRoutes.route('/')
+    .post(addUser)
+    .get(getAllUsers);
+
+// 2. Group routes with same path '/:id'
+userRoutes.route('/:id')
+    .delete(deleteUser)
+    .put(updateUser);
 */
 
 export default userRoutes;
