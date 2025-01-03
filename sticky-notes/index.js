@@ -28,7 +28,9 @@ app.use("/uploads", express.static("uploads")); // this means that when we go to
 app.use(
 "/uploads",                          => route name
 express.static("uploads")            => folder name
-); 
+);
+
+So, it connects the route name to the folder name.
 */
 
 // 04. Define the base path
