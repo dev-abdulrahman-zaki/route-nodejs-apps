@@ -1,6 +1,7 @@
 import express from "express";
 import multer from "multer";
 import { uploadPhoto, uploadPhotos, getPhotos } from "./photo.controller.js";
+import { SystemError } from "../../utils/systemError.js";
 
 const photoRoutes = express.Router();
 
@@ -14,7 +15,16 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const fileFilter = (req, file, cb) => {
+console.log(file);    
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    cb(new SystemError("Only image format allowed!"));
+  }
+};
+
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 photoRoutes.post(`/upload-single`, upload.single("photo"), uploadPhoto); // Note: photo is the name of the file input in the form. (not imgUrl in the schema)
 photoRoutes.post(`/upload-multiple`, upload.array("photos"), uploadPhotos);
