@@ -6,11 +6,13 @@ process.on("uncaughtException", (err) => {
 
 // 01. Importing the required modules
 import express from "express";
+import multer from "multer";
 import dotenv from "dotenv";
 dotenv.config();
 import { dbConnection } from "./database/dbConnection.js"; // Import the dbConnection to connect to MongoDB even if the dbConnection import is not used in the code.
 import userRoutes from "./src/modules/user/user.routes.js";
 import noteRoutes from "./src/modules/note/note.routes.js";
+import photoRoutes from "./src/modules/photo/photo.routes.js";
 import { checkAuth } from "./src/middlewares/checkAuth.js";
 import { SystemError } from "./src/utils/systemError.js";
 import { globalError } from "./src/middlewares/globalError.js";
@@ -21,11 +23,13 @@ const port = 4000;
 
 // 03. Middleware
 app.use(express.json());
+app.use(express.static("uploads"));
 
 // 04. Define the base path
 app.get("/", (req, res) => res.send("Hello World!"));
 app.use("/auth", userRoutes);
 app.use("/notes", checkAuth, noteRoutes);
+app.use("/photos", photoRoutes);
 
 // 05. Catch all routes
 app.use("*", (req, res, next) => {
