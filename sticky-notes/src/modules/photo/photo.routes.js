@@ -20,7 +20,7 @@ console.log(file);
   if (file.mimetype.startsWith("image")) {
     cb(null, true);
   } else {
-    cb(new SystemError("Only image format allowed!"));
+    cb(new SystemError("Only image format allowed!", 400), false);
   }
 };
 
