@@ -23,7 +23,7 @@ export const sendEmail = async (email, subject, text) => {
         /*
         or:
         // throw new SystemError("Error generating token", 500);
-        // can be used but requires some changes.
+        // SystemError can be used but requires some changes.
         - Key changes made:
           - Added a try/catch block to handle any errors
           - Converted callback-based jwt.sign to Promise-based using new Promise
