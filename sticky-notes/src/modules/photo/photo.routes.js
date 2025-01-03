@@ -6,7 +6,7 @@ const photoRoutes = express.Router();
 const upload = multer({
   dest: "uploads/",
 });
-photoRoutes.post(`/upload-single`, upload.single("photo"), uploadPhoto);
+photoRoutes.post(`/upload-single`, upload.single("photo"), uploadPhoto); // Note: photo is the name of the file input in the form. (not imgUrl in the schema)
 photoRoutes.post(`/upload-multiple`, upload.array("photos"), uploadPhotos);
 photoRoutes.get(`/`, getPhotos);
 
