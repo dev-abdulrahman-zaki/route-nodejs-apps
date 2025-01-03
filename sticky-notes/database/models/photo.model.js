@@ -9,10 +9,15 @@ const photoSchema = mongoose.Schema(
 );
 
 // 02. Post middleware - runs after the query is executed
-photoSchema.post("find", function (docs, next) {
-  docs.forEach(doc => {
-    doc.imgUrl = `http://localhost:4000/uploads/${doc.imgUrl}`;
-  });
+// photoSchema.post("find", function (docs, next) {
+//   docs.forEach(doc => {
+//     doc.imgUrl = `http://localhost:4000/uploads/${doc.imgUrl}`;
+//   });
+//   next();
+// });
+
+photoSchema.post("init", function (doc, next) {
+  doc.imgUrl = `http://localhost:4000/uploads/${doc.imgUrl}`;
   next();
 });
 
