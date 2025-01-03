@@ -6,7 +6,7 @@ import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 
 const signup = catchError(async (req, res) => {
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  const hashedPassword = await bcrypt.hash(req.body.password, 10); // todo: can be implemented in the as middleware/hook
   const user = await User.insertMany({ ...req.body, password: hashedPassword });
   await sendEmail(req.body.email, "Verify your email", "Click here to verify your email");
   user[0].password = undefined; // to hide the password from the response
