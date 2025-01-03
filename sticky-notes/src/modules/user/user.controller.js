@@ -5,10 +5,10 @@ import { sendEmail } from "../../services/emails/sendEmail.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 
-const signup = catchError(async (req, res, next) => {
+const signup = catchError(async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   const user = await User.insertMany({ ...req.body, password: hashedPassword });
-  await sendEmail(req.body.email, "Verify your email", "Click here to verify your email", next);
+  await sendEmail(req.body.email, "Verify your email", "Click here to verify your email");
   user[0].password = undefined; // to hide the password from the response
   return res.status(201).json({ message: "success", user: user[0] }); //insertMany returns an array of the inserted documents, so we need to access the first element of the array.
 });
