@@ -15,12 +15,26 @@ const uploadPhoto = catchError(async (req, res, next) => {
 const uploadPhotos = catchError(async (req, res, next) => {
   const { title } = req.body;
   const { files } = req;
-  const imgUrls = files.map(file => file.filename);
-  const photos = await Photo.insertMany(imgUrls.map(imgUrl => ({ title, imgUrl })));
+  const imgUrls = files.map((file) => file.filename);
+  const photos = await Photo.insertMany(
+    imgUrls.map((imgUrl) => ({ title, imgUrl }))
+  );
   res.status(201).json({ message: "Photos uploaded successfully", photos });
 });
 
-const getPhotos = catchError(async (req, res, next) => {  
+const uploadPhotosWithFields = catchError(async (req, res, next) => {
+  // console.log(req.files);
+  const coverImage = req.files.cover[0].filename;
+  const productImages = req.files.product.map((file) => file.filename);
+  const photos = await Photo.create({
+    title: req.body.title,
+    imgUrl: coverImage,
+    productImgUrls: productImages,
+  });
+  res.status(200).json({ message: "Photos uploaded successfully", photos });
+});
+
+const getPhotos = catchError(async (req, res, next) => {
   const photos = await Photo.find();
   // photos.forEach(photo => {
   //   photo.imgUrl = `http://localhost:4000/uploads/${photo.imgUrl}`;
@@ -28,4 +42,4 @@ const getPhotos = catchError(async (req, res, next) => {
   res.status(200).json({ message: "Photos fetched successfully", photos });
 });
 
-export { uploadPhoto, uploadPhotos, getPhotos };
+export { uploadPhoto, uploadPhotos, getPhotos, uploadPhotosWithFields };

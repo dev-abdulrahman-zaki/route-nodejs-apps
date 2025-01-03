@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 const photoSchema = mongoose.Schema({
   title: String,
   imgUrl: String,
+  productImgUrls: [String],
 });
 
 // 02. Post middleware - runs after the query is executed
@@ -16,6 +17,9 @@ const photoSchema = mongoose.Schema({
 
 photoSchema.post("init", function (doc) {
   doc.imgUrl = `http://localhost:4000/uploads/${doc.imgUrl}`;
+  doc.productImgUrls = doc.productImgUrls.map(
+    (imgUrl) => `http://localhost:4000/uploads/${imgUrl}`
+  );
 });
 
 // 03. Define the model
