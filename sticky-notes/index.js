@@ -23,7 +23,7 @@ const port = 4000;
 
 // 03. Middleware
 app.use(express.json());
-app.use(express.static("uploads"));
+app.use("/uploads", express.static("uploads"));
 
 // 04. Define the base path
 app.get("/", (req, res) => res.send("Hello World!"));
