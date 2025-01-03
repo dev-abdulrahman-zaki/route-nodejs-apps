@@ -6,7 +6,7 @@ const uploadPhoto = catchError(async (req, res, next) => {
   // console.log(req.file);
   const { title } = req.body;
   const file = req.file;
-  const imgUrl = file.path;
+  const imgUrl = file.filename; // Note: file.path is the absolute path of the file, but file.filename is the name of the file - we use file.filename to avoid path issues incase of changing the destination folder.
 
   const photo = await Photo.create({ title, imgUrl });
   res.status(201).json({ message: "Photo uploaded successfully", photo });
@@ -15,7 +15,7 @@ const uploadPhoto = catchError(async (req, res, next) => {
 const uploadPhotos = catchError(async (req, res, next) => {
   const { title } = req.body;
   const { files } = req;
-  const imgUrls = files.map(file => file.path);
+  const imgUrls = files.map(file => file.filename);
   const photos = await Photo.insertMany(imgUrls.map(imgUrl => ({ title, imgUrl })));
   res.status(201).json({ message: "Photos uploaded successfully", photos });
 });
