@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 // 02. Define the schema
-const noteSchema = mongoose.Schema(
+const noteSchema = new mongoose.Schema(
   {
     title: String,
     description: String,

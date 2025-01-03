@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 // 01. Define the schema
-const photoSchema = mongoose.Schema({
+const photoSchema = new mongoose.Schema({
   title: String,
   imgUrl: String,
   productImgUrls: [String],
