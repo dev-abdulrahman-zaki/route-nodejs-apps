@@ -1,12 +1,10 @@
 import mongoose from "mongoose";
 
 // 01. Define the schema
-const photoSchema = mongoose.Schema(
-  {
-    title: String,
-    imgUrl: String,
-  },
-);
+const photoSchema = mongoose.Schema({
+  title: String,
+  imgUrl: String,
+});
 
 // 02. Post middleware - runs after the query is executed
 // photoSchema.post("find", function (docs, next) {
@@ -16,9 +14,8 @@ const photoSchema = mongoose.Schema(
 //   next();
 // });
 
-photoSchema.post("init", function (doc, next) {
+photoSchema.post("init", function (doc) {
   doc.imgUrl = `http://localhost:4000/uploads/${doc.imgUrl}`;
-  next();
 });
 
 // 03. Define the model

@@ -30,7 +30,7 @@ app.use(
 express.static("uploads")            => folder name
 );
 
-So, it connects the route name to the folder name.
+So, it connects/anchors the route name to the folder name.
 */
 
 // 04. Define the base path
