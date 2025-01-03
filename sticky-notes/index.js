@@ -23,7 +23,13 @@ const port = 4000;
 
 // 03. Middleware
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("uploads")); // this means that when we go to http://localhost:4000/uploads/photo.jpg, it will serve the photo.jpg file from the uploads folder.
+/*
+app.use(
+"/uploads",                          => route name
+express.static("uploads")            => folder name
+); 
+*/
 
 // 04. Define the base path
 app.get("/", (req, res) => res.send("Hello World!"));
