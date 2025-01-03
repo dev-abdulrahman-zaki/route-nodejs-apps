@@ -22,9 +22,9 @@ const uploadPhotos = catchError(async (req, res, next) => {
 
 const getPhotos = catchError(async (req, res, next) => {  
   const photos = await Photo.find();
-  photos.forEach(photo => {
-    photo.imgUrl = `http://localhost:4000/uploads/${photo.imgUrl}`;
-  });
+  // photos.forEach(photo => {
+  //   photo.imgUrl = `http://localhost:4000/uploads/${photo.imgUrl}`;
+  // });
   res.status(200).json({ message: "Photos fetched successfully", photos });
 });
 
