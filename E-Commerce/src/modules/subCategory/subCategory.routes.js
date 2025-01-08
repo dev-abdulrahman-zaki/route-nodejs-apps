@@ -1,6 +1,9 @@
 import express from "express"; // or: import {Router} from "express";
-// import { validate } from "../../middlewares/validate.js";
-// import { addCategoryValidationSchema, updateCategoryValidationSchema } from "./category.validation.js";
+import { validate } from "../../middlewares/validate.js";
+import {
+  addSubCategoryValidationSchema,
+  updateSubCategoryValidationSchema,
+} from "./subCategory.validation.js";
 const subCategoryRoutes = express.Router();
 
 import {
@@ -11,10 +14,18 @@ import {
   deleteSubCategory,
 } from "./subCategory.controller.js";
 
-subCategoryRoutes.post(`/`, addSubCategory);
+subCategoryRoutes.post(
+  `/`,
+  validate(addSubCategoryValidationSchema),
+  addSubCategory
+);
 subCategoryRoutes.get(`/`, getAllSubCategories);
 subCategoryRoutes.get(`/:slug`, getSingleSubCategory);
-subCategoryRoutes.put(`/:slug`, updateSubCategory);
+subCategoryRoutes.put(
+  `/:slug`,
+  validate(updateSubCategoryValidationSchema),
+  updateSubCategory
+);
 subCategoryRoutes.delete(`/:slug`, deleteSubCategory);
 
 export default subCategoryRoutes;
