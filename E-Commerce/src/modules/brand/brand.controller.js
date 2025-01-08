@@ -1,0 +1,55 @@
+import { Brand } from "../../../database/models/brand.model.js";
+import { catchError } from "../../middlewares/catchError.js";
+import { SystemError } from "../../utils/systemError.js";
+import slugify from "slugify";
+
+const addBrand = catchError(async (req, res) => {
+  req.body.slug = slugify(req.body.name, { lower: true });
+  req.body.createdBy = req.user.id;
+  const brand = new Brand(req.body);
+  await brand.save();
+  res.status(201).json({ message: "success", brand });
+});
+
+const getAllBrands = catchError(async (req, res, next) => {
+  const brands = await Brand.find().populate(
+    "createdBy",
+    "-password -email -confirmEmail -createdAt"
+  ); // or : const notes = await Note.find().populate("user", { password: 0 });
+  if (!brands) {
+    return next(new SystemError("Brands not found", 404));
+  }
+  res.status(200).json({ message: "success", brands });
+});
+
+const getSingleBrand = catchError(async (req, res, next) => {
+  const brand = await Brand.findOne({ slug: req.params.slug }).populate(
+    "createdBy",
+    "-password -email -confirmEmail -createdAt"
+  );
+  if (!brand) {
+    return next(new SystemError("Brand not found", 404));
+  }
+  res.status(200).json({ message: "success", brand });
+});
+
+const updateBrand = catchError(async (req, res, next) => {
+  req.body.slug = slugify(req.body.name, { lower: true });
+  const brand = await Brand.findOneAndUpdate({ slug: req.params.slug }, req.body, {
+    new: true,
+  });
+  if (!brand) {
+    return next(new SystemError("Brand not found", 404));
+  }
+  res.status(200).json({ message: "success", brand });
+});
+
+const deleteBrand = catchError(async (req, res, next) => {
+  const brand = await Brand.findOneAndDelete({ slug: req.params.slug });
+  if (!brand) {
+    return next(new SystemError("Brand not found", 404));
+  }
+  res.status(200).json({ message: "success", brand });
+});
+
+export { addBrand, getAllBrands, getSingleBrand, updateBrand, deleteBrand };

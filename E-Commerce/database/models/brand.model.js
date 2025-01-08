@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 // 02. Define the schema
-const categorySchema = new mongoose.Schema(
+const brandSchema = new mongoose.Schema(
   {
     name: {
       type: String,
