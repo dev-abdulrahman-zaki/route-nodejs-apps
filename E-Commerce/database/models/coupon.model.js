@@ -8,6 +8,7 @@ const couponSchema = new mongoose.Schema(
       unique: [true, "Coupon code must be unique"],
       trim: true,
       minlength: 3,
+      required: true,
     },
     expire: {
       type: Date,
