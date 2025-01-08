@@ -13,7 +13,7 @@ const noteSchema = new mongoose.Schema(
   },
   {
     timestamps: {
-      updatedAt: false,
+      updatedAt: false, // Adds createdAt
     },
     versionKey: false,
   }

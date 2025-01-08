@@ -1,13 +1,19 @@
 import mongoose from "mongoose";
 
 // 02. Define the schema
-const postSchema = mongoose.Schema({
+const postSchema = new mongoose.Schema({
   title: String,
   description: String,
   createdBy: {
     type: mongoose.Types.ObjectId,
     ref: "User",
+    required: true,
   },
+}, {
+  timestamps: {
+    updatedAt: false, // Adds createdAt
+  },
+  versionKey: false,
 });
 
 // 03. Define the model

@@ -1,16 +1,27 @@
 import mongoose from "mongoose";
 
 // 02. Define the schema
-const commentSchema = mongoose.Schema({
-  content: String,
+const commentSchema = new mongoose.Schema({
+  content: {
+    type: String,
+    required: true,
+    trim: true
+  },
   createdBy: {
     type: mongoose.Types.ObjectId,
     ref: "User",
+    required: true,
   },
   post: {
     type: mongoose.Types.ObjectId,
     ref: "Post",
+    required: true,
   },
+}, {
+  timestamps: {
+    updatedAt: false, // Adds createdAt
+  },
+  versionKey: false,
 });
 
 // 03. Define the model
