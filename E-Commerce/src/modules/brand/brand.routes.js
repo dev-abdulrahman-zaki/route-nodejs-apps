@@ -1,4 +1,5 @@
 import express from "express";
+import fileUpload from "../../services/fileUpload/fileUpload.js";
 // import { validate } from "../../middlewares/validate.js";
 // import { addCategoryValidationSchema, updateCategoryValidationSchema } from "./brand.validation.js";
 const brandRoutes = express.Router();
@@ -11,10 +12,10 @@ import {
   deleteBrand,
 } from "./brand.controller.js";
 
-brandRoutes.post(`/`, addBrand);
+brandRoutes.post(`/`, fileUpload("brands").single("logo"), addBrand);
 brandRoutes.get(`/`, getAllBrands);
 brandRoutes.get(`/:slug`, getSingleBrand);
-brandRoutes.put(`/:slug`, updateBrand);
+brandRoutes.put(`/:slug`, fileUpload("brands").single("logo"), updateBrand);
 brandRoutes.delete(`/:slug`, deleteBrand);
 
 export default brandRoutes;

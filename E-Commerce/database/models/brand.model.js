@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-// 02. Define the schema
+// 01. Define the schema
 const brandSchema = new mongoose.Schema(
   {
     name: {
@@ -35,6 +35,11 @@ const brandSchema = new mongoose.Schema(
     versionKey: false,
   }
 );
+
+// 02. Post middleware - runs after the query is executed
+brandSchema.post("init", function (doc) {
+  doc.logo = `http://localhost:4000/uploads/brands/${doc.logo}`;
+});
 
 // 03. Define the model
 export const Brand = mongoose.model("Brand", brandSchema); // Note is the name of the collection in the "localhost:27017/e-commerce" database, which is "brands" by default.

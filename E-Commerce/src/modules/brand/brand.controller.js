@@ -5,7 +5,8 @@ import slugify from "slugify";
 
 const addBrand = catchError(async (req, res) => {
   req.body.slug = slugify(req.body.name, { lower: true });
-  req.body.createdBy = req.user.id;
+  req.body.createdBy = req.user?.id || "669161111111111111111111";
+  req.body.logo = req.file.filename;
   const brand = new Brand(req.body);
   await brand.save();
   res.status(201).json({ message: "success", brand });
@@ -34,7 +35,8 @@ const getSingleBrand = catchError(async (req, res, next) => {
 });
 
 const updateBrand = catchError(async (req, res, next) => {
-  req.body.slug = slugify(req.body.name, { lower: true });
+  if (req.body.name) req.body.slug = slugify(req.body.name, { lower: true });
+  if (req.file) req.body.logo = req.file.filename;
   const brand = await Brand.findOneAndUpdate({ slug: req.params.slug }, req.body, {
     new: true,
   });

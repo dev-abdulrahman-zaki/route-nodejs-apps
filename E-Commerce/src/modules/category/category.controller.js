@@ -38,7 +38,7 @@ const getSingleCategory = catchError(async (req, res, next) => {
 });
 
 const updateCategory = catchError(async (req, res, next) => {
-  req.body.slug = slugify(req.body.name, { lower: true });
+  if (req.body.name) req.body.slug = slugify(req.body.name, { lower: true });
   if (req.file) req.body.image = req.file.filename;
   const category = await Category.findOneAndUpdate({ slug: req.params.slug }, req.body, {
     new: true,
