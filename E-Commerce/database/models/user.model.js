@@ -29,20 +29,20 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    confirmEmail: {
+    isBlocked: {
       type: Boolean,
       default: false,
     },
+    // confirmEmail: {
+    //   type: Boolean,
+    //   default: false,
+    // },
     role: {
       type: String,
       enum: ["user", "admin"],
       default: "user",
     },
-    age: {
-      type: Number,
-      min: [18, "You must be at least 18 years old"],
-      max: [100, "You must be less than 100 years old"],
-    },
+
   },
   {
     timestamps: {
