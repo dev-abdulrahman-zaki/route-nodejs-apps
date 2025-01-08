@@ -1,7 +1,7 @@
-import userRoutes from "./src/modules/user/user.routes.js";
-import noteRoutes from "./src/modules/note/note.routes.js";
-import photoRoutes from "./src/modules/photo/photo.routes.js";
-import { checkAuth } from "./src/middlewares/checkAuth.js";
+import userRoutes from "./user/user.routes.js";
+import noteRoutes from "./note/note.routes.js";
+import photoRoutes from "./photo/photo.routes.js";
+import { checkAuth } from "../middlewares/checkAuth.js";
 
 export const indexRoutes = (app) => {
   app.get("/", (req, res) => res.send("Hello World!"));
