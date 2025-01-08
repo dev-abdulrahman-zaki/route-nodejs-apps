@@ -1,0 +1,1 @@
+## remove old image from the folder

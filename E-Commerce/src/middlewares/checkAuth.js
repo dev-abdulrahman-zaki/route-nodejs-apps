@@ -3,6 +3,7 @@ import { SystemError } from "../utils/systemError.js";
 
 // check auth / verify token
 export const checkAuth = (req, res, next) => {
+  return next(); // skip the middleware
   const authHeader = req.headers.authorization || req.headers.Authorization;
   const token = authHeader?.split(" ")[1] || null;
   if (!token) {

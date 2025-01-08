@@ -6,7 +6,8 @@ import slugify from "slugify";
 const addCategory = catchError(async (req, res) => {
   // const category = await Category.create({ ...req.body, createdBy: req.user.id });
   req.body.slug = slugify(req.body.name, { lower: true });
-  req.body.createdBy = req.user.id;
+  req.body.createdBy = req.user?.id || "669161111111111111111111";
+  req.body.image = req.file.filename;
   const category = new Category(req.body);
   // console.log(`category before save:`, category); // without createdAt field
   await category.save();
@@ -38,6 +39,7 @@ const getSingleCategory = catchError(async (req, res, next) => {
 
 const updateCategory = catchError(async (req, res, next) => {
   req.body.slug = slugify(req.body.name, { lower: true });
+  if (req.file) req.body.image = req.file.filename;
   const category = await Category.findOneAndUpdate({ slug: req.params.slug }, req.body, {
     new: true,
   });

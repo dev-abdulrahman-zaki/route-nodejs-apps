@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-// 02. Define the schema
+// 01. Define the schema
 const categorySchema = new mongoose.Schema(
   {
     name: {
@@ -35,6 +35,11 @@ const categorySchema = new mongoose.Schema(
     versionKey: false,
   }
 );
+
+// 02. Post middleware - runs after the query is executed
+categorySchema.post("init", function (doc) {
+  doc.image = `http://localhost:4000/uploads/categories/${doc.image}`;
+});
 
 // 03. Define the model
 export const Category = mongoose.model("Category", categorySchema); // Note is the name of the collection in the "localhost:27017/e-commerce" database, which is "categories" by default.
