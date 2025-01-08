@@ -20,9 +20,9 @@ const addProduct = catchError(async (req, res, next) => {
     return next(new SystemError("Brand not found", 404));
   }
   req.body.slug = slugify(req.body.name, { lower: true });
-  req.body.createdBy = req.user.id;
-  // req.body.imageCover = req.file.filename;
-  // req.body.images = req.files.map((file) => file.filename);
+  req.body.createdBy = req.user?.id || "669161111111111111111111";
+  req.body.imageCover = req.files.imageCover[0].filename;
+  req.body.images = req.files.images.map((file) => file.filename);
   // req.body.priceAfterDiscount = req.body.price - (req.body.price * req.body.discount / 100);
   req.body.ratingsAverage = 0;
   req.body.ratingsQuantity = 0;
@@ -57,6 +57,8 @@ const getSingleProduct = catchError(async (req, res, next) => {
 
 const updateProduct = catchError(async (req, res, next) => {
   req.body.slug = slugify(req.body.name, { lower: true });
+  if (req.files.imageCover) req.body.imageCover = req.files.imageCover[0].filename;
+  if (req.files.images) req.body.images = req.files.images.map((file) => file.filename);
   const product = await Product.findOneAndUpdate({ slug: req.params.slug }, req.body, {
     new: true,
   });
