@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      unique: true,
+      unique: true, // This creates a unique index on the email field
       // required: true,
       required: [true, "Email is required - from mongoose"],
       lowercase: true,
