@@ -4,6 +4,10 @@ import { SystemError } from "../../utils/systemError.js";
 import slugify from "slugify";
 
 const addSubCategory = catchError(async (req, res, next) => {
+  const isCategoryExist = await Category.findById(req.body.category);
+  if (!isCategoryExist) {
+    return next(new SystemError("Category not found", 404));
+  }
   req.body.slug = slugify(req.body.name, { lower: true });
   req.body.createdBy = req.user.id;
   const subCategory = new SubCategory(req.body);
@@ -23,10 +27,9 @@ const getAllSubCategories = catchError(async (req, res, next) => {
 });
 
 const getSingleSubCategory = catchError(async (req, res, next) => {
-  const subCategory = await SubCategory.findOne({ slug: req.params.slug }).populate(
-    "createdBy",
-    "-password -email -confirmEmail -createdAt"
-  );
+  const subCategory = await SubCategory.findOne({
+    slug: req.params.slug,
+  }).populate("createdBy", "-password -email -confirmEmail -createdAt");
   if (!subCategory) {
     return next(new SystemError("SubCategory not found", 404));
   }
@@ -35,9 +38,13 @@ const getSingleSubCategory = catchError(async (req, res, next) => {
 
 const updateSubCategory = catchError(async (req, res, next) => {
   req.body.slug = slugify(req.body.name, { lower: true });
-  const subCategory = await SubCategory.findOneAndUpdate({ slug: req.params.slug }, req.body, {
-    new: true,
-  });
+  const subCategory = await SubCategory.findOneAndUpdate(
+    { slug: req.params.slug },
+    req.body,
+    {
+      new: true,
+    }
+  );
   if (!subCategory) {
     return next(new SystemError("SubCategory not found", 404));
   }
@@ -45,11 +52,19 @@ const updateSubCategory = catchError(async (req, res, next) => {
 });
 
 const deleteSubCategory = catchError(async (req, res, next) => {
-  const subCategory = await SubCategory.findOneAndDelete({ slug: req.params.slug });
+  const subCategory = await SubCategory.findOneAndDelete({
+    slug: req.params.slug,
+  });
   if (!subCategory) {
     return next(new SystemError("SubCategory not found", 404));
   }
   res.status(200).json({ message: "success", subCategory });
 });
 
-export { addSubCategory, getAllSubCategories, getSingleSubCategory, updateSubCategory, deleteSubCategory };
+export {
+  addSubCategory,
+  getAllSubCategories,
+  getSingleSubCategory,
+  updateSubCategory,
+  deleteSubCategory,
+};
