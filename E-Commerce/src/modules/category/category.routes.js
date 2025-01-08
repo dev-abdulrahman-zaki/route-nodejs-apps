@@ -14,7 +14,7 @@ import {
 categoryRoutes.post(`/`, validate(addCategoryValidationSchema), addCategory);
 categoryRoutes.get(`/`, getAllCategories);
 categoryRoutes.get(`/:slug`, getSingleCategory);
-categoryRoutes.put(`/:id`, validate(updateCategoryValidationSchema), updateCategory);
-categoryRoutes.delete(`/:id`, deleteCategory);
+categoryRoutes.put(`/:slug`, validate(updateCategoryValidationSchema), updateCategory);
+categoryRoutes.delete(`/:slug`, deleteCategory);
 
 export default categoryRoutes;

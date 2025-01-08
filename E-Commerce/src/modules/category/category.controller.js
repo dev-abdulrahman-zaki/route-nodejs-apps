@@ -6,7 +6,8 @@ import slugify from "slugify";
 const addCategory = catchError(async (req, res) => {
   // const category = await Category.create({ ...req.body, createdBy: req.user.id });
   req.body.slug = slugify(req.body.name, { lower: true });
-  const category = new Category({ ...req.body, createdBy: req.user.id });
+  req.body.createdBy = req.user.id;
+  const category = new Category(req.body);
   // console.log(`category before save:`, category); // without createdAt field
   await category.save();
   // console.log(`category after save:`, category); // createdAt field is added automatically by mongoose
@@ -15,7 +16,7 @@ const addCategory = catchError(async (req, res) => {
 
 const getAllCategories = catchError(async (req, res) => {
   const categories = await Category.find().populate(
-    "user",
+    "createdBy",
     "-password -email -confirmEmail -createdAt"
   ); // or : const notes = await Note.find().populate("user", { password: 0 });
   res.status(200).json({ message: "success", categories });
@@ -30,14 +31,15 @@ const getSingleCategory = catchError(async (req, res) => {
 });
 
 const updateCategory = catchError(async (req, res) => {
-  const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
+  req.body.slug = slugify(req.body.name, { lower: true });
+  const category = await Category.findOneAndUpdate({ slug: req.params.slug }, req.body, {
     new: true,
   });
   res.status(200).json({ message: "success", category });
 });
 
 const deleteCategory = catchError(async (req, res, next) => {
-  const category = await Category.findByIdAndDelete(req.params.id);
+  const category = await Category.findOneAndDelete({ slug: req.params.slug });
   if (!category) {
     return next(new SystemError("Category not found", 404));
   }

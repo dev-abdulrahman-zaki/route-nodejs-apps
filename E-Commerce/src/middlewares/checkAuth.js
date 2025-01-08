@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { SystemError } from "../utils/systemError.js";
 
 // check auth / verify token
 export const checkAuth = (req, res, next) => {
