@@ -9,10 +9,7 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import { dbConnection } from "./database/dbConnection.js"; // Import the dbConnection to connect to MongoDB even if the dbConnection import is not used in the code.
-import userRoutes from "./src/modules/user/user.routes.js";
-import noteRoutes from "./src/modules/note/note.routes.js";
-import photoRoutes from "./src/modules/photo/photo.routes.js";
-import { checkAuth } from "./src/middlewares/checkAuth.js";
+import { indexRoutes } from "./src/modules/index.routes.js";
 import { SystemError } from "./src/utils/systemError.js";
 import { globalError } from "./src/middlewares/globalError.js";
 
@@ -33,10 +30,7 @@ So, it connects/anchors the route name to the folder name.
 */
 
 // 04. Define the base path
-app.get("/", (req, res) => res.send("Hello World!"));
-app.use("/auth", userRoutes);
-app.use("/notes", checkAuth, noteRoutes);
-app.use("/photos", photoRoutes);
+indexRoutes(app);
 
 // 05. Catch all routes
 app.use("*", (req, res, next) => {
