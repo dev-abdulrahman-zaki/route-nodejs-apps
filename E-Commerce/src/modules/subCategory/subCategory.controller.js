@@ -10,14 +10,16 @@ const addSubCategory = catchError(async (req, res, next) => {
     return next(new SystemError("Category not found", 404));
   }
   req.body.slug = slugify(req.body.name, { lower: true });
-  req.body.createdBy = req.user.id;
+  req.body.createdBy = req.user?.id || "677eb89034823e94b28151bf";
   const subCategory = new SubCategory(req.body);
   await subCategory.save();
   res.status(201).json({ message: "success", subCategory });
 });
 
 const getAllSubCategories = catchError(async (req, res, next) => {
-  const subCategories = await SubCategory.find().populate(
+  const filterObj = {};
+  if (req.params.categorySlug) filterObj.category = req.params.categorySlug;
+  const subCategories = await SubCategory.find(filterObj).populate(
     "createdBy",
     "-password -email -confirmEmail -createdAt"
   ); // or : const notes = await Note.find().populate("user", { password: 0 });

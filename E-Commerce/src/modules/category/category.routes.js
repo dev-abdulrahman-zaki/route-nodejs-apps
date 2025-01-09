@@ -5,6 +5,7 @@ import {
   updateCategoryValidationSchema,
 } from "./category.validation.js";
 import fileUpload from "../../services/fileUpload/fileUpload.js";
+import subCategoryRoutes from "../subCategory/subCategory.routes.js";
 const categoryRoutes = express.Router();
 
 import {
@@ -15,6 +16,10 @@ import {
   deleteCategory,
 } from "./category.controller.js";
 
+// - for /categories/:categorySlug/subcategories routes
+categoryRoutes.use("/:categorySlug/subcategories", subCategoryRoutes);
+
+// - for /categories routes
 categoryRoutes.post(
   `/`,
   fileUpload("categories").single("image"), // parse the request body (form-data) using multer.

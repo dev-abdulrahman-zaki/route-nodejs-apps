@@ -4,7 +4,7 @@ import {
   addSubCategoryValidationSchema,
   updateSubCategoryValidationSchema,
 } from "./subCategory.validation.js";
-const subCategoryRoutes = express.Router();
+const subCategoryRoutes = express.Router({ mergeParams: true });
 
 import {
   addSubCategory,
