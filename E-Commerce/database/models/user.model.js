@@ -1,6 +1,6 @@
 import mongoose from "mongoose"; // or: import {Schema, model} from "mongoose";
 
-// 02. Define the schema
+// 01. Define the schema
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -52,5 +52,5 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// 03. Define the model
+// 02. Define the model
 export const User = mongoose.model("User", userSchema); // User is the name of the collection in the "localhost:27017/mongoose" database, which is "users" by default.

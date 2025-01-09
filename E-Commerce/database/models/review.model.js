@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-// 02. Define the schema
+// 01. Define the schema
 const reviewSchema = new mongoose.Schema(
   {
     comment: {
@@ -34,5 +34,5 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-// 03. Define the model
+// 02. Define the model
 export const Review = mongoose.model("Review", reviewSchema); // Note is the name of the collection in the "localhost:27017/e-commerce" database, which is "reviews" by default.
