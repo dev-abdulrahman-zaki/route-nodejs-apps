@@ -4,6 +4,7 @@ import { SubCategory } from "../../../database/models/subCategory.model.js";
 import { Brand } from "../../../database/models/brand.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
+import { deleteOne } from "../../utils/handlers.js";
 import slugify from "slugify";
 
 const addProduct = catchError(async (req, res, next) => {
@@ -68,12 +69,6 @@ const updateProduct = catchError(async (req, res, next) => {
   res.status(200).json({ message: "success", product });
 });
 
-const deleteProduct = catchError(async (req, res, next) => {
-  const product = await Product.findOneAndDelete({ slug: req.params.slug });
-  if (!product) {
-    return next(new SystemError("Product not found", 404));
-  }
-  res.status(200).json({ message: "success", product });
-});
+const deleteProduct = deleteOne(Product);
 
 export { addProduct, getAllProducts, getSingleProduct, updateProduct, deleteProduct };

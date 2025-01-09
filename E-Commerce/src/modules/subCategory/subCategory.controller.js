@@ -3,6 +3,7 @@ import { Category } from "../../../database/models/category.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import slugify from "slugify";
+import { deleteOne } from "../../utils/handlers.js";
 
 const addSubCategory = catchError(async (req, res, next) => {
   const isCategoryExist = await Category.findById(req.body.category);
@@ -54,15 +55,7 @@ const updateSubCategory = catchError(async (req, res, next) => {
   res.status(200).json({ message: "success", subCategory });
 });
 
-const deleteSubCategory = catchError(async (req, res, next) => {
-  const subCategory = await SubCategory.findOneAndDelete({
-    slug: req.params.slug,
-  });
-  if (!subCategory) {
-    return next(new SystemError("SubCategory not found", 404));
-  }
-  res.status(200).json({ message: "success", subCategory });
-});
+const deleteSubCategory = deleteOne(SubCategory);
 
 export {
   addSubCategory,

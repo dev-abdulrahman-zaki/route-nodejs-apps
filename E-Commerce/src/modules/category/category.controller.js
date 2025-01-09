@@ -2,6 +2,7 @@ import { Category } from "../../../database/models/category.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import slugify from "slugify";
+import { deleteOne } from "../../utils/handlers.js";
 
 const addCategory = catchError(async (req, res) => {
   // const category = await Category.create({ ...req.body, createdBy: req.user.id });
@@ -49,12 +50,6 @@ const updateCategory = catchError(async (req, res, next) => {
   res.status(200).json({ message: "success", category });
 });
 
-const deleteCategory = catchError(async (req, res, next) => {
-  const category = await Category.findOneAndDelete({ slug: req.params.slug });
-  if (!category) {
-    return next(new SystemError("Category not found", 404));
-  }
-  res.status(200).json({ message: "success", category });
-});
+const deleteCategory = deleteOne(Category);
 
 export { addCategory, getAllCategories, getSingleCategory, updateCategory, deleteCategory };
