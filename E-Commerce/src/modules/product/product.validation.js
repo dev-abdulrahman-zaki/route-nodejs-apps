@@ -84,6 +84,7 @@ const updateProductValidationSchema = Joi.object({
 });
 
 const getProductValidationSchema = Joi.object({
+  // ===== 1- Pagination =====
   page: Joi.number().integer().positive().default(1).options({ convert: true }),
   limit: Joi.number()
     .integer()
@@ -91,6 +92,24 @@ const getProductValidationSchema = Joi.object({
     .max(100) // Prevents requesting too much data at once
     .default(20)
     .options({ convert: true }),
+  // ===== 2- Filter =====
+  price: Joi.number().min(0).default("").options({ convert: true }),
+  stock: Joi.number().min(0).default("").options({ convert: true }),
+  category: Joi.string().default(""),
+  subcategory: Joi.string().default(""),
+  brand: Joi.string().default(""),
+  ratingsAverage: Joi.number()
+    .min(0)
+    .max(5)
+    .default("")
+    .options({ convert: true }),
+  ratingsQuantity: Joi.number().min(0).default("").options({ convert: true }),
+  // ===== 3- Sort =====
+  sort: Joi.string().valid("asc", "desc").default("desc"),
+  // ===== 4- Select =====
+  fields: Joi.string().default(""),
+  // ===== 5- Search =====
+  search: Joi.string().default(""),
 });
 
 export {

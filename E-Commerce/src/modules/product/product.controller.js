@@ -39,8 +39,24 @@ const getAllProducts = catchError(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 20;
   const skip = (page - 1) * limit;
-
-  const products = await Product.find().skip(skip).limit(limit);
+  // ===== 2- Filter =====
+  let filterObject = structuredClone(req.query);
+  filterObject = JSON.stringify(filterObject);
+  filterObject = filterObject.replace(
+    /(gt|gte|lt|lte|in|nin|exists|regex|eq|ne)/g,
+    (match) => `$${match}`
+  );
+  filterObject = JSON.parse(filterObject);
+  ["page", "limit", "sort", "fields", "search"].forEach((key) => delete filterObject[key]);
+  // ===== 3- Sort =====
+  const { sort } = req.query;
+  // ===== 4- Select =====
+  const { fields } = req.query;
+  // ===== 5- Search =====
+  const { search } = req.query;
+  
+  console.log(filterObject);
+  const products = await Product.find(filterObject).skip(skip).limit(limit);
 
   // .populate(
   //   "createdBy",

@@ -18,6 +18,7 @@ getAllSubCategories
 2- Filter.
     ?price=150
     ?price[gt]=100
+    ?price[gt]=100&stock=200
     ?price[gt]=100&price[lt]=200
     ?price[lt]=200
     ?price[gte]=100
