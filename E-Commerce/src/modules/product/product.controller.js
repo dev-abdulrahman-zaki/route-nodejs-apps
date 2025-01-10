@@ -35,14 +35,34 @@ const addProduct = catchError(async (req, res, next) => {
 });
 
 const getAllProducts = catchError(async (req, res, next) => {
-  const products = await Product.find().populate(
-    "createdBy",
-    "-password -email -confirmEmail -createdAt"
-  ); // or : const notes = await Note.find().populate("user", { password: 0 });
+  // ===== 1- Pagination =====
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const skip = (page - 1) * limit;
+
+  const products = await Product.find().skip(skip).limit(limit);
+
+  // .populate(
+  //   "createdBy",
+  //   // "-password -email -confirmEmail -createdAt"
+  // ); // or : const notes = await Note.find().populate("user", { password: 0 });
+
   if (!products) {
     return next(new SystemError("Products not found", 404));
   }
-  res.status(200).json({ message: "success", products });
+  res
+    .status(200)
+    .json({
+      message: "success",
+      metaData: {
+        page,
+        limit,
+        skip,
+        totalPages: Math.ceil(products.length / limit),
+        productsCount: products.length,
+      },
+      products,
+    });
 });
 
 const getSingleProduct = catchError(async (req, res, next) => {
@@ -58,11 +78,17 @@ const getSingleProduct = catchError(async (req, res, next) => {
 
 const updateProduct = catchError(async (req, res, next) => {
   req.body.slug = slugify(req.body.name, { lower: true });
-  if (req.files.imageCover) req.body.imageCover = req.files.imageCover[0].filename;
-  if (req.files.images) req.body.images = req.files.images.map((file) => file.filename);
-  const product = await Product.findOneAndUpdate({ slug: req.params.slug }, req.body, {
-    new: true,
-  });
+  if (req.files.imageCover)
+    req.body.imageCover = req.files.imageCover[0].filename;
+  if (req.files.images)
+    req.body.images = req.files.images.map((file) => file.filename);
+  const product = await Product.findOneAndUpdate(
+    { slug: req.params.slug },
+    req.body,
+    {
+      new: true,
+    }
+  );
   if (!product) {
     return next(new SystemError("Product not found", 404));
   }
@@ -71,4 +97,10 @@ const updateProduct = catchError(async (req, res, next) => {
 
 const deleteProduct = deleteOne(Product);
 
-export { addProduct, getAllProducts, getSingleProduct, updateProduct, deleteProduct };
+export {
+  addProduct,
+  getAllProducts,
+  getSingleProduct,
+  updateProduct,
+  deleteProduct,
+};

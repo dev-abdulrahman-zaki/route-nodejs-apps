@@ -29,7 +29,9 @@ const addProductValidationSchema = Joi.object({
         size: Joi.number().max(1000000).required(),
         path: Joi.string().required(),
       })
-    ).min(1).required(),
+    )
+    .min(1)
+    .required(),
   price: Joi.number().required().min(0),
   priceAfterDiscount: Joi.number().required().min(0),
   stock: Joi.number().required().min(0),
@@ -55,20 +57,22 @@ const updateProductValidationSchema = Joi.object({
     size: Joi.number().max(1000000).required(),
     path: Joi.string().required(),
   }),
-  images: Joi.array().items(
-    Joi.object({
-      fieldname: Joi.string().required(),
-      originalname: Joi.string().required(),
-      destination: Joi.string().required(),
-      filename: Joi.string().required(),
-      mimetype: Joi.string()
-        .valid("image/jpeg", "image/png", "image/jpg")
-        .required(),
-      encoding: Joi.string().required(),
-      size: Joi.number().max(1000000).required(),
-      path: Joi.string().required(),
-    })
-  ).min(1),
+  images: Joi.array()
+    .items(
+      Joi.object({
+        fieldname: Joi.string().required(),
+        originalname: Joi.string().required(),
+        destination: Joi.string().required(),
+        filename: Joi.string().required(),
+        mimetype: Joi.string()
+          .valid("image/jpeg", "image/png", "image/jpg")
+          .required(),
+        encoding: Joi.string().required(),
+        size: Joi.number().max(1000000).required(),
+        path: Joi.string().required(),
+      })
+    )
+    .min(1),
   price: Joi.number().min(0),
   priceAfterDiscount: Joi.number().min(0),
   stock: Joi.number().min(0),
@@ -79,4 +83,18 @@ const updateProductValidationSchema = Joi.object({
   ratingsQuantity: Joi.number().min(0),
 });
 
-export { addProductValidationSchema, updateProductValidationSchema };
+const getProductValidationSchema = Joi.object({
+  page: Joi.number().integer().positive().default(1).options({ convert: true }),
+  limit: Joi.number()
+    .integer()
+    .positive()
+    .max(100) // Prevents requesting too much data at once
+    .default(20)
+    .options({ convert: true }),
+});
+
+export {
+  addProductValidationSchema,
+  updateProductValidationSchema,
+  getProductValidationSchema,
+};
