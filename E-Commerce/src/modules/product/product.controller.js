@@ -58,11 +58,17 @@ const getAllProducts = catchError(async (req, res, next) => {
     mongooseQuery.sort(sortBy);
   }
   // ===== 4- Select =====
-  const { fields } = req.query;
+  if (req.query.fields) {
+    const fields = req.query.fields.split(",").join(" ");
+    mongooseQuery.select(fields);
+  }
   // ===== 5- Search =====
-  const { search } = req.query;
+  if (req.query.search) {
+    const search = req.query.search.split(",").join(" ");
+    mongooseQuery.find({ $text: { $search: search } });
+  }
 
-  console.log(filterObject);
+  console.log(req.query);
   const products = await mongooseQuery;
 
   // .populate(
