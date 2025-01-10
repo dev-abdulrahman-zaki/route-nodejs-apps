@@ -5,3 +5,6 @@ hint: use fs module to remove the old image from the folder.
 ===========
 ## apply refactoring to the code (all files)
 ===========
+## populate
+===========
+## req.body || "hex"

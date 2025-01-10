@@ -83,6 +83,19 @@ const updateProductValidationSchema = Joi.object({
   ratingsQuantity: Joi.number().min(0),
 });
 
+const validSortFields = [
+  "price",
+  "ratingsAverage",
+  "ratingsQuantity",
+  "name",
+  "description",
+  "stock",
+  "category",
+  "subcategory",
+  "brand",
+  "sold",
+];
+
 const getProductValidationSchema = Joi.object({
   // ===== 1- Pagination =====
   page: Joi.number().integer().positive().default(1).options({ convert: true }),
@@ -105,7 +118,24 @@ const getProductValidationSchema = Joi.object({
     .options({ convert: true }),
   ratingsQuantity: Joi.number().min(0).default("").options({ convert: true }),
   // ===== 3- Sort =====
-  sort: Joi.string().valid("asc", "desc").default("desc"),
+  sort: Joi.string()
+    .custom((value, helpers) => {
+      if (!value) return "";
+      const sortFields = value.split(",");
+      const isValid = sortFields.every((field) => {
+        const fieldWithoutMinus = field.startsWith("-")
+          ? field.substring(1)
+          : field;
+        return validSortFields.includes(fieldWithoutMinus);
+      });
+
+      if (!isValid) {
+        return helpers.error("any.invalid");
+      }
+
+      return value;
+    })
+    .default(""),
   // ===== 4- Select =====
   fields: Joi.string().default(""),
   // ===== 5- Search =====

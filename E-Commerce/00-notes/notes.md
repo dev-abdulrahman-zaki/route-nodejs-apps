@@ -38,8 +38,8 @@ getAllSubCategories
 3- Sort.
     ?sort=price
     ?sort=-price
-    <!-- ?sort=price,name
-    ?sort=-price,name -->
+    ?sort=price,name
+    ?sort=-price,name
 4- Select fields.
     ?fields=title
     ?fields=price,name

@@ -47,16 +47,23 @@ const getAllProducts = catchError(async (req, res, next) => {
     (match) => `$${match}`
   );
   filterObject = JSON.parse(filterObject);
-  ["page", "limit", "sort", "fields", "search"].forEach((key) => delete filterObject[key]);
+  ["page", "limit", "sort", "fields", "search"].forEach(
+    (key) => delete filterObject[key]
+  );
+  // ===== Mongoose Query =====
+  const mongooseQuery = Product.find(filterObject).skip(skip).limit(limit);
   // ===== 3- Sort =====
-  const { sort } = req.query;
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(",").join(" ");
+    mongooseQuery.sort(sortBy);
+  }
   // ===== 4- Select =====
   const { fields } = req.query;
   // ===== 5- Search =====
   const { search } = req.query;
-  
+
   console.log(filterObject);
-  const products = await Product.find(filterObject).skip(skip).limit(limit);
+  const products = await mongooseQuery;
 
   // .populate(
   //   "createdBy",
@@ -66,19 +73,17 @@ const getAllProducts = catchError(async (req, res, next) => {
   if (!products) {
     return next(new SystemError("Products not found", 404));
   }
-  res
-    .status(200)
-    .json({
-      message: "success",
-      metaData: {
-        page,
-        limit,
-        skip,
-        totalPages: Math.ceil(products.length / limit),
-        productsCount: products.length,
-      },
-      products,
-    });
+  res.status(200).json({
+    message: "success",
+    metaData: {
+      page,
+      limit,
+      skip,
+      totalPages: Math.ceil(products.length / limit),
+      productsCount: products.length,
+    },
+    products,
+  });
 });
 
 const getSingleProduct = catchError(async (req, res, next) => {
