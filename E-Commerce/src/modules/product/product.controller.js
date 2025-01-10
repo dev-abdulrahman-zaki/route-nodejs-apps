@@ -51,24 +51,27 @@ const getAllProducts = catchError(async (req, res, next) => {
     (key) => delete filterObject[key]
   );
   // ===== Mongoose Query =====
-  const mongooseQuery = Product.find(filterObject).skip(skip).limit(limit);
+  let mongooseQuery = Product.find(filterObject).skip(skip).limit(limit);
   // ===== 3- Sort =====
   if (req.query.sort) {
     const sortBy = req.query.sort.split(",").join(" ");
-    mongooseQuery.sort(sortBy);
+    mongooseQuery = mongooseQuery.sort(sortBy);
   }
   // ===== 4- Select =====
   if (req.query.fields) {
     const fields = req.query.fields.split(",").join(" ");
-    mongooseQuery.select(fields);
+    mongooseQuery = mongooseQuery.select(fields);
   }
-  // ===== 5- Search =====
+  // ===== 5- Search by name or description =====
   if (req.query.search) {
-    const search = req.query.search.split(",").join(" ");
-    mongooseQuery.find({ $text: { $search: search } });
+    mongooseQuery = mongooseQuery.find({
+      $or: [
+        { name: { $regex: req.query.search, $options: "i" } },
+        { description: { $regex: req.query.search, $options: "i" } },
+      ],
+    });
   }
 
-  console.log(req.query);
   const products = await mongooseQuery;
 
   // .populate(

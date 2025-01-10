@@ -114,6 +114,8 @@ const validSortFields = [
 ];
 
 const validSelectFields = [
+  "name",
+  "description",
   "price",
   "stock",
   "category",
@@ -145,18 +147,20 @@ const getProductValidationSchema = Joi.object({
   ratingsQuantity: Joi.number().min(0).default("").options({ convert: true }),
   // ===== 3- Sort =====
   sort: Joi.string()
+    .lowercase()
     .custom((queryValue, helpers) =>
       handleValidValue(queryValue, helpers, validSortFields)
     )
     .default(""),
   // ===== 4- Select =====
   fields: Joi.string()
+    .lowercase()
     .custom((queryValue, helpers) =>
       handleValidValue(queryValue, helpers, validSelectFields)
     )
     .default(""),
   // ===== 5- Search =====
-  search: Joi.string().default(""),
+  search: Joi.string().default("").lowercase(),
 });
 
 export {
