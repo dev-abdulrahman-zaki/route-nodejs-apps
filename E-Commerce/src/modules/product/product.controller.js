@@ -4,9 +4,8 @@ import { SubCategory } from "../../../database/models/subCategory.model.js";
 import { Brand } from "../../../database/models/brand.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
-import { deleteOne } from "../../utils/handlers.js";
+import { deleteOne, getAll } from "../../utils/handlers.js";
 import slugify from "slugify";
-import ApiFeatures from "../../utils/apiFeatures.js";
 
 const addProduct = catchError(async (req, res, next) => {
   const isCategoryExist = await Category.findById(req.body.category);
@@ -35,30 +34,7 @@ const addProduct = catchError(async (req, res, next) => {
   res.status(201).json({ message: "success", product });
 });
 
-const getAllProducts = catchError(async (req, res, next) => {
-  const apiFeatures = await new ApiFeatures(Product.find(), req.query)
-    .filter()
-    .sort()
-    .selectFields()
-    .search()
-    .paginate();
-
-  const products = await apiFeatures.mongooseQuery;
-
-  // .populate(
-  //   "createdBy",
-  //   // "-password -email -confirmEmail -createdAt"
-  // ); // or : const notes = await Note.find().populate("user", { password: 0 });
-
-  if (!products) {
-    return next(new SystemError("Products not found", 404));
-  }
-  res.status(200).json({
-    message: "success",
-    metaData: apiFeatures.metaData,
-    products,
-  });
-});
+const getAllProducts = getAll(Product);
 
 const getSingleProduct = catchError(async (req, res, next) => {
   const product = await Product.findOne({ slug: req.params.slug }).populate(
