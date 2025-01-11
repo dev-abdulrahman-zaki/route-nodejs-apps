@@ -34,7 +34,7 @@ const addProduct = catchError(async (req, res, next) => {
   res.status(201).json({ message: "success", product });
 });
 
-const getAllProducts = getAll(Product);
+const getAllProducts = getAll(Product, ["name", "description"]);
 
 const getSingleProduct = catchError(async (req, res, next) => {
   const product = await Product.findOne({ slug: req.params.slug }).populate(
