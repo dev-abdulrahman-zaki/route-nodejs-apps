@@ -16,14 +16,14 @@ class ApiFeatures {
       (match) => `$${match}`
     );
 
-    this.mongooseQuery = this.mongooseQuery.find(JSON.parse(filterStr));
+    this.mongooseQuery.find(JSON.parse(filterStr));
     return this;
   }
   // ===== 2- Sort =====
   sort() {
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(",").join(" ");
-      this.mongooseQuery = this.mongooseQuery.sort(sortBy);
+      this.mongooseQuery.sort(sortBy);
     }
     return this;
   }
@@ -31,14 +31,14 @@ class ApiFeatures {
   selectFields() {
     if (this.queryString.fields) {
       const fields = this.queryString.fields.split(",").join(" ");
-      this.mongooseQuery = this.mongooseQuery.select(fields);
+      this.mongooseQuery.select(fields);
     }
     return this;
   }
   // ===== 4- Search by name or description (default) =====
   search(fields = ["name", "description"]) {
     if (this.queryString.search) {
-      this.mongooseQuery = this.mongooseQuery.find({
+      this.mongooseQuery.find({
         $or: fields.map((field) => ({
           [field]: { $regex: this.queryString.search, $options: "i" },
         })),
@@ -66,7 +66,7 @@ class ApiFeatures {
       nextPage: page + 1 <= Math.ceil(resultDocumentsCount / limit) ? page + 1 : null,
       previousPage: page - 1 > 0 ? page - 1 : null,
     };
-    this.mongooseQuery = this.mongooseQuery.skip(skip).limit(limit);
+    this.mongooseQuery.skip(skip).limit(limit);
     return this;
   }
 }
