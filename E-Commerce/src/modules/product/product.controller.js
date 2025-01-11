@@ -36,12 +36,12 @@ const addProduct = catchError(async (req, res, next) => {
 });
 
 const getAllProducts = catchError(async (req, res, next) => {
-  const apiFeatures = new ApiFeatures(Product.find(), req.query)
-    .paginate()
+  const apiFeatures = await new ApiFeatures(Product.find(), req.query)
     .filter()
     .sort()
     .selectFields()
-    .search();
+    .search()
+    .paginate();
 
   const products = await apiFeatures.mongooseQuery;
 

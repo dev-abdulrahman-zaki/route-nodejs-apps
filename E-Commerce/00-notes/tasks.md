@@ -6,5 +6,7 @@ hint: use fs module to remove the old image from the folder.
 ## apply refactoring to the code (all files)
 ===========
 ## populate
+Can I use this with Mongoose's populate method?
 ===========
 ## req.body || "hex"
+===========

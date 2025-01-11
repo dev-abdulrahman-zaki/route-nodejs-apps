@@ -4,22 +4,7 @@ class ApiFeatures {
     this.queryString = queryString; // req.query
     this.metaData = {}; // Initialize empty metadata object
   }
-  // ===== 1- Pagination =====
-  paginate() {
-    const page = parseInt(this.queryString.page) || 1;
-    const limit = parseInt(this.queryString.limit) || 20;
-    const skip = (page - 1) * limit;
-    this.metaData = {
-      page,
-      limit,
-      skip,
-      totalPages: Math.ceil(this.mongooseQuery.length / limit),
-      resultsCount: this.mongooseQuery.length,
-    };
-    this.mongooseQuery = this.mongooseQuery.skip(skip).limit(limit);
-    return this;
-  }
-  // ===== 2- Filter =====
+  // ===== 1- Filter =====
   filter() {
     const filterObj = { ...this.queryString };
     const excludedFields = ["page", "limit", "sort", "fields", "search"];
@@ -34,7 +19,7 @@ class ApiFeatures {
     this.mongooseQuery = this.mongooseQuery.find(JSON.parse(filterStr));
     return this;
   }
-  // ===== 3- Sort =====
+  // ===== 2- Sort =====
   sort() {
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(",").join(" ");
@@ -42,7 +27,7 @@ class ApiFeatures {
     }
     return this;
   }
-  // ===== 4- Select =====
+  // ===== 3- Select =====
   selectFields() {
     if (this.queryString.fields) {
       const fields = this.queryString.fields.split(",").join(" ");
@@ -50,7 +35,7 @@ class ApiFeatures {
     }
     return this;
   }
-  // ===== 5- Search by name or description (default) =====
+  // ===== 4- Search by name or description (default) =====
   search(fields = ["name", "description"]) {
     if (this.queryString.search) {
       this.mongooseQuery = this.mongooseQuery.find({
@@ -59,6 +44,29 @@ class ApiFeatures {
         })),
       });
     }
+    return this;
+  }
+  // ===== 5- Pagination =====
+  async paginate() {
+    const page = parseInt(this.queryString.page) || 1;
+    const limit = parseInt(this.queryString.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    // Clone the query to get result documents count without pagination
+    const countQuery = this.mongooseQuery.model.find(this.mongooseQuery.getQuery());
+    const resultDocumentsCount = await countQuery.countDocuments();
+    const totalCount = await this.mongooseQuery.model.countDocuments();
+    this.metaData = {
+      limit,
+      skip,
+      totalCount,
+      resultsCount: resultDocumentsCount,
+      totalPages: Math.ceil(resultDocumentsCount / limit),      
+      currentPage: page,
+      nextPage: page + 1 <= Math.ceil(resultDocumentsCount / limit) ? page + 1 : null,
+      previousPage: page - 1 > 0 ? page - 1 : null,
+    };
+    this.mongooseQuery = this.mongooseQuery.skip(skip).limit(limit);
     return this;
   }
 }
