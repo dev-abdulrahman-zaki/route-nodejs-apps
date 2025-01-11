@@ -6,6 +6,7 @@ import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import { deleteOne } from "../../utils/handlers.js";
 import slugify from "slugify";
+import ApiFeatures from "../../utils/apiFeatures.js";
 
 const addProduct = catchError(async (req, res, next) => {
   const isCategoryExist = await Category.findById(req.body.category);
@@ -35,44 +36,14 @@ const addProduct = catchError(async (req, res, next) => {
 });
 
 const getAllProducts = catchError(async (req, res, next) => {
-  // ===== 1- Pagination =====
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 20;
-  const skip = (page - 1) * limit;
-  // ===== 2- Filter =====
-  let filterObject = structuredClone(req.query);
-  filterObject = JSON.stringify(filterObject);
-  filterObject = filterObject.replace(
-    /(gt|gte|lt|lte|in|nin|exists|regex|eq|ne)/g,
-    (match) => `$${match}`
-  );
-  filterObject = JSON.parse(filterObject);
-  ["page", "limit", "sort", "fields", "search"].forEach(
-    (key) => delete filterObject[key]
-  );
-  // ===== Mongoose Query =====
-  let mongooseQuery = Product.find(filterObject).skip(skip).limit(limit);
-  // ===== 3- Sort =====
-  if (req.query.sort) {
-    const sortBy = req.query.sort.split(",").join(" ");
-    mongooseQuery = mongooseQuery.sort(sortBy);
-  }
-  // ===== 4- Select =====
-  if (req.query.fields) {
-    const fields = req.query.fields.split(",").join(" ");
-    mongooseQuery = mongooseQuery.select(fields);
-  }
-  // ===== 5- Search by name or description =====
-  if (req.query.search) {
-    mongooseQuery = mongooseQuery.find({
-      $or: [
-        { name: { $regex: req.query.search, $options: "i" } },
-        { description: { $regex: req.query.search, $options: "i" } },
-      ],
-    });
-  }
+  const apiFeatures = new ApiFeatures(Product.find(), req.query)
+    .paginate()
+    .filter()
+    .sort()
+    .selectFields()
+    .search();
 
-  const products = await mongooseQuery;
+  const products = await apiFeatures.mongooseQuery;
 
   // .populate(
   //   "createdBy",
@@ -84,13 +55,7 @@ const getAllProducts = catchError(async (req, res, next) => {
   }
   res.status(200).json({
     message: "success",
-    metaData: {
-      page,
-      limit,
-      skip,
-      totalPages: Math.ceil(products.length / limit),
-      productsCount: products.length,
-    },
+    metaData: apiFeatures.metaData,
     products,
   });
 });
