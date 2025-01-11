@@ -2,7 +2,7 @@ import { Brand } from "../../../database/models/brand.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import slugify from "slugify";
-import { deleteOne } from "../../utils/handlers.js";
+import { deleteOne, getAll } from "../../utils/handlers.js";
 
 const addBrand = catchError(async (req, res) => {
   req.body.slug = slugify(req.body.name, { lower: true });
@@ -13,16 +13,7 @@ const addBrand = catchError(async (req, res) => {
   res.status(201).json({ message: "success", brand });
 });
 
-const getAllBrands = catchError(async (req, res, next) => {
-  const brands = await Brand.find().populate(
-    "createdBy",
-    "-password -email -confirmEmail -createdAt"
-  ); // or : const notes = await Note.find().populate("user", { password: 0 });
-  if (!brands) {
-    return next(new SystemError("Brands not found", 404));
-  }
-  res.status(200).json({ message: "success", brands });
-});
+const getAllBrands = getAll(Brand);
 
 const getSingleBrand = catchError(async (req, res, next) => {
   const brand = await Brand.findOne({ slug: req.params.slug }).populate(

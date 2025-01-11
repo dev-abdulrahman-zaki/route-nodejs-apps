@@ -2,7 +2,7 @@ import { Category } from "../../../database/models/category.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import slugify from "slugify";
-import { deleteOne } from "../../utils/handlers.js";
+import { deleteOne, getAll } from "../../utils/handlers.js";
 
 const addCategory = catchError(async (req, res) => {
   // const category = await Category.create({ ...req.body, createdBy: req.user.id });
@@ -16,16 +16,7 @@ const addCategory = catchError(async (req, res) => {
   res.status(201).json({ message: "success", category });
 });
 
-const getAllCategories = catchError(async (req, res, next) => {
-  const categories = await Category.find().populate(
-    "createdBy",
-    "-password -email -confirmEmail -createdAt"
-  ); // or : const notes = await Note.find().populate("user", { password: 0 });
-  if (!categories) {
-    return next(new SystemError("Categories not found", 404));
-  }
-  res.status(200).json({ message: "success", categories });
-});
+const getAllCategories = getAll(Category);
 
 const getSingleCategory = catchError(async (req, res, next) => {
   const category = await Category.findOne({ slug: req.params.slug }).populate(
