@@ -3,7 +3,7 @@ import { Category } from "../../../database/models/category.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import slugify from "slugify";
-import { deleteOne } from "../../utils/handlers.js";
+import { deleteOne, getAll } from "../../utils/handlers.js";
 
 const addSubCategory = catchError(async (req, res, next) => {
   const isCategoryExist = await Category.findById(req.body.category);
@@ -20,14 +20,7 @@ const addSubCategory = catchError(async (req, res, next) => {
 const getAllSubCategories = catchError(async (req, res, next) => {
   const filterObj = {};
   if (req.params.categorySlug) filterObj.category = req.params.categorySlug;
-  const subCategories = await SubCategory.find(filterObj).populate(
-    "createdBy",
-    "-password -email -confirmEmail -createdAt"
-  ); // or : const notes = await Note.find().populate("user", { password: 0 });
-  if (!subCategories) {
-    return next(new SystemError("SubCategories not found", 404));
-  }
-  res.status(200).json({ message: "success", subCategories });
+  return getAll(SubCategory, ["name", "description"], filterObj)(req, res, next); //getAll returns a middleware function that needs to be called with (req, res, next)
 });
 
 const getSingleSubCategory = catchError(async (req, res, next) => {

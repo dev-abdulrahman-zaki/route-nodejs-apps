@@ -2,9 +2,9 @@ import { catchError } from "../middlewares/catchError.js";
 import ApiFeatures from "./apiFeatures.js";
 import { SystemError } from "./systemError.js";
 
-export const getAll = (Model, validSearchFields = ["name", "description"]) => {
+export const getAll = (Model, validSearchFields = ["name", "description"], filterObj = {}) => {
   return catchError(async (req, res, next) => {
-    const apiFeatures = await new ApiFeatures(Model.find(), req.query)
+    const apiFeatures = await new ApiFeatures(Model.find(filterObj), req.query)
       .filter()
       .sort()
       .selectFields()

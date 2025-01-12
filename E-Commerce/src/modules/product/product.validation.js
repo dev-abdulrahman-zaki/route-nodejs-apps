@@ -115,13 +115,20 @@ const validSortFields = [
 
 const validSelectFields = [
   "name",
+  "slug",
   "description",
+  "imageCover",
+  "images",
   "price",
+  "priceAfterDiscount",
+  "sold",
   "stock",
   "category",
   "subcategory",
   "brand",
-  "sold",
+  "ratingsAverage",
+  "ratingsQuantity",
+  "createdBy",
 ];
 
 const getProductValidationSchema = Joi.object({

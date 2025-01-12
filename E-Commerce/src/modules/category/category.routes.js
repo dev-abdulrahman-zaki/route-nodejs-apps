@@ -6,8 +6,6 @@ import {
 } from "./category.validation.js";
 import fileUpload from "../../services/fileUpload/fileUpload.js";
 import subCategoryRoutes from "../subCategory/subCategory.routes.js";
-const categoryRoutes = express.Router();
-
 import {
   addCategory,
   getAllCategories,
@@ -15,6 +13,8 @@ import {
   updateCategory,
   deleteCategory,
 } from "./category.controller.js";
+
+const categoryRoutes = express.Router();
 
 // - for /categories/:categorySlug/subcategories routes
 categoryRoutes.use("/:categorySlug/subcategories", subCategoryRoutes);
