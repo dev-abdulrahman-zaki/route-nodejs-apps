@@ -2,7 +2,9 @@
 
 # dependencies
 /node_modules
-# /uploads
+/uploads/categories/*
+/uploads/products/*
+/uploads/brands/*
 /.pnp
 .pnp.js
 .yarn/install-state.gz

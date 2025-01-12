@@ -85,8 +85,8 @@ const productSchema = new mongoose.Schema(
 
 // 02. Post middleware - runs after the query is executed
 productSchema.post("init", function (doc) {
-  if (doc.imageCover) doc.imageCover = `http://localhost:4000/uploads/products/${doc.imageCover}`;
-  if (doc.images) doc.images = doc.images?.map((image) => `http://localhost:4000/uploads/products/${image}`);
+  if (doc.imageCover) doc.imageCover = `${process.env.BASE_URL}/uploads/products/${doc.imageCover}`;
+  if (doc.images) doc.images = doc.images?.map((image) => `${process.env.BASE_URL}/uploads/products/${image}`);
 });
 
 // 03. Define the model

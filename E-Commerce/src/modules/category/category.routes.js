@@ -3,6 +3,7 @@ import { validate } from "../../middlewares/validate.js";
 import {
   addCategoryValidationSchema,
   updateCategoryValidationSchema,
+  getAllCategoriesValidationSchema,
 } from "./category.validation.js";
 import fileUpload from "../../services/fileUpload/fileUpload.js";
 import subCategoryRoutes from "../subCategory/subCategory.routes.js";
@@ -26,7 +27,7 @@ categoryRoutes.post(
   validate(addCategoryValidationSchema, "image"), // validate the request body (form-data) after multer parsing it. that's why we use the validate middleware after the fileUpload middleware.
   addCategory
 );
-categoryRoutes.get(`/`, getAllCategories);
+categoryRoutes.get(`/`, validate(getAllCategoriesValidationSchema), getAllCategories);
 categoryRoutes.get(`/:slug`, getSingleCategory);
 categoryRoutes.put(
   `/:slug`,

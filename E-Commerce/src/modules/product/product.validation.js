@@ -1,4 +1,5 @@
 import Joi from "joi";
+import handleValidValue from "../../utils/handleValidValue.js";
 
 const addProductValidationSchema = Joi.object({
   name: Joi.string().required().trim().min(3),
@@ -83,23 +84,6 @@ const updateProductValidationSchema = Joi.object({
   ratingsQuantity: Joi.number().min(0),
 });
 
-const handleValidValue = (queryValue, helpers, validValues) => {
-  if (!queryValue) return "";
-  const values = queryValue.split(",");
-  const isValid = values.every((value) => {
-    const valueWithoutMinus = value.startsWith("-")
-      ? value.substring(1)
-      : value;
-    return validValues.includes(valueWithoutMinus);
-  });
-
-  if (!isValid) {
-    return helpers.error("any.invalid");
-  }
-
-  return queryValue;
-};
-
 const validSortFields = [
   "price",
   "ratingsAverage",
@@ -111,6 +95,7 @@ const validSortFields = [
   "subcategory",
   "brand",
   "sold",
+  "createdAt",
 ];
 
 const validSelectFields = [
@@ -129,9 +114,10 @@ const validSelectFields = [
   "ratingsAverage",
   "ratingsQuantity",
   "createdBy",
+  "createdAt",
 ];
 
-const getProductValidationSchema = Joi.object({
+const getAllProductsValidationSchema = Joi.object({
   // ===== 1- Pagination =====
   page: Joi.number().integer().positive().default(1).options({ convert: true }),
   limit: Joi.number()
@@ -158,7 +144,7 @@ const getProductValidationSchema = Joi.object({
     .custom((queryValue, helpers) =>
       handleValidValue(queryValue, helpers, validSortFields)
     )
-    .default(""),
+    .default("-createdAt"),
   // ===== 4- Select =====
   fields: Joi.string()
     .lowercase()
@@ -173,5 +159,5 @@ const getProductValidationSchema = Joi.object({
 export {
   addProductValidationSchema,
   updateProductValidationSchema,
-  getProductValidationSchema,
+  getAllProductsValidationSchema,
 };
