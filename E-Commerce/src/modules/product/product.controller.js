@@ -4,7 +4,7 @@ import { SubCategory } from "../../../database/models/subCategory.model.js";
 import { Brand } from "../../../database/models/brand.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
-import { deleteOne, getAll } from "../../utils/handlers.js";
+import { deleteOne, getAll } from "../../utils/factoryHandlers.js";
 import slugify from "slugify";
 
 const addProduct = catchError(async (req, res, next) => {

@@ -2,7 +2,7 @@ import { Category } from "../../../database/models/category.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import slugify from "slugify";
-import { deleteOne, getAll } from "../../utils/handlers.js";
+import { deleteOne, getAll } from "../../utils/factoryHandlers.js";
 
 const addCategory = catchError(async (req, res) => {
   // const category = await Category.create({ ...req.body, createdBy: req.user.id });

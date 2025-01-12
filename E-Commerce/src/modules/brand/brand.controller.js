@@ -2,7 +2,7 @@ import { Brand } from "../../../database/models/brand.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import slugify from "slugify";
-import { deleteOne, getAll } from "../../utils/handlers.js";
+import { deleteOne, getAll } from "../../utils/factoryHandlers.js";
 
 const addBrand = catchError(async (req, res) => {
   req.body.slug = slugify(req.body.name, { lower: true });
