@@ -1,6 +1,6 @@
 import { SystemError } from "../utils/systemError.js";
 
-export const validate = (schema) => {
+export const validateSchema = (schema) => {
   return (req, res, next) => {
     const { value, error } = schema.validate(
       { ...req.body, ...req.params, ...req.query },

@@ -1,5 +1,5 @@
 import express from "express"; // or: import {Router} from "express";
-import { validate } from "../../middlewares/validate.js";
+import { validateSchema } from "../../middlewares/validateSchema.js";
 import {
   addCategoryValidationSchema,
   updateCategoryValidationSchema,
@@ -24,14 +24,14 @@ categoryRoutes.use("/:categorySlug/subcategories", subCategoryRoutes);
 categoryRoutes.post(
   `/`,
   fileUpload("categories").single("image"), // parse the request body (form-data) using multer.
-  validate(addCategoryValidationSchema, "image"), // validate the request body (form-data) after multer parsing it. that's why we use the validate middleware after the fileUpload middleware.
+  validateSchema(addCategoryValidationSchema, "image"), // validate the request body (form-data) after multer parsing it. that's why we use the validate middleware after the fileUpload middleware.
   addCategory
 );
-categoryRoutes.get(`/`, validate(getAllCategoriesValidationSchema), getAllCategories);
+categoryRoutes.get(`/`, validateSchema(getAllCategoriesValidationSchema), getAllCategories);
 categoryRoutes.get(`/:slug`, getSingleCategory);
 categoryRoutes.put(
   `/:slug`,
-  validate(updateCategoryValidationSchema, "image"),
+  validateSchema(updateCategoryValidationSchema, "image"),
   fileUpload("categories").single("image"),
   updateCategory
 );

@@ -1,6 +1,6 @@
 import { SystemError } from "../utils/systemError.js";
 
-export const validate = (schema, field) => {
+export const validateSchema = (schema, field) => {
   return (req, res, next) => {
     // Handle multiple file uploads from req.files
     let dataToValidate = {

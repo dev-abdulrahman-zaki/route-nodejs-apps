@@ -1,5 +1,5 @@
 import express from "express"; // or: import {Router} from "express";
-import { validate } from "../../middlewares/validate.js";
+import { validateSchema } from "../../middlewares/validateSchema.js";
 import {
   addSubCategoryValidationSchema,
   updateSubCategoryValidationSchema,
@@ -16,14 +16,14 @@ import {
 
 subCategoryRoutes.post(
   `/`,
-  validate(addSubCategoryValidationSchema),
+  validateSchema(addSubCategoryValidationSchema),
   addSubCategory
 );
 subCategoryRoutes.get(`/`, getAllSubCategories);
 subCategoryRoutes.get(`/:slug`, getSingleSubCategory);
 subCategoryRoutes.put(
   `/:slug`,
-  validate(updateSubCategoryValidationSchema),
+  validateSchema(updateSubCategoryValidationSchema),
   updateSubCategory
 );
 subCategoryRoutes.delete(`/:slug`, deleteSubCategory);

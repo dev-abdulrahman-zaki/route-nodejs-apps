@@ -1,5 +1,5 @@
 import express from "express"; // or: import {Router} from "express";
-import { validate } from "../../middlewares/validate.js";
+import { validateSchema } from "../../middlewares/validateSchema.js";
 import { addNoteValidationSchema, updateNoteValidationSchema } from "./note.validation.js";
 const noteRoutes = express.Router();
 
@@ -14,9 +14,9 @@ import {
 /*
 or: noteRoutes.use(checkAuth);
 */
-noteRoutes.post(`/`, validate(addNoteValidationSchema), addNote);
+noteRoutes.post(`/`, validateSchema(addNoteValidationSchema), addNote);
 noteRoutes.get(`/`, getAllNotes);
-noteRoutes.put(`/:id`, validate(updateNoteValidationSchema), updateNote);
+noteRoutes.put(`/:id`, validateSchema(updateNoteValidationSchema), updateNote);
 noteRoutes.delete(`/:id`, deleteNote);
 
 export default noteRoutes;
