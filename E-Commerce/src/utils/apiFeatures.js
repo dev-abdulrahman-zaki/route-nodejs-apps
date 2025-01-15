@@ -36,11 +36,17 @@ class ApiFeatures {
     return this;
   }
   // ===== 4- Search by name or description (default) =====
+  // By default, searches in name and description fields
   search(fields = ["name", "description"]) {
     if (this.queryString.search) {
       this.mongooseQuery.find({
+        // Look in ANY of these fields ($or)
         $or: fields.map((field) => ({
-          [field]: { $regex: this.queryString.search, $options: "i" },
+          // For each field (name, description)
+          [field]: {
+            $regex: this.queryString.search, // Look for this pattern
+            $options: "i", // Case insensitive search
+          },
         })),
       });
     }
@@ -53,7 +59,9 @@ class ApiFeatures {
     const skip = (page - 1) * limit;
 
     // Clone the query to get result documents count without pagination
-    const countQuery = this.mongooseQuery.model.find(this.mongooseQuery.getQuery());
+    const countQuery = this.mongooseQuery.model.find(
+      this.mongooseQuery.getQuery()
+    );
     const resultDocumentsCount = await countQuery.countDocuments();
     const totalCount = await this.mongooseQuery.model.countDocuments();
     this.metaData = {
@@ -61,9 +69,10 @@ class ApiFeatures {
       skip,
       totalCount,
       resultsCount: resultDocumentsCount,
-      totalPages: Math.ceil(resultDocumentsCount / limit),      
+      totalPages: Math.ceil(resultDocumentsCount / limit),
       currentPage: page,
-      nextPage: page + 1 <= Math.ceil(resultDocumentsCount / limit) ? page + 1 : null,
+      nextPage:
+        page + 1 <= Math.ceil(resultDocumentsCount / limit) ? page + 1 : null,
       previousPage: page - 1 > 0 ? page - 1 : null,
     };
     this.mongooseQuery.skip(skip).limit(limit);
