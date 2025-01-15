@@ -131,7 +131,7 @@ const getAllProductsValidationSchema = Joi.object({
     .default("")
     .options({ convert: true }),
   ratingsQuantity: Joi.number().min(0).default("").options({ convert: true }),
-  // createdBy: Joi.string().hex().length(24).default(""),
+  createdBy: Joi.string().hex().length(24).default(""),
   // createdAt: Joi.date().default(""),
   // ===== 2- Sort =====
   sort: Joi.string()
