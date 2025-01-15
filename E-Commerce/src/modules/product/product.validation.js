@@ -132,14 +132,14 @@ const getAllProductsValidationSchema = Joi.object({
     .options({ convert: true }),
   ratingsQuantity: Joi.number().min(0).default("").options({ convert: true }),
   createdBy: Joi.string().hex().length(24).default(""),
-  // createdAt: Joi.date().default(""),
+  createdAt: Joi.date().less("now"), // Must be before current time
   // ===== 2- Sort =====
   sort: Joi.string()
     .lowercase()
     .custom((queryValue, helpers) =>
       handleValidValue(queryValue, helpers, validSortFields)
     )
-    .default("-createdAt"),
+    .default("-createdAt"), // Apply default if result of handleValidValue is undefined
   // ===== 3- Select =====
   fields: Joi.string()
     .lowercase()
@@ -148,7 +148,7 @@ const getAllProductsValidationSchema = Joi.object({
     )
     .default(""),
   // ===== 4- Search =====
-  search: Joi.string().default("").lowercase(),
+  search: Joi.string().lowercase().default(""),
   // ===== 5- Pagination =====
   page: Joi.number().integer().positive().default(1).options({ convert: true }),
   limit: Joi.number()

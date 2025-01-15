@@ -13,6 +13,7 @@ const getAllCategoriesValidationSchema = Joi.object({
 
   // ===== 2- Sort =====
   sort: Joi.string()
+    // todo: Why allow underscores? 
     .pattern(/^[a-zA-Z,\-_ ]+$/)  // Allow letters, commas, hyphens, underscores
     .default('-createdAt')  // Sort by newest first by default
     .messages({

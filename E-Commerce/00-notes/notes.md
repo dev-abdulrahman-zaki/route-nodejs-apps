@@ -35,6 +35,25 @@ getAllSubCategories
     ?price[sort]=desc
     ?price[sort]=asc,desc
     <!-- ?price[sort]=price,name -->
+    // Simple queries
+    ?price=100
+    ?stock=50
+
+    // Operator queries
+    ?price[gte]=100
+    ?price[lt]=1000
+    ?stock[gt]=0
+    ?ratingsAverage[gte]=4
+    ?createdAt[lt]=2024-01-15
+
+    // String field queries
+    ?category[in]=["id1","id2"]
+    ?brand[regex]=apple
+    ?subcategory[exists]=true
+
+    // Multiple operators
+    ?price[gte]=100&price[lt]=1000
+
 3- Sort.
     ?sort=price
     ?sort=-price
