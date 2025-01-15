@@ -118,16 +118,9 @@ const validSelectFields = [
 ];
 
 const getAllProductsValidationSchema = Joi.object({
-  // ===== 1- Pagination =====
-  page: Joi.number().integer().positive().default(1).options({ convert: true }),
-  limit: Joi.number()
-    .integer()
-    .positive()
-    .max(100) // Prevents requesting too much data at once
-    .default(20)
-    .options({ convert: true }),
-  // ===== 2- Filter =====
+  // ===== 1- Filter =====
   price: Joi.number().min(0).default("").options({ convert: true }),
+  sold: Joi.number().min(0).default("").options({ convert: true }),
   stock: Joi.number().min(0).default("").options({ convert: true }),
   category: Joi.string().default(""),
   subcategory: Joi.string().default(""),
@@ -138,22 +131,32 @@ const getAllProductsValidationSchema = Joi.object({
     .default("")
     .options({ convert: true }),
   ratingsQuantity: Joi.number().min(0).default("").options({ convert: true }),
-  // ===== 3- Sort =====
+  // createdBy: Joi.string().hex().length(24).default(""),
+  // createdAt: Joi.date().default(""),
+  // ===== 2- Sort =====
   sort: Joi.string()
     .lowercase()
     .custom((queryValue, helpers) =>
       handleValidValue(queryValue, helpers, validSortFields)
     )
     .default("-createdAt"),
-  // ===== 4- Select =====
+  // ===== 3- Select =====
   fields: Joi.string()
     .lowercase()
     .custom((queryValue, helpers) =>
       handleValidValue(queryValue, helpers, validSelectFields)
     )
     .default(""),
-  // ===== 5- Search =====
+  // ===== 4- Search =====
   search: Joi.string().default("").lowercase(),
+  // ===== 5- Pagination =====
+  page: Joi.number().integer().positive().default(1).options({ convert: true }),
+  limit: Joi.number()
+    .integer()
+    .positive()
+    .max(100) // Prevents requesting too much data at once
+    .default(20)
+    .options({ convert: true }),
 });
 
 export {
