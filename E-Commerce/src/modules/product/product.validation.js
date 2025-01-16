@@ -120,9 +120,9 @@ const validSelectFields = [
 const createNumberFilterSchema = () =>
   Joi.alternatives()
     .try(
-      Joi.number(),
+      Joi.number(), // ✓ price=100
       Joi.object({
-        gt: Joi.number(), // ✓ price[gt]=100
+        gt: Joi.number(), // ✓ price[gt]=100 - // { price: { gt: '2' } }
         gte: Joi.number(), // ✓ price[gte]=100
         lt: Joi.number(), // ✓ price[lt]=200
         lte: Joi.number(), // ✓ price[lte]=200
@@ -134,45 +134,40 @@ const createNumberFilterSchema = () =>
         regex: Joi.string(), // ✓ price[regex]=^[0-9]+$
       }).min(0)
     )
-    .default(undefined)
     .options({ convert: true });
 
 const createStringFilterSchema = () =>
-  Joi.alternatives()
-    .try(
-      Joi.string(),
-      Joi.object({
-        eq: Joi.string(), // ✓ brand[eq]=apple
-        ne: Joi.string(), // ✓ brand[ne]=apple
-        in: Joi.alternatives().try(
-          Joi.array().items(Joi.string()),
-          Joi.string() // ✓ both category[in]=["id1","id2"] and category[in]=id1,id2
-        ),
-        nin: Joi.alternatives().try(
-          Joi.array().items(Joi.string()),
-          Joi.string()
-        ),
-        regex: Joi.string(), // ✓ brand[regex]=apple
-        exists: Joi.boolean(), // ✓ brand[exists]=true
-      }).min(1)
-    )
-    .default(undefined);
+  Joi.alternatives().try(
+    Joi.string(), // ✓ brand=apple
+    Joi.object({
+      eq: Joi.string(), // ✓ brand[eq]=apple
+      ne: Joi.string(), // ✓ brand[ne]=apple
+      in: Joi.alternatives().try(
+        Joi.array().items(Joi.string()),
+        Joi.string() // ✓ both category[in]=["id1","id2"] and category[in]=id1,id2
+      ),
+      nin: Joi.alternatives().try(
+        Joi.array().items(Joi.string()),
+        Joi.string()
+      ),
+      regex: Joi.string(), // ✓ brand[regex]=apple
+      exists: Joi.boolean(), // ✓ brand[exists]=true
+    }).min(1)
+  );
 
 const createDateFilterSchema = () =>
-  Joi.alternatives()
-    .try(
-      Joi.date(),
-      Joi.object({
-        gt: Joi.date(), // ✓ createdAt[gt]=2024-01-15
-        gte: Joi.date(), // ✓ createdAt[gte]=2024-01-15
-        lt: Joi.date(), // ✓ createdAt[lt]=2024-01-15
-        lte: Joi.date(), // ✓ createdAt[lte]=2024-01-15
-        eq: Joi.date(), // ✓ createdAt[eq]=2024-01-15
-        ne: Joi.date(), // ✓ createdAt[ne]=2024-01-15
-        exists: Joi.boolean(), // ✓ createdAt[exists]=true
-      }).min(1)
-    )
-    .default(undefined);
+  Joi.alternatives().try(
+    Joi.date(),
+    Joi.object({
+      gt: Joi.date(), // ✓ createdAt[gt]=2024-01-15
+      gte: Joi.date(), // ✓ createdAt[gte]=2024-01-15
+      lt: Joi.date(), // ✓ createdAt[lt]=2024-01-15
+      lte: Joi.date(), // ✓ createdAt[lte]=2024-01-15
+      eq: Joi.date(), // ✓ createdAt[eq]=2024-01-15
+      ne: Joi.date(), // ✓ createdAt[ne]=2024-01-15
+      exists: Joi.boolean(), // ✓ createdAt[exists]=true
+    }).min(1)
+  );
 
 const getAllProductsValidationSchema = Joi.object({
   // ===== 1- Filter =====
@@ -185,7 +180,6 @@ const getAllProductsValidationSchema = Joi.object({
   ratingsAverage: Joi.number()
     .min(0)
     .max(5)
-    .default("")
     .options({ convert: true }),
   // ratingsAverage: createNumberFilterSchema()
   // .custom((value, helpers) => {
@@ -201,7 +195,7 @@ const getAllProductsValidationSchema = Joi.object({
   //   return value;
   // })
   ratingsQuantity: createNumberFilterSchema(),
-  createdBy: Joi.string().hex().length(24).default(""),
+  createdBy: Joi.string().hex().length(24),
   createdAt: Joi.date().less("now"), // Must be before current time
   // createdAt: createDateFilterSchema()
   // .custom((value, helpers) => {
@@ -228,10 +222,9 @@ const getAllProductsValidationSchema = Joi.object({
     .lowercase()
     .custom((queryValue, helpers) =>
       handleValidValue(queryValue, helpers, validSelectFields)
-    )
-    .default(""),
+    ),
   // ===== 4- Search =====
-  search: Joi.string().lowercase().default(""),
+  search: Joi.string().lowercase(),
   // ===== 5- Pagination =====
   page: Joi.number().integer().positive().default(1).options({ convert: true }),
   limit: Joi.number()

@@ -4,6 +4,7 @@ import { SystemError } from "./systemError.js";
 
 export const getAll = (Model, validSearchFields = ["name", "description"], filterObj = {}) => {
   return catchError(async (req, res, next) => {
+    // console.log(req.query)
     const apiFeatures = await new ApiFeatures(Model.find(filterObj), req.query)
       .filter()
       .sort()
