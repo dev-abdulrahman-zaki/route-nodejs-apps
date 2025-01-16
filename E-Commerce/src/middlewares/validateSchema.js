@@ -4,9 +4,9 @@ export const validateSchema = (schema, field) => {
   return (req, res, next) => {
     // Handle multiple file uploads from req.files
     let dataToValidate = {
-      ...req.body,
-      ...req.params,
-      ...req.query,
+      body: req.body,
+      params: req.params,
+      query: req.query,
       ...(field && { [field]: req.file }),
     };
 
@@ -14,11 +14,11 @@ export const validateSchema = (schema, field) => {
     if (req.files) {
       // For single files in fields, get the first file
       if (req.files.imageCover) {
-        dataToValidate.imageCover = req.files.imageCover[0];
+        dataToValidate.body.imageCover = req.files.imageCover[0];
       }
       // For multiple files in fields
       if (req.files.images) {
-        dataToValidate.images = req.files.images;
+        dataToValidate.body.images = req.files.images;
       }
     }
 
@@ -28,9 +28,13 @@ export const validateSchema = (schema, field) => {
     if (error) {
       const errorMessages = error?.details.map((err) => err.message);
       //   res.status(400).json({ message: errorMessages });
-      next(new SystemError(errorMessages, 400));
+      return next(new SystemError(errorMessages, 400));
     }
-    req.body = value; // to use the validated data in the next middleware - modifies/transforms the request object
+
+    // Assign validated values back to their respective properties
+    req.body = value.body; // to use the validated data in the next middleware - modifies/transforms the request object
+    req.params = value.params;
+    req.query = value.query;
     next();
   };
 };

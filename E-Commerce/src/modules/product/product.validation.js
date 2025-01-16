@@ -170,69 +170,74 @@ const createDateFilterSchema = () =>
   );
 
 const getAllProductsValidationSchema = Joi.object({
-  // ===== 1- Filter =====
-  price: createNumberFilterSchema(),
-  sold: createNumberFilterSchema(),
-  stock: createNumberFilterSchema(),
-  category: createStringFilterSchema(),
-  subcategory: createStringFilterSchema(),
-  brand: createStringFilterSchema(),
-  ratingsAverage: Joi.number()
-    .min(0)
-    .max(5)
-    .options({ convert: true }),
-  // ratingsAverage: createNumberFilterSchema()
-  // .custom((value, helpers) => {
-  //   // Additional validation for rating range
-  //   const checkRange = (num) => num >= 0 && num <= 5;
-  //   if (typeof value === 'number') {
-  //     if (!checkRange(value)) return helpers.error('number.max');
-  //   } else if (typeof value === 'object') {
-  //     for (const [key, val] of Object.entries(value)) {
-  //       if (!checkRange(val)) return helpers.error('number.max');
-  //     }
-  //   }
-  //   return value;
-  // })
-  ratingsQuantity: createNumberFilterSchema(),
-  createdBy: Joi.string().hex().length(24),
-  createdAt: Joi.date().less("now"), // Must be before current time
-  // createdAt: createDateFilterSchema()
-  // .custom((value, helpers) => {
-  //   // Additional validation for dates to be in the past
-  //   const checkPastDate = (date) => date < new Date();
-  //   if (value instanceof Date) {
-  //     if (!checkPastDate(value)) return helpers.error('date.max');
-  //   } else if (typeof value === 'object') {
-  //     for (const [key, val] of Object.entries(value)) {
-  //       if (!checkPastDate(val)) return helpers.error('date.max');
-  //     }
-  //   }
-  //   return value;
-  // })
-  // ===== 2- Sort =====
-  sort: Joi.string()
-    .lowercase()
-    .custom((queryValue, helpers) =>
-      handleValidValue(queryValue, helpers, validSortFields)
-    )
-    .default("-createdAt"), // Apply default if result of handleValidValue is undefined
-  // ===== 3- Select =====
-  fields: Joi.string()
-    .lowercase()
-    .custom((queryValue, helpers) =>
-      handleValidValue(queryValue, helpers, validSelectFields)
-    ),
-  // ===== 4- Search =====
-  search: Joi.string().lowercase(),
-  // ===== 5- Pagination =====
-  page: Joi.number().integer().positive().default(1).options({ convert: true }),
-  limit: Joi.number()
-    .integer()
-    .positive()
-    .max(100) // Prevents requesting too much data at once
-    .default(20)
-    .options({ convert: true }),
+  body: Joi.object().default({}),
+  params: Joi.object().default({}),
+  query: Joi.object({
+    // ===== 1- Filter =====
+    price: createNumberFilterSchema(),
+    sold: createNumberFilterSchema(),
+    stock: createNumberFilterSchema(),
+    category: createStringFilterSchema(),
+    subcategory: createStringFilterSchema(),
+    brand: createStringFilterSchema(),
+    ratingsAverage: Joi.number().min(0).max(5).options({ convert: true }),
+    // ratingsAverage: createNumberFilterSchema()
+    // .custom((value, helpers) => {
+    //   // Additional validation for rating range
+    //   const checkRange = (num) => num >= 0 && num <= 5;
+    //   if (typeof value === 'number') {
+    //     if (!checkRange(value)) return helpers.error('number.max');
+    //   } else if (typeof value === 'object') {
+    //     for (const [key, val] of Object.entries(value)) {
+    //       if (!checkRange(val)) return helpers.error('number.max');
+    //     }
+    //   }
+    //   return value;
+    // })
+    ratingsQuantity: createNumberFilterSchema(),
+    createdBy: Joi.string().hex().length(24),
+    createdAt: Joi.date().less("now"), // Must be before current time
+    // createdAt: createDateFilterSchema()
+    // .custom((value, helpers) => {
+    //   // Additional validation for dates to be in the past
+    //   const checkPastDate = (date) => date < new Date();
+    //   if (value instanceof Date) {
+    //     if (!checkPastDate(value)) return helpers.error('date.max');
+    //   } else if (typeof value === 'object') {
+    //     for (const [key, val] of Object.entries(value)) {
+    //       if (!checkPastDate(val)) return helpers.error('date.max');
+    //     }
+    //   }
+    //   return value;
+    // })
+    // ===== 2- Sort =====
+    sort: Joi.string()
+      .lowercase()
+      .custom((queryValue, helpers) =>
+        handleValidValue(queryValue, helpers, validSortFields)
+      )
+      .default("-createdAt"), // Apply default if result of handleValidValue is undefined
+    // ===== 3- Select =====
+    fields: Joi.string()
+      .lowercase()
+      .custom((queryValue, helpers) =>
+        handleValidValue(queryValue, helpers, validSelectFields)
+      ),
+    // ===== 4- Search =====
+    search: Joi.string().lowercase(),
+    // ===== 5- Pagination =====
+    page: Joi.number()
+      .integer()
+      .positive()
+      .default(1)
+      .options({ convert: true }),
+    limit: Joi.number()
+      .integer()
+      .positive()
+      .max(100) // Prevents requesting too much data at once
+      .default(20)
+      .options({ convert: true }),
+  }).default({}),
 });
 
 export {
