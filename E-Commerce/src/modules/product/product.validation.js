@@ -1,5 +1,6 @@
 import Joi from "joi";
 import handleValidValue from "../../utils/handleValidValue.js";
+import { fileObject } from "../../utils/constants.js";
 
 const addProductValidationSchema = Joi.object({
   params: Joi.object().default({}),
@@ -32,40 +33,10 @@ const addProductValidationSchema = Joi.object({
   // Handle multiple file upload (.fields in this case)
   files: Joi.object({
     imageCover: Joi.array()
-      .items(
-        Joi.object({
-          fieldname: Joi.string().required(),
-          originalname: Joi.string().required(),
-          destination: Joi.string().required(),
-          filename: Joi.string().required(),
-          mimetype: Joi.string()
-            .valid("image/jpeg", "image/png", "image/jpg")
-            .required(),
-          encoding: Joi.string().required(),
-          size: Joi.number().max(1000000).required(),
-          path: Joi.string().required(),
-        })
-      )
+      .items(fileObject)
       .length(1) // Must have exactly 1 file
       .required(),
-    images: Joi.array()
-      .items(
-        Joi.object({
-          fieldname: Joi.string().required(),
-          originalname: Joi.string().required(),
-          destination: Joi.string().required(),
-          filename: Joi.string().required(),
-          mimetype: Joi.string()
-            .valid("image/jpeg", "image/png", "image/jpg")
-            .required(),
-          encoding: Joi.string().required(),
-          size: Joi.number().max(1000000).required(),
-          path: Joi.string().required(),
-        })
-      )
-      .min(1)
-      .max(10)
-      .required(),
+    images: Joi.array().items(fileObject).min(1).max(10).required(),
   }).default({}),
 });
 
@@ -98,39 +69,8 @@ const updateProductValidationSchema = Joi.object({
   file: Joi.object().default({}),
   // Handle multiple file upload (.fields or .array)
   files: Joi.object({
-    imageCover: Joi.array()
-      .items(
-        Joi.object({
-          fieldname: Joi.string().required(),
-          originalname: Joi.string().required(),
-          destination: Joi.string().required(),
-          filename: Joi.string().required(),
-          mimetype: Joi.string()
-            .valid("image/jpeg", "image/png", "image/jpg")
-            .required(),
-          encoding: Joi.string().required(),
-          size: Joi.number().max(1000000).required(),
-          path: Joi.string().required(),
-        })
-      )
-      .length(1), // Must have exactly 1 file
-    images: Joi.array()
-      .items(
-        Joi.object({
-          fieldname: Joi.string().required(),
-          originalname: Joi.string().required(),
-          destination: Joi.string().required(),
-          filename: Joi.string().required(),
-          mimetype: Joi.string()
-            .valid("image/jpeg", "image/png", "image/jpg")
-            .required(),
-          encoding: Joi.string().required(),
-          size: Joi.number().max(1000000).required(),
-          path: Joi.string().required(),
-        })
-      )
-      .min(1)
-      .max(10),
+    imageCover: Joi.array().items(fileObject).length(1), // Must have exactly 1 file
+    images: Joi.array().items(fileObject).min(1).max(10),
   }).default({}),
 });
 
