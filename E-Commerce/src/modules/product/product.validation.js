@@ -29,7 +29,7 @@ const addProductValidationSchema = Joi.object({
   }).default({}),
   // Handle single file upload (.single)
   file: Joi.object().default({}),
-  // Handle multiple file upload (.fields or .array)
+  // Handle multiple file upload (.fields in this case)
   files: Joi.object({
     imageCover: Joi.array()
       .items(
