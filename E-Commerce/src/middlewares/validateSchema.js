@@ -10,7 +10,7 @@ export const validateSchema = (schema, field) => {
       ...(field && { [field]: req.file }),
     };
 
-    // Handle files from multer's fields
+    // Handle multiple files from multer's fields
     if (req.files) {
       // For single files in fields, get the first file
       if (req.files.imageCover) {
