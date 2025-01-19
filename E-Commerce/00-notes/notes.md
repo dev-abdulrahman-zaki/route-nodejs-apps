@@ -1,3 +1,10 @@
+- Validation Schema Boilerplate: 
+body: Joi.object().default({}),
+params: Joi.object().default({}),
+query: Joi.object().default({}),
+file: Joi.object().default({}),
+files: Joi.object().default({}),
+<!-- ====================================================================== -->
 ## 18-mergParams
 1- Parent Route: category.routes.js
 categoryRoutes.use("/:categorySlug/subcategories", subCategoryRoutes);
