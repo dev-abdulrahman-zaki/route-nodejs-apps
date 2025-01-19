@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { fileObject } from "../../utils/constants";
+import { fileObject } from "../../utils/constants.js";
 import {
   handleValidValue,
   createDateFilterSchema,
