@@ -7,7 +7,7 @@ hint: use fs module to remove the old image from the folder.
 ## apply validation (all files)
 ===========
 ## populate
-Can I use this with Mongoose's populate method?
+Can I use "this" with Mongoose's populate method?
 ===========
 ## req.body || "hex"
 ===========
