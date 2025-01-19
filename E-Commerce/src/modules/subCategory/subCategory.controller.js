@@ -20,7 +20,7 @@ const addSubCategory = catchError(async (req, res, next) => {
 const getAllSubCategories = (req, res, next) => {
   const filterObj = {};
   if (req.params.categorySlug) filterObj.category = req.params.categorySlug;
-  return getAll(SubCategory, ["name", "description"], filterObj)(req, res, next); //getAll returns a middleware function that needs to be called with (req, res, next)
+  return getAll(SubCategory, ["name"], filterObj)(req, res, next); //getAll returns a middleware function that needs to be called with (req, res, next)
 };
 
 const getSingleSubCategory = catchError(async (req, res, next) => {

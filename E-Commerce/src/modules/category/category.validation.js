@@ -1,51 +1,60 @@
 import Joi from "joi";
-import handleValidValue from "../../utils/handleValidValue.js";
+import {
+  handleValidValue,
+  createDateFilterSchema,
+} from "../../utils/validationUtils.js";
 
 const addCategoryValidationSchema = Joi.object({
-  name: Joi.string().required().trim().min(3),
-  image: Joi.object({
-    fieldname: Joi.string().required(),
-    originalname: Joi.string().required(),
-    destination: Joi.string().required(),
-    filename: Joi.string().required(),
-    mimetype: Joi.string()
-      .valid("image/jpeg", "image/png", "image/jpg")
-      .required(),
-    encoding: Joi.string().required(),
-    size: Joi.number().max(1000000).required(),
-    path: Joi.string().required(),
-  }).required(),
+  params: Joi.object().default({}),
+  query: Joi.object().default({}),
+  file: fileObject.required().default({}),
+  files: Joi.object().default({}),
+  body: Joi.object({
+    name: Joi.string().required().trim().min(3),
+  }).default({}),
 });
 
 const updateCategoryValidationSchema = Joi.object({
-  name: Joi.string().trim().min(3),
-  image: Joi.object({
-    fieldname: Joi.string().required(),
-    originalname: Joi.string().required(),
-    destination: Joi.string().required(),
-    filename: Joi.string().required(),
-    mimetype: Joi.string()
-      .valid("image/jpeg", "image/png", "image/jpg")
-      .required(),
-    encoding: Joi.string().required(),
-    size: Joi.number().max(1000000).required(),
-    path: Joi.string().required(),
-  }),
+  params: Joi.object().default({}),
+  query: Joi.object().default({}),
+  file: fileObject.default({}),
+  files: Joi.object().default({}),
+  body: Joi.object({
+    name: Joi.string().trim().min(3),
+  }).default({}),
 });
 
-const validSortFields = ["createdAt"];
+const validSortFields = ["name", "createdAt"];
 
 const validSelectFields = ["name", "slug", "image", "createdBy", "createdAt"];
 
 const getAllCategoriesValidationSchema = Joi.object({
   // ===== 1- Filter =====
+  createdBy: Joi.string().hex().length(24),
+  createdAt: createDateFilterSchema()
+    // Additional validation for dates to be in the past
+    .custom((value, helpers) => {
+      const checkPastDate = (date) => date < new Date(); // equivalent to: .less("now") - Date Must be before current time
+      if (value instanceof Date) {
+        if (!checkPastDate(value))
+          return helpers.message("Creation date must be in the past");
+      } else if (typeof value === "object") {
+        for (const [key, val] of Object.entries(value)) {
+          if (!checkPastDate(val))
+            return helpers.message(
+              `Creation date in ${key} filter must be in the past`
+            );
+        }
+      }
+      return value;
+    }),
   // ===== 2- Sort =====
   sort: Joi.string()
-  .lowercase()
-  .custom((queryValue, helpers) =>
-    handleValidValue(queryValue, helpers, validSortFields)
-  )
-  .default("-createdAt"),
+    .lowercase()
+    .custom((queryValue, helpers) =>
+      handleValidValue(queryValue, helpers, validSortFields)
+    )
+    .default("-createdAt"),
   // ===== 3- Select =====
   fields: Joi.string()
     .lowercase()

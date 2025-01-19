@@ -13,7 +13,7 @@ const addBrand = catchError(async (req, res) => {
   res.status(201).json({ message: "success", brand });
 });
 
-const getAllBrands = getAll(Brand);
+const getAllBrands = getAll(Brand, ["name"]);
 
 const getSingleBrand = catchError(async (req, res, next) => {
   const brand = await Brand.findOne({ slug: req.params.slug }).populate(

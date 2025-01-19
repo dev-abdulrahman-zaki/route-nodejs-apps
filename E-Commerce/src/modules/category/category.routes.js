@@ -24,14 +24,14 @@ categoryRoutes.use("/:categorySlug/subcategories", subCategoryRoutes);
 categoryRoutes.post(
   `/`,
   fileUpload("categories").single("image"), // parse the request body (form-data) using multer.
-  validateSchema(addCategoryValidationSchema, "image"), // validate the request body (form-data) after multer parsing it. that's why we use the validate middleware after the fileUpload middleware.
+  validateSchema(addCategoryValidationSchema), // validate the request body (form-data) after multer parsing it. that's why we use the validate middleware after the fileUpload middleware.
   addCategory
 );
 categoryRoutes.get(`/`, validateSchema(getAllCategoriesValidationSchema), getAllCategories);
 categoryRoutes.get(`/:slug`, getSingleCategory);
 categoryRoutes.put(
   `/:slug`,
-  validateSchema(updateCategoryValidationSchema, "image"),
+  validateSchema(updateCategoryValidationSchema),
   fileUpload("categories").single("image"),
   updateCategory
 );
