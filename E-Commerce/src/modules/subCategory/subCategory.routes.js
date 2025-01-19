@@ -22,7 +22,7 @@ subCategoryRoutes.post(
 );
 subCategoryRoutes.get(
   `/`,
-  getAllSubCategoriesValidationSchema,
+  validateSchema(getAllSubCategoriesValidationSchema),
   getAllSubCategories
 );
 subCategoryRoutes.get(`/:slug`, getSingleSubCategory);
