@@ -3,6 +3,7 @@ import { validateSchema } from "../../middlewares/validateSchema.js";
 import {
   addSubCategoryValidationSchema,
   updateSubCategoryValidationSchema,
+  getAllSubCategoriesValidationSchema,
 } from "./subCategory.validation.js";
 const subCategoryRoutes = express.Router({ mergeParams: true });
 
@@ -19,7 +20,11 @@ subCategoryRoutes.post(
   validateSchema(addSubCategoryValidationSchema),
   addSubCategory
 );
-subCategoryRoutes.get(`/`, getAllSubCategories);
+subCategoryRoutes.get(
+  `/`,
+  getAllSubCategoriesValidationSchema,
+  getAllSubCategories
+);
 subCategoryRoutes.get(`/:slug`, getSingleSubCategory);
 subCategoryRoutes.put(
   `/:slug`,
