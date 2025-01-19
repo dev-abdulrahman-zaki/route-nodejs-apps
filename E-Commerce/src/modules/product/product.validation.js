@@ -189,7 +189,7 @@ const getAllProductsValidationSchema = Joi.object({
       .default(20)
       .options({ convert: true }),
   }).default({}),
-  file: fileObject.required().default({}),
+  file: Joi.object().default({}),
   files: Joi.object().default({}),
 });
 

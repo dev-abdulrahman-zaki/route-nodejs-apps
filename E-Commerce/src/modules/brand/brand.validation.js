@@ -23,7 +23,7 @@ const updateBrandValidationSchema = Joi.object({
   body: Joi.object({
     name: Joi.string().trim().min(3),
   }).default({}),
-  file: Joi.fileObject.default({}),
+  file: fileObject.default({}),
   files: Joi.object().default({}),
 });
 
@@ -34,7 +34,7 @@ const validSelectFields = ["name", "slug", "logo", "createdBy", "createdAt"];
 const getAllBrandsValidationSchema = Joi.object({
   params: Joi.object().default({}),
   body: Joi.object().default({}),
-  file: fileObject.required().default({}),
+  file: Joi.object().default({}),
   files: Joi.object().default({}),
   query: Joi.object({
     // ===== 1- Filter =====
