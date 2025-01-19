@@ -34,7 +34,9 @@ const validSelectFields = [
 ];
 
 const getAllSubCategoriesValidationSchema = Joi.object({
-  params: Joi.object().default({}),
+  params: Joi.object({
+    categorySlug: Joi.string().hex().length(24),
+  }).default({}),
   body: Joi.object().default({}),
   file: Joi.object().default({}),
   files: Joi.object().default({}),
