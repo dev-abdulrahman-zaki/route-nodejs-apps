@@ -1,23 +1,23 @@
 import { User } from "../../../database/models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { sendEmail } from "../../services/emails/sendEmail.js";
+// import { sendEmail } from "../../services/emails/sendEmail.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
-
 
 const signup = catchError(async (req, res) => {
   const user = new User(req.body);
   await user.save();
+  // generate token in signup to redirect the user to Homepage after signing up without signing in again. (UX)
   const token = jwt.sign(
     { id: user._id, name: user.name, email: user.email, role: user.role },
     process.env.JWT_SECRET
   );
-  await sendEmail(
-    req.body.email,
-    "Verify your email",
-    "Click here to verify your email"
-  );
+  // await sendEmail(
+  //   req.body.email,
+  //   "Verify your email",
+  //   "Click here to verify your email"
+  // );
   user.password = undefined; // to hide the password from the response
   return res.status(201).json({ message: "success", user, token });
 });
