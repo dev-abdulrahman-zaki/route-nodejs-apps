@@ -7,6 +7,7 @@ import {
   getAllBrandsValidationSchema,
 } from "./brand.validation.js";
 import { checkAuth } from "../../middlewares/checkAuth.js";
+import { allowedTo } from "../../middlewares/allowedTo.js";
 const brandRoutes = express.Router();
 
 import {
@@ -20,6 +21,7 @@ import {
 brandRoutes.post(
   `/`,
   checkAuth,
+  allowedTo("admin"),
   fileUpload("brands").single("logo"),
   validateSchema(addBrandValidationSchema),
   addBrand
@@ -33,10 +35,11 @@ brandRoutes.get(`/:slug`, getSingleBrand);
 brandRoutes.put(
   `/:slug`,
   checkAuth,
+  allowedTo("admin"),
   fileUpload("brands").single("logo"),
   validateSchema(updateBrandValidationSchema),
   updateBrand
 );
-brandRoutes.delete(`/:slug`, checkAuth, deleteBrand);
+brandRoutes.delete(`/:slug`, checkAuth, allowedTo("admin"), deleteBrand);
 
 export default brandRoutes;
