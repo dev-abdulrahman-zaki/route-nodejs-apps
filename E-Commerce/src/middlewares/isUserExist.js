@@ -6,7 +6,6 @@ const isUserExist = async (req, res, next) => {
     email: req.body.email.toLowerCase(),
   });
   if (isUserExist) {
-    // return res.status(409).json({ message: "User already exists" });
     return next(new SystemError("User already exists", 409));
   }
   next();
