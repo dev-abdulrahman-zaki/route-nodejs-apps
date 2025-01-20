@@ -1,12 +1,24 @@
 import express from "express";
 import { validateSchema } from "../../middlewares/validateSchema.js";
-import { isUserExist } from "../../middlewares/isUserExist.js";
-import { signup, signin, verifyEmail } from "./user.controller.js";
-import { signupValidationSchema, signinValidationSchema } from "./user.validation.js";
-
+import {
+  addUserValidationSchema,
+  updateUserValidationSchema,
+  getAllUsersValidationSchema,
+} from "./user.validation.js";
 const userRoutes = express.Router();
-userRoutes.post(`/signup`, validateSchema(signupValidationSchema), isUserExist, signup);
-userRoutes.post(`/signin`, validateSchema(signinValidationSchema), signin);
-userRoutes.get(`/verify/:token`, verifyEmail);
+
+import {
+  addUser,
+  getAllUsers,
+  getSingleUser,
+  updateUser,
+  deleteUser,
+} from "./user.controller.js";
+
+userRoutes.post(`/`, validateSchema(addUserValidationSchema), addUser);
+userRoutes.get(`/`, validateSchema(getAllUsersValidationSchema), getAllUsers);
+userRoutes.get(`/:id`, getSingleUser);
+userRoutes.put(`/:id`, validateSchema(updateUserValidationSchema), updateUser);
+userRoutes.delete(`/:id`, deleteUser);
 
 export default userRoutes;

@@ -12,4 +12,5 @@ export const indexRoutes = (app) => {
   app.use("/api/v1/subcategories", checkAuth, subCategoryRoutes);
   app.use("/api/v1/brands", checkAuth, brandRoutes);
   app.use("/api/v1/products", checkAuth, productRoutes);
+  app.use("/api/v1/users", checkAuth, userRoutes);
 };

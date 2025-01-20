@@ -71,9 +71,22 @@ const createDateFilterSchema = () =>
     }).min(1)
   );
 
+const createBooleanFilterSchema = () =>
+  Joi.alternatives().try(
+    Joi.boolean(),
+    Joi.object({
+      eq: Joi.boolean(), // ✓ isBlocked[eq]=true
+      ne: Joi.boolean(), // ✓ isBlocked[ne]=true
+      in: Joi.array().items(Joi.boolean()).single(), // ✓ isBlocked[in]=true,false
+      nin: Joi.array().items(Joi.boolean()).single(), // ✓ isBlocked[nin]=true,false
+      exists: Joi.boolean(), // ✓ isBlocked[exists]=true
+    }).min(1)
+  );
+
 export {
   handleValidValue,
   createNumberFilterSchema,
   createStringFilterSchema,
   createDateFilterSchema,
+  createBooleanFilterSchema,
 };
