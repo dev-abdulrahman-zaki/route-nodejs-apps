@@ -27,6 +27,8 @@ const signinValidationSchema = Joi.object({
 
 const changePasswordValidationSchema = Joi.object({
   body: Joi.object({
+    // todo: search by user id from token instead of email
+    email: Joi.string().email().required(),
     password: Joi.string().min(8).required().trim(),
     newPassword: Joi.string()
       .min(8)

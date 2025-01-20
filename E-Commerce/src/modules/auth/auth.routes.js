@@ -1,8 +1,14 @@
 import express from "express";
-import { signup, signin, verifyEmail } from "./auth.controller.js";
+import {
+  signup,
+  signin,
+  verifyEmail,
+  changePassword,
+} from "./auth.controller.js";
 import {
   signupValidationSchema,
   signinValidationSchema,
+  changePasswordValidationSchema,
 } from "./auth.validation.js";
 import { validateSchema } from "../../middlewares/validateSchema.js";
 import { isUserExist } from "../../middlewares/isUserExist.js";
