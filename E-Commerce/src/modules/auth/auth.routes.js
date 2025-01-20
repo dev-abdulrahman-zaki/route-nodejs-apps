@@ -12,6 +12,7 @@ import {
 } from "./auth.validation.js";
 import { validateSchema } from "../../middlewares/validateSchema.js";
 import { isUserExist } from "../../middlewares/isUserExist.js";
+import { checkAuth } from "../../middlewares/checkAuth.js";
 
 const authRoutes = express.Router();
 authRoutes.post(
@@ -24,7 +25,7 @@ authRoutes.post(`/signin`, validateSchema(signinValidationSchema), signin);
 authRoutes.get(`/verify/:token`, verifyEmail);
 authRoutes.patch(
   `/change-password`,
-  // ,protectedRoutes - is it like checkAuth?
+  checkAuth,
   validateSchema(changePasswordValidationSchema),
   changePassword
 );

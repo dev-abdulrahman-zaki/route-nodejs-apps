@@ -6,6 +6,7 @@ import {
   getAllUsersValidationSchema,
 } from "./user.validation.js";
 import { isUserExist } from "../../middlewares/isUserExist.js";
+import { checkAuth } from "../../middlewares/checkAuth.js";
 const userRoutes = express.Router();
 
 import {
@@ -18,13 +19,14 @@ import {
 
 userRoutes.post(
   `/`,
+  checkAuth,
   validateSchema(addUserValidationSchema),
   isUserExist,
   addUser
 );
-userRoutes.get(`/`, validateSchema(getAllUsersValidationSchema), getAllUsers);
-userRoutes.get(`/:id`, getSingleUser);
-userRoutes.put(`/:id`, validateSchema(updateUserValidationSchema), updateUser);
-userRoutes.delete(`/:id`, deleteUser);
+userRoutes.get(`/`, checkAuth, validateSchema(getAllUsersValidationSchema), getAllUsers);
+userRoutes.get(`/:id`, checkAuth, getSingleUser);
+userRoutes.put(`/:id`, checkAuth, validateSchema(updateUserValidationSchema), updateUser);
+userRoutes.delete(`/:id`, checkAuth, deleteUser);
 
 export default userRoutes;

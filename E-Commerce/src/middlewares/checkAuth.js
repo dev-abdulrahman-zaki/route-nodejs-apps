@@ -22,8 +22,10 @@ export const checkAuth = async (req, res, next) => {
   if (!user) return next(new SystemError("User not found", 401));
   // 05- check if token is valid by comparing token iat (issued at) after last password change (updatedAt or passwordChangedAt) or last logout time (lastLoginAt)
   if (
-    user?.passwordChangedAt.getTime() / 1000 > decodedToken.iat ||
-    user?.lastLoginAt.getTime() / 1000 > decodedToken.iat
+    (user?.passwordChangedAt &&
+      user?.passwordChangedAt?.getTime() / 1000 > decodedToken.iat) ||
+    (user?.lastLoginAt &&
+      user?.lastLoginAt?.getTime() / 1000 > decodedToken.iat)
   ) {
     return next(new SystemError("Token expired", 401));
   }

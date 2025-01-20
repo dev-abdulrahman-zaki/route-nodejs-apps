@@ -5,6 +5,7 @@ import {
   updateSubCategoryValidationSchema,
   getAllSubCategoriesValidationSchema,
 } from "./subCategory.validation.js";
+import { checkAuth } from "../../middlewares/checkAuth.js";
 const subCategoryRoutes = express.Router({ mergeParams: true });
 
 import {
@@ -17,6 +18,7 @@ import {
 
 subCategoryRoutes.post(
   `/`,
+  checkAuth,
   validateSchema(addSubCategoryValidationSchema),
   addSubCategory
 );
@@ -28,9 +30,10 @@ subCategoryRoutes.get(
 subCategoryRoutes.get(`/:slug`, getSingleSubCategory);
 subCategoryRoutes.put(
   `/:slug`,
+  checkAuth,
   validateSchema(updateSubCategoryValidationSchema),
   updateSubCategory
 );
-subCategoryRoutes.delete(`/:slug`, deleteSubCategory);
+subCategoryRoutes.delete(`/:slug`, checkAuth, deleteSubCategory);
 
 export default subCategoryRoutes;

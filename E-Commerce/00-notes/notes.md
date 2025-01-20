@@ -59,4 +59,5 @@ getAllSubCategories
     ?search=title,description,price,name
     ?search=title,description,price,name,category
 <!-- ====================================================================== -->
-
+- What should be stored in schema (Database), and what should be stored in validation schema (Joi)?
+ref: https://poe.com/s/RItpDrn7a0ADzzEvhXV3
