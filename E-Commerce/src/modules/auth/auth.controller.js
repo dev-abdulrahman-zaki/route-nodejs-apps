@@ -62,4 +62,35 @@ const verifyEmail = catchError(async (req, res, next) => {
   });
 });
 
-export { signup, signin, verifyEmail };
+const changePassword = catchError(async (req, res, next) => {
+  // todo: search by user id from token instead of email
+  const user = await User.findOne({ email: req.body.email });
+  const isPasswordCorrect =
+    user && (await bcrypt.compare(req.body.password, user.password));
+  if (!user || !isPasswordCorrect) {
+    return next(new SystemError("Invalid email or password", 401));
+  }
+  user.password = req.body.newPassword;
+  await user.save();
+  jwt.sign(
+    { id: user._id, name: user.name, email: user.email, role: user.role },
+    process.env.JWT_SECRET,
+    // { expiresIn: "8h" },
+    (err, token) => {
+      if (err) {
+        console.error("JWT Sign Error:", err);
+        return next(new SystemError("Error generating token", 500));
+      }
+      return res.status(200).json({ message: "Password changed", token });
+    }
+  );
+});
+
+// const forgotPassword = catchError(async (req, res, next) => {
+//   const user = await User.findOne({ email: req.body.email });
+//   user.password = req.body.password;
+//   await user.save();
+//   return res.status(200).json({ message: "Password changed" });
+// });
+
+export { signup, signin, verifyEmail, changePassword };

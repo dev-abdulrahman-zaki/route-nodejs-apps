@@ -25,4 +25,19 @@ const signinValidationSchema = Joi.object({
   files: Joi.object().default({}),
 });
 
-export { signupValidationSchema, signinValidationSchema };
+const changePasswordValidationSchema = Joi.object({
+  body: Joi.object({
+    password: Joi.string().min(8).required().trim(),
+    newPassword: Joi.string().min(8).required().trim(),
+  }).default({}),
+  params: Joi.object().default({}),
+  query: Joi.object().default({}),
+  file: Joi.object().default({}),
+  files: Joi.object().default({}),
+});
+
+export {
+  signupValidationSchema,
+  signinValidationSchema,
+  changePasswordValidationSchema,
+};
