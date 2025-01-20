@@ -16,7 +16,7 @@ const addUserValidationSchema = Joi.object({
     email: Joi.string().email().trim().lowercase().required(),
     password: Joi.string().trim().min(8).required(),
   }).default({}),
-  file: fileObject.required().default({}),
+  file: Joi.object().default({}),
   files: Joi.object().default({}),
 });
 
@@ -29,7 +29,7 @@ const updateUserValidationSchema = Joi.object({
     email: Joi.string().email().trim().lowercase(),
     password: Joi.string().trim().min(8),
   }).default({}),
-  file: fileObject.default({}),
+  file: Joi.object().default({}),
   files: Joi.object().default({}),
 });
 
