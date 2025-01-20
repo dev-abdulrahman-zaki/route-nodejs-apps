@@ -1,5 +1,4 @@
 import Joi from "joi";
-import { fileObject } from "../../utils/constants.js";
 import {
   handleValidValue,
   createDateFilterSchema,
@@ -15,6 +14,7 @@ const addUserValidationSchema = Joi.object({
     name: Joi.string().trim().min(3).required(),
     email: Joi.string().email().trim().lowercase().required(),
     password: Joi.string().trim().min(8).required(),
+    role: Joi.string().valid("user", "admin").lowercase().default("user").optional(),
   }).default({}),
   file: Joi.object().default({}),
   files: Joi.object().default({}),
