@@ -1,16 +1,25 @@
-import { User } from "../../database/models/user.model.js";
+import { User } from "../../../database/models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { sendEmail } from "../../src/services/emails/sendEmail.js";
-import { catchError } from "../../src/middlewares/catchError.js";
-import { SystemError } from "../../src/utils/systemError.js";
+import { sendEmail } from "../../services/emails/sendEmail.js";
+import { catchError } from "../../middlewares/catchError.js";
+import { SystemError } from "../../utils/systemError.js";
+
 
 const signup = catchError(async (req, res) => {
-  const hashedPassword = await bcrypt.hash(req.body.password, 10); // todo: can be implemented in the as middleware/hook
-  const user = await User.insertMany({ ...req.body, password: hashedPassword });
-  await sendEmail(req.body.email, "Verify your email", "Click here to verify your email");
-  user[0].password = undefined; // to hide the password from the response
-  return res.status(201).json({ message: "success", user: user[0] }); //insertMany returns an array of the inserted documents, so we need to access the first element of the array.
+  const user = new User(req.body);
+  await user.save();
+  const token = jwt.sign(
+    { id: user._id, name: user.name, email: user.email, role: user.role },
+    process.env.JWT_SECRET
+  );
+  await sendEmail(
+    req.body.email,
+    "Verify your email",
+    "Click here to verify your email"
+  );
+  user.password = undefined; // to hide the password from the response
+  return res.status(201).json({ message: "success", user, token });
 });
 
 const signin = catchError(async (req, res, next) => {

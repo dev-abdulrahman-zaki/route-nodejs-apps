@@ -30,7 +30,7 @@ export const sendEmail = async (email, subject, text) => {
         */
       }
       const info = await transporter.sendMail({
-        from: `StickyNotes Inc. <${process.env.EMAIL_USER}>`, // sender address
+        from: `FreshCart Inc. <${process.env.EMAIL_USER}>`, // sender address
         to: email, // list of receivers
         subject: subject, // Subject line
         text: text, // plain text body
@@ -72,7 +72,7 @@ export const sendEmail = async (email, subject, text) => {
 
     // 03 - send the email
     const info = await transporter.sendMail({
-      from: `StickyNotes Inc. <${process.env.EMAIL_USER}>`,
+      from: `FreshCart Inc. <${process.env.EMAIL_USER}>`,
       to: email,
       subject: subject,
       text: text,

@@ -5,6 +5,7 @@ import {
   updateUserValidationSchema,
   getAllUsersValidationSchema,
 } from "./user.validation.js";
+import { isUserExist } from "../../middlewares/isUserExist.js";
 const userRoutes = express.Router();
 
 import {
@@ -15,7 +16,12 @@ import {
   deleteUser,
 } from "./user.controller.js";
 
-userRoutes.post(`/`, validateSchema(addUserValidationSchema), isUserExist, addUser);
+userRoutes.post(
+  `/`,
+  validateSchema(addUserValidationSchema),
+  isUserExist,
+  addUser
+);
 userRoutes.get(`/`, validateSchema(getAllUsersValidationSchema), getAllUsers);
 userRoutes.get(`/:id`, getSingleUser);
 userRoutes.put(`/:id`, validateSchema(updateUserValidationSchema), updateUser);
