@@ -28,7 +28,20 @@ const signinValidationSchema = Joi.object({
 const changePasswordValidationSchema = Joi.object({
   body: Joi.object({
     password: Joi.string().min(8).required().trim(),
-    newPassword: Joi.string().min(8).required().trim(),
+    newPassword: Joi.string()
+      .min(8)
+      .required()
+      .trim()
+      // Ensure new password is different
+      .not(Joi.ref("password"))
+      .messages({
+        "any.invalid": "New password must be different from current password",
+      }),
+    confirmNewPassword: Joi.string()
+      // Ensure new password is the same as the confirmNewPassword
+      .valid(Joi.ref("newPassword"))
+      .required()
+      .messages({ "any.only": "Passwords must match" }),
   }).default({}),
   params: Joi.object().default({}),
   query: Joi.object().default({}),
