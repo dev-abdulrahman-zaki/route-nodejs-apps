@@ -30,6 +30,12 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    passwordChangedAt: {
+      type: Date,
+    },
+    lastLoginAt: {
+      type: Date,
+    },
     isBlocked: {
       type: Boolean,
       default: false,

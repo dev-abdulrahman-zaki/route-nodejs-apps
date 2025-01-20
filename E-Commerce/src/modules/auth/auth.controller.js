@@ -71,6 +71,7 @@ const changePassword = catchError(async (req, res, next) => {
     return next(new SystemError("Invalid email or password", 401));
   }
   user.password = req.body.newPassword;
+  user.passwordChangedAt = new Date();
   await user.save();
   jwt.sign(
     { id: user._id, name: user.name, email: user.email, role: user.role },
