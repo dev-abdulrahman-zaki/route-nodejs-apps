@@ -5,7 +5,7 @@ import {
   createNumberFilterSchema,
 } from "../../utils/validationUtils.js";
 
-const addBrandValidationSchema = Joi.object({
+const addReviewValidationSchema = Joi.object({
   params: Joi.object().default({}),
   query: Joi.object().default({}),
   params: Joi.object().default({}),
@@ -18,7 +18,7 @@ const addBrandValidationSchema = Joi.object({
   files: Joi.object().default({}),
 });
 
-const updateBrandValidationSchema = Joi.object({
+const updateReviewValidationSchema = Joi.object({
   params: Joi.object().default({}),
   query: Joi.object().default({}),
   params: Joi.object().default({}),
@@ -40,7 +40,7 @@ const validSelectFields = [
   "createdAt",
 ];
 
-const getAllBrandsValidationSchema = Joi.object({
+const getAllReviewsValidationSchema = Joi.object({
   params: Joi.object().default({}),
   body: Joi.object().default({}),
   file: Joi.object().default({}),
@@ -116,7 +116,7 @@ const getAllBrandsValidationSchema = Joi.object({
 });
 
 export {
-  addBrandValidationSchema,
-  updateBrandValidationSchema,
-  getAllBrandsValidationSchema,
+  addReviewValidationSchema,
+  updateReviewValidationSchema,
+  getAllReviewsValidationSchema,
 };

@@ -11,7 +11,7 @@ const addSubCategory = catchError(async (req, res, next) => {
     return next(new SystemError("Category not found", 404));
   }
   req.body.slug = slugify(req.body.name, { lower: true });
-  req.body.createdBy = req.user?.id || "677eb89034823e94b28151bf";
+  req.body.createdBy = req.user?.id;
   const subCategory = new SubCategory(req.body);
   await subCategory.save();
   res.status(201).json({ message: "success", subCategory });

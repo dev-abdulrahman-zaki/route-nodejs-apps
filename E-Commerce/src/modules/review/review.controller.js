@@ -3,10 +3,10 @@ import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import { deleteOne, getAll } from "../../utils/factoryHandlers.js";
 
-const addReview = catchError(async (req, res) => {
-  req.body.createdBy = req.user._id;
+const addReview = catchError(async (req, res, next) => {
+  req.body.createdBy = req.user.id;
   const isReviewed = await Review.findOne({
-    createdBy: req.user._id,
+    createdBy: req.user.id,
     product: req.body.product,
   });
   if (isReviewed) {
@@ -33,7 +33,7 @@ const getSingleReview = catchError(async (req, res, next) => {
 
 const updateReview = catchError(async (req, res, next) => {
   const review = await Review.findOneAndUpdate(
-    { _id: req.params.id, createdBy: req.user._id },
+    { _id: req.params.id, createdBy: req.user.id },
     req.body,
     {
       new: true,

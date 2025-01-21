@@ -6,7 +6,7 @@ import { deleteOne, getAll } from "../../utils/factoryHandlers.js";
 
 const addBrand = catchError(async (req, res) => {
   req.body.slug = slugify(req.body.name, { lower: true });
-  req.body.createdBy = req.user?.id || "669161111111111111111111";
+  req.body.createdBy = req.user?.id;
   req.body.logo = req.file.filename;
   const brand = new Brand(req.body);
   await brand.save();

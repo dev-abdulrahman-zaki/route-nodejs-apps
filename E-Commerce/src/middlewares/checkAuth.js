@@ -31,5 +31,6 @@ export const checkAuth = async (req, res, next) => {
   }
   // 06- add the decoded user to the request object (modify the request object in middleware) - modifies/transforms the request object
   req.user = decodedToken;
+  // console.log(req.user);
   return next();
 };
