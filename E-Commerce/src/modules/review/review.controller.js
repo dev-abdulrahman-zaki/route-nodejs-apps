@@ -45,6 +45,7 @@ const updateReview = catchError(async (req, res, next) => {
   res.status(200).json({ message: "success", review });
 });
 
+// todo findOneAndDelete by _id: req.params.id, createdBy: req.user.id like updateReview
 const deleteReview = deleteOne(Review);
 
 export {

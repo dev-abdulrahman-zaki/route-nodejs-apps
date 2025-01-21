@@ -37,6 +37,11 @@ reviewRoutes.put(
   validateSchema(updateReviewValidationSchema),
   updateReview
 );
-reviewRoutes.delete(`/:id`, checkAuth, allowedTo("user, admin"), deleteReview);
+reviewRoutes.delete(
+  `/:id`,
+  checkAuth,
+  allowedTo("user", "admin"),
+  deleteReview
+);
 
 export default reviewRoutes;
