@@ -2,8 +2,13 @@ import { Review } from "../../../database/models/review.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import { deleteOne, getAll } from "../../utils/factoryHandlers.js";
+import { Product } from "../../../database/models/product.model.js";
 
 const addReview = catchError(async (req, res, next) => {
+  const isProductExist = await Product.findById(req.body.product);
+  if (!isProductExist) {
+    return next(new SystemError("Product not found", 404));
+  }
   req.body.createdBy = req.user.id;
   const isReviewed = await Review.findOne({
     createdBy: req.user.id,
@@ -46,7 +51,19 @@ const updateReview = catchError(async (req, res, next) => {
 });
 
 // todo findOneAndDelete by _id: req.params.id, createdBy: req.user.id like updateReview
-const deleteReview = deleteOne(Review);
+const deleteReview = catchError(async (req, res, next) => {
+  const review = await Review.findOneAndDelete(
+    { _id: req.params.id, createdBy: req.user.id },
+    req.body,
+    {
+      new: true,
+    }
+  );
+  if (!review) {
+    return next(new SystemError("Review not found", 404));
+  }
+  res.status(200).json({ message: "success", review });
+});
 
 export {
   addReview,
