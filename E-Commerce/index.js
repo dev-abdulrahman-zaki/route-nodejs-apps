@@ -6,8 +6,7 @@ process.on("uncaughtException", (err) => {
 
 // 01. Importing the required modules
 import express from "express";
-import dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config";
 import { dbConnection } from "./database/dbConnection.js"; // Import the dbConnection to connect to MongoDB even if the dbConnection import is not used in the code.
 import { indexRoutes } from "./src/modules/index.routes.js";
 import { SystemError } from "./src/utils/systemError.js";
