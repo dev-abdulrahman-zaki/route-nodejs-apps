@@ -63,8 +63,7 @@ const verifyEmail = catchError(async (req, res, next) => {
 });
 
 const changePassword = catchError(async (req, res, next) => {
-  // todo: search by user id from token instead of email
-  const user = await User.findOne({ email: req.body.email });
+  const user = await User.findById(req.user.id);
   const isPasswordCorrect =
     user && (await bcrypt.compare(req.body.password, user.password));
   if (!user || !isPasswordCorrect) {
