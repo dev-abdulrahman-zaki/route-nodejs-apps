@@ -38,7 +38,7 @@ const brandSchema = new mongoose.Schema(
 
 // 02. Post middleware - runs after the query is executed
 brandSchema.post("init", function (doc) {
-  doc.logo = `http://localhost:4000/uploads/brands/${doc.logo}`;
+  doc.logo = `${process.env.BASE_URL}/uploads/brands/${doc.logo}`;
 });
 
 // 03. Define the model

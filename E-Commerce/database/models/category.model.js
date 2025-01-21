@@ -38,7 +38,7 @@ const categorySchema = new mongoose.Schema(
 
 // 02. Post middleware - runs after the query is executed
 categorySchema.post("init", function (doc) {
-  doc.image = `http://localhost:4000/uploads/categories/${doc.image}`;
+  doc.image = `${process.env.BASE_URL}/uploads/categories/${doc.image}`;
 });
 
 // 03. Define the model
