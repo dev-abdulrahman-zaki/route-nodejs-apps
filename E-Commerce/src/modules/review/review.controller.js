@@ -10,11 +10,11 @@ const addReview = catchError(async (req, res, next) => {
     return next(new SystemError("Product not found", 404));
   }
   req.body.createdBy = req.user.id;
-  const isReviewed = await Review.findOne({
-    createdBy: req.user.id,
+  const isReviewExist = await Review.findOne({
+    createdBy: req.body.createdBy,
     product: req.body.product,
   });
-  if (isReviewed) {
+  if (isReviewExist) {
     return next(new SystemError("You already reviewed this product", 400));
   }
   const review = new Review(req.body);
