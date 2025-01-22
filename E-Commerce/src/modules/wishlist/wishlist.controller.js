@@ -50,8 +50,8 @@ const getWishlist = catchError(async (req, res, next) => {
     return next(new SystemError("User not found", 404));
   }
   const wishlist = await User.findById(req.user.id, { wishlist: 1 });
-  // const wishlist = await User.findById(req.user.id).populate("wishlist");
-  // const wishlist = await Product.find({ _id: { $in: user.wishlist } });
+  // or: const wishlist = await User.findById(req.user.id).populate("wishlist");
+  // or: const wishlist = await Product.find({ _id: { $in: user.wishlist } });
   if (!wishlist) {
     return next(new SystemError("Wishlist not found", 404));
   }
