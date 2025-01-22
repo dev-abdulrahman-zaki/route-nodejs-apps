@@ -5,6 +5,8 @@ import subCategoryRoutes from "./subCategory/subCategory.routes.js";
 import brandRoutes from "./brand/brand.routes.js";
 import productRoutes from "./product/product.routes.js";
 import reviewRoutes from "./review/review.routes.js";
+import wishlistRoutes from "./wishlist/wishlist.routes.js";
+// todo: maybe remove checkAuth from here
 import { checkAuth } from "../middlewares/checkAuth.js";
 
 export const indexRoutes = (app) => {
@@ -16,4 +18,5 @@ export const indexRoutes = (app) => {
   app.use("/api/v1/products", checkAuth, productRoutes);
   app.use("/api/v1/users", checkAuth, userRoutes);
   app.use("/api/v1/reviews", checkAuth, reviewRoutes);
+  app.use("/api/v1/wishlists", checkAuth, wishlistRoutes);
 };

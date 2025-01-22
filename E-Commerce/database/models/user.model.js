@@ -50,6 +50,51 @@ const userSchema = new mongoose.Schema(
       default: "user",
       lowercase: true,
     },
+    wishlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
+    addresses: [
+      {
+        city: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        street: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        building: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        floor: {
+          type: Number,
+          required: true,
+          trim: true,
+        },
+        flat: {
+          type: Number,
+          required: true,
+          trim: true,
+        },
+        postalCode: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        phone: {
+          type: Number,
+          required: true,
+          trim: true,
+        },
+      },
+    ],
   },
   {
     timestamps: {
