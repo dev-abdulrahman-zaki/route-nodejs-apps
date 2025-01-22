@@ -1,7 +1,7 @@
 import { Review } from "../../../database/models/review.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
-import { deleteOne, getAll } from "../../utils/factoryHandlers.js";
+import { getAll } from "../../utils/factoryHandlers.js";
 import { Product } from "../../../database/models/product.model.js";
 
 const addReview = catchError(async (req, res, next) => {
@@ -50,10 +50,12 @@ const updateReview = catchError(async (req, res, next) => {
   res.status(200).json({ message: "success", review });
 });
 
-// todo findOneAndDelete by _id: req.params.id, createdBy: req.user.id like updateReview
 const deleteReview = catchError(async (req, res, next) => {
   const review = await Review.findOneAndDelete(
-    { _id: req.params.id, createdBy: req.user.id },
+    {
+      _id: req.params.id,
+      ...(req.user.role === "user" && { createdBy: req.user.id }),
+    },
     req.body,
     {
       new: true,
