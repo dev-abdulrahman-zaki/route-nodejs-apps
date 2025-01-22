@@ -25,14 +25,11 @@ wishlistRoutes.patch(
 wishlistRoutes.delete(
   `/:id`,
   checkAuth,
-  allowedTo("user", "admin"),
+  allowedTo("user"),
   validateSchema(removeFromWishlistValidationSchema),
   removeFromWishlist
 );
 
-wishlistRoutes.get(
-  `/`,
-  getWishlist
-);
+wishlistRoutes.get(`/`, checkAuth, allowedTo("user"), getWishlist);
 
 export default wishlistRoutes;
