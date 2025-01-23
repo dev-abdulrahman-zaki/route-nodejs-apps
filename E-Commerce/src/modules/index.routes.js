@@ -9,7 +9,7 @@ import wishlistRoutes from "./wishlist/wishlist.routes.js";
 import addressRoutes from "./address/address.routes.js";
 import couponRoutes from "./coupon/coupon.routes.js";
 // todo: maybe remove checkAuth from here
-import { checkAuth } from "./middlewares/checkAuth.js";
+import { checkAuth } from "../middlewares/checkAuth.js";
 
 export const indexRoutes = (app) => {
   app.get("/", (req, res) => res.send("Hello World!"));
