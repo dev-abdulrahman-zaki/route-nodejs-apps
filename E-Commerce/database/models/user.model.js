@@ -68,29 +68,29 @@ const userSchema = new mongoose.Schema(
           required: true,
           trim: true,
         },
-        building: {
+        phone: {
           type: String,
           required: true,
+          trim: true,
+        },
+        building: {
+          type: String,
+          // required: true,
           trim: true,
         },
         floor: {
           type: Number,
-          required: true,
+          // required: true,
           trim: true,
         },
         flat: {
           type: Number,
-          required: true,
+          // required: true,
           trim: true,
         },
         postalCode: {
           type: String,
-          required: true,
-          trim: true,
-        },
-        phone: {
-          type: Number,
-          required: true,
+          // required: true,
           trim: true,
         },
       },
