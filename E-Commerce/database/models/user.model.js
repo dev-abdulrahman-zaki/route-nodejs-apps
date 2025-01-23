@@ -79,12 +79,12 @@ const userSchema = new mongoose.Schema(
           trim: true,
         },
         floor: {
-          type: Number,
+          type: String,
           // required: true,
           trim: true,
         },
         flat: {
-          type: Number,
+          type: String,
           // required: true,
           trim: true,
         },

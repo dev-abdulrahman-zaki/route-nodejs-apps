@@ -25,7 +25,7 @@ addressRoutes.patch(
 addressRoutes.delete(
   `/:id`,
   checkAuth,
-  allowedTo("user"),
+  allowedTo("user", "admin"),
   validateSchema(removeAddressValidationSchema),
   removeAddress
 );

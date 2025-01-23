@@ -35,7 +35,7 @@ const removeAddress = catchError(async (req, res, next) => {
   );
   /*
   or:
-  user.wishlist = user.wishlist.filter((id) => id !== req.params.id);
+  user.addresses = user.addresses.filter((id) => id !== req.params.id);
   await user.save();
   */
   if (!addresses) {
