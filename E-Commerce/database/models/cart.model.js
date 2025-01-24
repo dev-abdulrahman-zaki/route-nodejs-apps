@@ -20,16 +20,19 @@ const cartSchema = new mongoose.Schema(
           default: 1,
           required: true,
         },
+        // internal field
         price: {
           type: Number,
           required: true,
         },
       },
     ],
+    // internal field
     totalPrice: {
       type: Number,
       required: true,
     },
+    // internal field
     discount: {
       type: Number,
       required: true,
@@ -37,6 +40,7 @@ const cartSchema = new mongoose.Schema(
       max: 100,
       default: 0,
     },
+    // internal field
     totalPriceAfterDiscount: {
       type: Number,
       required: true,
