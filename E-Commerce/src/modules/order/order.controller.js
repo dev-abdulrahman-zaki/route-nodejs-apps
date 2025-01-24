@@ -20,12 +20,30 @@ const createOrder = catchError(async (req, res, next) => {
     shippingAddress,
   });
   // 3- update stock and sold count
+  /*
   await Promise.all(
     cart.cartItems.map(async (item) => {
       await Product.findByIdAndUpdate(item.product, {
         $inc: { stock: -item.quantity, sold: item.quantity },
       });
     })
+  );
+  */
+  // or: updateMany
+  /*
+  await Product.updateMany(
+    { _id: { $in: cart.cartItems.map((item) => item.product) } },
+    { $inc: { stock: -cart.cartItems.reduce((acc, item) => acc + item.quantity, 0) } }
+  );
+  */
+  // or: bulkWrite (better performance)
+  await Product.bulkWrite(
+    cart.cartItems.map((item) => ({
+      updateOne: {
+        filter: { _id: item.product },
+        update: { $inc: { stock: -item.quantity, sold: item.quantity } },
+      },
+    }))
   );
   // 4- clear cart
   await Cart.findOneAndDelete({ user: req.user.id });
