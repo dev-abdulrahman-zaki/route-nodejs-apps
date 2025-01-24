@@ -10,14 +10,13 @@ const couponSchema = new mongoose.Schema(
       minlength: 3,
       required: true,
     },
-    expire: {
+    expiresAt: {
       type: Date,
       required: true,
     },
     discount: {
-      type: Number,
+      type: String, // percentage
       required: true,
-      min: 0,
     },
   },
   {

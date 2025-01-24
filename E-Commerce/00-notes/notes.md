@@ -61,3 +61,14 @@ getAllSubCategories
 <!-- ====================================================================== -->
 - What should be stored in schema (Database), and what should be stored in validation schema (Joi)?
 ref: https://poe.com/s/RItpDrn7a0ADzzEvhXV3
+<!-- ====================================================================== -->
+## 21-virtual populate
+1- Virtual populate is a technique used in MongoDB to populate a field with data from another collection.
+2- It allows you to create a virtual field in a document that references another document in a different collection.
+3- This virtual field can then be used in queries and updates, even though it doesn't physically exist in the database.
+4- Virtual populate is useful when you want to create a relationship between two collections without actually storing the referenced data in the current collection.
+5- It can be used to create a one-to-one, one-to-many, or many-to-many relationship between collections.
+6- Virtual populate is implemented using the populate method in Mongoose.
+7- The populate method takes a path and a reference to the collection to populate from.
+8- The path is the name of the virtual field to create, and the reference is the name of the collection to populate from.
+9- The populate method returns a promise that resolves to the populated document.

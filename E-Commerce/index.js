@@ -6,6 +6,7 @@ process.on("uncaughtException", (err) => {
 
 // 01. Importing the required modules
 import express from "express";
+import cors from "cors";
 import "dotenv/config";
 import { dbConnection } from "./database/dbConnection.js"; // Import the dbConnection to connect to MongoDB even if the dbConnection import is not used in the code.
 import { indexRoutes } from "./src/modules/index.routes.js";
@@ -17,6 +18,7 @@ const app = express();
 const port = 4000;
 
 // 03. Middleware
+app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads")); // this means that when we go to http://localhost:4000/uploads/photo.jpg, it will serve the photo.jpg file from the uploads folder.
 /*
