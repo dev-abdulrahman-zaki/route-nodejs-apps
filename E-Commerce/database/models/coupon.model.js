@@ -14,11 +14,12 @@ const couponSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    discount: {
+    discountPercentage: {
       type: Number, // percentage
       required: true,
       min: 0,
       max: 100,
+      default: 0,
     },
   },
   {

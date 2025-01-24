@@ -11,7 +11,7 @@ const addCouponValidationSchema = Joi.object({
   body: Joi.object({
     code: Joi.string().required().trim().min(3),
     expiresAt: Joi.date().required(),
-    discount: Joi.number().required().min(0).max(100).custom((value, helpers) => value / 100),
+    discountPercentage: Joi.number().required().min(0).max(100),
   }).default({}),
   file: Joi.object().default({}),
   files: Joi.object().default({}),
@@ -24,7 +24,7 @@ const updateCouponValidationSchema = Joi.object({
   body: Joi.object({
     code: Joi.string().trim().min(3),
     expiresAt: Joi.date(),
-    discount: Joi.number().min(0).max(100).custom((value, helpers) => value / 100),
+    discountPercentage: Joi.number().min(0).max(100),
   }).default({}),
   file: Joi.object().default({}),
   files: Joi.object().default({}),
@@ -58,7 +58,7 @@ const getAllCouponsValidationSchema = Joi.object({
         }
         return value;
       }),
-    discount: Joi.number().min(0).max(100).custom((value, helpers) => value / 100),
+      discountPercentage: Joi.number().min(0).max(100),
     // ===== 2- Sort =====
     sort: Joi.string()
       .lowercase()

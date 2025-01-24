@@ -16,6 +16,9 @@ import {
 
 const cartRoutes = express.Router();
 
+cartRoutes.post(`/apply-coupon`, checkAuth, allowedTo("user"), applyCoupon);
+cartRoutes.delete(`/remove-coupon`, checkAuth, allowedTo("user"), removeCoupon);
+
 cartRoutes.post(
   `/`,
   checkAuth,
@@ -23,17 +26,18 @@ cartRoutes.post(
   // validateSchema(addBrandValidationSchema),
   addProductToCart
 );
-
-cartRoutes.patch(`/:id`, checkAuth, allowedTo("user"), updateProductQuantity);
-
-cartRoutes.delete(`/:id`, checkAuth, allowedTo("user"), removeProductFromCart);
-
 cartRoutes.get(`/`, checkAuth, allowedTo("user"), getCart);
-
 cartRoutes.delete(`/`, checkAuth, allowedTo("user"), clearCart);
 
-cartRoutes.post(`/apply-coupon`, checkAuth, allowedTo("user"), applyCoupon);
+cartRoutes.delete(`/:id`, checkAuth, allowedTo("user"), removeProductFromCart);
+cartRoutes.patch(`/:id`, checkAuth, allowedTo("user"), updateProductQuantity);
 
-cartRoutes.delete(`/remove-coupon`, checkAuth, allowedTo("user"), removeCoupon);
+/*
+Note:
+Express processes routes in the order they’re defined.
+If the route /remove-coupon comes after a route like /cart/:id, Express might interpret remove-coupon as the dynamic :id parameter.
+To fix this, place static routes before dynamic ones.
+error: "message": "Cast to ObjectId failed for value \"remove-coupon\" (type string) at path \"_id\" because of \"BSONError\""
+*/
 
 export default cartRoutes;
