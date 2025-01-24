@@ -95,18 +95,18 @@ const getSingleOrder = catchError(async (req, res, next) => {
   res.status(200).json({ message: "success", order });
 });
 
-const updateOrder = catchError(async (req, res, next) => {
-  const { id } = req.params;
-  const { status } = req.body;
-  const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
-  res.status(200).json({ message: "success", order });
-});
+// const updateOrder = catchError(async (req, res, next) => {
+//   const { id } = req.params;
+//   const { status } = req.body;
+//   const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
+//   res.status(200).json({ message: "success", order });
+// });
 
-const deleteOrder = catchError(async (req, res, next) => {
-  const { id } = req.params;
-  await Order.findByIdAndDelete(id);
-  res.status(200).json({ message: "success" });
-});
+// const deleteOrder = catchError(async (req, res, next) => {
+//   const { id } = req.params;
+//   await Order.findByIdAndDelete(id);
+//   res.status(200).json({ message: "success" });
+// });
 
 export {
   createOrder,
@@ -114,6 +114,4 @@ export {
   getSingleOrder,
   getOrdersByUser,
   getSingleOrderByUser,
-  updateOrder,
-  deleteOrder,
 };

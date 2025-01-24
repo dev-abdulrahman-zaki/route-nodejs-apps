@@ -15,8 +15,8 @@ import {
 const orderRoutes = express.Router();
 orderRoutes.post(`/`, checkAuth, allowedTo("user"), createOrder);
 orderRoutes.get(`/`, checkAuth, allowedTo("user"), getOrdersByUser);
-orderRoutes.get(`/:id`, checkAuth, allowedTo("user"), getSingleOrderByUser);
 orderRoutes.get(`/admin`, checkAuth, allowedTo("admin"), getOrders);
+orderRoutes.get(`/:id`, checkAuth, allowedTo("user"), getSingleOrderByUser);
 orderRoutes.get(`/admin/:id`, checkAuth, allowedTo("admin"), getSingleOrder);
 
 export default orderRoutes;
