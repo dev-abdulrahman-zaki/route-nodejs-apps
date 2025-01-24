@@ -1,16 +1,20 @@
 import { Cart } from "../../../database/models/cart.model.js";
+import { Coupon } from "../../../database/models/coupon.model.js";
 import { Product } from "../../../database/models/product.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 
-const calculateTotalPrice = (cartItems) => {
-  return cartItems.reduce(
+const calculateTotalPrice = (cart) => {
+  cart.totalPrice = cart.cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
+  if (cart.discount) {
+    cart.totalPriceAfterDiscount = cart.totalPrice * (1 - cart.discount / 100);
+  }
 };
 
-const addToCart = catchError(async (req, res, next) => {
+const addProductToCart = catchError(async (req, res, next) => {
   const cart = await Cart.findOne({ user: req.user.id });
   const product = await Product.findById(req.body.product);
   // Check if the product is available
@@ -34,11 +38,10 @@ const addToCart = catchError(async (req, res, next) => {
           price: req.body.price,
         },
       ],
-      totalPrice: calculateTotalPrice(req.body.cartItems),
+      totalPrice: calculateTotalPrice(req.body),
       discount: req.body.discount,
       totalPriceAfterDiscount:
-        calculateTotalPrice(req.body.cartItems) -
-        calculateTotalPrice(req.body.cartItems) * req.body.discount,
+        calculateTotalPrice(req.body) * req.body.discount,
     });
     await newCart.save();
     res.status(201).json({ message: "success", cart: newCart });
@@ -62,7 +65,7 @@ const addToCart = catchError(async (req, res, next) => {
         price: req.body.price,
       });
     }
-    cart.totalPrice = calculateTotalPrice(cart.cartItems);
+    cart.totalPrice = calculateTotalPrice(cart);
     cart.discount = req.body.discount;
     cart.totalPriceAfterDiscount =
       cart.totalPrice - cart.totalPrice * req.body.discount;
@@ -76,7 +79,7 @@ const addToCart = catchError(async (req, res, next) => {
   */
 });
 
-const updateQuantity = catchError(async (req, res, next) => {
+const updateProductQuantity = catchError(async (req, res, next) => {
   const cart = await Cart.findOne({ user: req.user.id });
   const product = await Product.findById(req.params.id);
   if (!product) {
@@ -93,7 +96,7 @@ const updateQuantity = catchError(async (req, res, next) => {
     return next(new SystemError("Product is out of stock", 400));
   }
   cartItem.quantity = req.body.quantity;
-  cart.totalPrice = calculateTotalPrice(cart.cartItems);
+  cart.totalPrice = calculateTotalPrice(cart);
   cart.discount = req.body.discount;
   cart.totalPriceAfterDiscount =
     cart.totalPrice - cart.totalPrice * req.body.discount;
@@ -110,7 +113,7 @@ const removeProductFromCart = catchError(async (req, res, next) => {
   if (!cart) {
     return next(new SystemError("Cart not found", 404));
   }
-  cart.totalPrice = calculateTotalPrice(cart.cartItems);
+  cart.totalPrice = calculateTotalPrice(cart);
   cart.discount = req.body.discount;
   cart.totalPriceAfterDiscount =
     cart.totalPrice - cart.totalPrice * req.body.discount;
@@ -152,33 +155,36 @@ const clearCart = catchError(async (req, res, next) => {
   res.status(200).json({ message: "success" });
 });
 
-// const addProductToCart = catchError(async (req, res) => {
-//   const cart = await Cart.findByIdAndUpdate(req.params.id, {
-//     $push: { cartItems: req.body },
-//   });
-//   res.status(200).json({ message: "success", cart });
-// });
-
-// const removeProductFromCart = catchError(async (req, res) => {
-//   const cart = await Cart.findByIdAndUpdate(req.params.id, {
-//     $pull: { cartItems: req.body },
-//   });
-//   res.status(200).json({ message: "success", cart });
-// });
-
-// const updateProductQuantity = catchError(async (req, res) => {
-//   const cart = await Cart.findByIdAndUpdate(req.params.id, {
-//     $set: { "cartItems.$.quantity": req.body.quantity },
-//   });
-//   res.status(200).json({ message: "success", cart });
-// });
-
-// const applyCoupon = catchError(async (req, res) => {
-//   const cart = await Cart.findByIdAndUpdate(req.params.id, {
-//     $set: { discount: req.body.discount },
-//   });
-//   res.status(200).json({ message: "success", cart });
-// });
+const applyCoupon = catchError(async (req, res, next) => {
+  const coupon = await Coupon.findOne({ code: req.body.code });
+  // or: const coupon = await Coupon.findOne({ code: req.body.code, expiresAt: { $gte: Date.now() } });
+  if (!coupon) {
+    return next(new SystemError("Coupon is not valid", 400));
+  }
+  if (coupon.expiresAt < new Date()) {
+    return next(new SystemError("Coupon is expired", 400));
+  }
+  const cart = await Cart.findOne({ user: req.user.id });
+  cart.discount = coupon.discount;
+  await cart.save();
+  /*
+  or:
+    const cart = await Cart.findOneAndUpdate(
+    { user: req.user.id },
+    {
+      $set: {
+        discount: coupon.discount,
+        totalPriceAfterDiscount: cart.totalPrice * (1 - coupon.discount / 100),
+      },
+    },
+    { new: true }
+  );
+  */
+  if (!cart) {
+    return next(new SystemError("Cart not found", 404));
+  }
+  res.status(200).json({ message: "success", cart });
+});
 
 // const removeCoupon = catchError(async (req, res) => {
 //   const cart = await Cart.findByIdAndUpdate(req.params.id, {
@@ -197,4 +203,11 @@ const clearCart = catchError(async (req, res, next) => {
 //   res.status(200).json({ message: "success", cart });
 // });
 
-export { addToCart, updateQuantity, removeProductFromCart, getCart, clearCart };
+export {
+  addProductToCart,
+  updateProductQuantity,
+  removeProductFromCart,
+  getCart,
+  clearCart,
+  applyCoupon,
+};
