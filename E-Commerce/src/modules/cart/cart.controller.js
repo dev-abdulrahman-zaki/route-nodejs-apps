@@ -3,6 +3,13 @@ import { Product } from "../../../database/models/product.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 
+const calculateTotalPrice = (cartItems) => {
+  return cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+};
+
 const addToCart = catchError(async (req, res, next) => {
   const cart = await Cart.findOne({ user: req.user.id });
   const product = await Product.findById(req.body.product);
@@ -27,10 +34,11 @@ const addToCart = catchError(async (req, res, next) => {
           price: req.body.price,
         },
       ],
-      totalPrice: req.body.price,
+      totalPrice: calculateTotalPrice(req.body.cartItems),
       discount: req.body.discount,
       totalPriceAfterDiscount:
-        req.body.price - req.body.price * req.body.discount,
+        calculateTotalPrice(req.body.cartItems) -
+        calculateTotalPrice(req.body.cartItems) * req.body.discount,
     });
     await newCart.save();
     res.status(201).json({ message: "success", cart: newCart });
@@ -53,11 +61,11 @@ const addToCart = catchError(async (req, res, next) => {
         quantity: req.body.quantity || 1,
         price: req.body.price,
       });
-      // cart.totalPrice += req.body.price;
-      // cart.discount += req.body.discount;
-      // cart.totalPriceAfterDiscount +=
-      //   req.body.price - req.body.price * req.body.discount;
     }
+    cart.totalPrice = calculateTotalPrice(cart.cartItems);
+    cart.discount = req.body.discount;
+    cart.totalPriceAfterDiscount =
+      cart.totalPrice - cart.totalPrice * req.body.discount;
     await cart.save();
     res.status(200).json({ message: "success", cart });
   }
