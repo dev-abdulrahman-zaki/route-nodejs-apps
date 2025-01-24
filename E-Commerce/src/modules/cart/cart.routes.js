@@ -5,7 +5,7 @@ import {
 } from "./cart.validation.js";
 import { checkAuth } from "../../middlewares/checkAuth.js";
 import { allowedTo } from "../../middlewares/allowedTo.js";
-import { addToCart } from "./cart.controller.js";
+import { addToCart, updateQuantity } from "./cart.controller.js";
 
 const cartRoutes = express.Router();
 
@@ -16,4 +16,12 @@ cartRoutes.post(
   // validateSchema(addBrandValidationSchema),
   addToCart
 );
+
+cartRoutes.patch(
+  `/:id`,
+  checkAuth,
+  allowedTo("user"),
+  updateQuantity
+);
+
 export default cartRoutes;

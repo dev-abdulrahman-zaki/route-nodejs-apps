@@ -76,6 +76,31 @@ const addToCart = catchError(async (req, res, next) => {
   */
 });
 
+const updateQuantity = catchError(async (req, res, next) => {
+  const cart = await Cart.findOne({ user: req.user.id });
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    return next(new SystemError("Product not found", 404));
+  }
+  const cartItem = cart.cartItems.find(
+    (item) => item.product.toString() === req.params.id
+  );
+  if (!cartItem) {
+    return next(new SystemError("Product not found in cart", 404));
+  }
+  // Check if the product is in stock
+  if (req.body.quantity > product.stock) {
+    return next(new SystemError("Product is out of stock", 400));
+  }
+  cartItem.quantity = req.body.quantity;
+  cart.totalPrice = calculateTotalPrice(cart.cartItems);
+  cart.discount = req.body.discount;
+  cart.totalPriceAfterDiscount =
+    cart.totalPrice - cart.totalPrice * req.body.discount;
+  await cart.save();
+  res.status(200).json({ message: "success", cart });
+});
+
 // const addCart = catchError(async (req, res) => {
 //   const cart = new Cart(req.body);
 //   await cart.save();
@@ -154,4 +179,4 @@ const addToCart = catchError(async (req, res, next) => {
 //   res.status(200).json({ message: "success", cart });
 // });
 
-export { addToCart };
+export { addToCart, updateQuantity };
