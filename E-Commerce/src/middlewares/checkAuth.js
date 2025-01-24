@@ -25,7 +25,8 @@ export const checkAuth = async (req, res, next) => {
     (user?.passwordChangedAt &&
       user?.passwordChangedAt?.getTime() / 1000 > decodedToken.iat) ||
     (user?.lastLoginAt &&
-      user?.lastLoginAt?.getTime() / 1000 > decodedToken.iat)
+      user?.lastLoginAt?.getTime() / 1000 > decodedToken.iat) ||
+    (user?.updatedAt && user?.updatedAt?.getTime() / 1000 > decodedToken.iat)
   ) {
     return next(new SystemError("Token expired", 401));
   }
