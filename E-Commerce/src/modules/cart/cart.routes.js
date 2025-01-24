@@ -1,11 +1,10 @@
 import express from "express";
-import { validateSchema } from "../../middlewares/validateSchema.js";
-import {
-
-} from "./cart.validation.js";
+// import { validateSchema } from "../../middlewares/validateSchema.js";
+// import {
+// } from "./cart.validation.js";
 import { checkAuth } from "../../middlewares/checkAuth.js";
 import { allowedTo } from "../../middlewares/allowedTo.js";
-import { addToCart, updateQuantity, removeProductFromCart } from "./cart.controller.js";
+import { addToCart, updateQuantity, removeProductFromCart, getCart } from "./cart.controller.js";
 
 const cartRoutes = express.Router();
 
@@ -29,6 +28,13 @@ cartRoutes.delete(
   checkAuth,
   allowedTo("user"),
   removeProductFromCart
+);
+
+cartRoutes.get(
+  `/`,
+  checkAuth,
+  allowedTo("user"),
+  getCart
 );
 
 export default cartRoutes;

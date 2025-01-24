@@ -124,10 +124,13 @@ const removeProductFromCart = catchError(async (req, res, next) => {
 //   res.status(201).json({ message: "success", cart });
 // });
 
-// const getCart = catchError(async (req, res) => {
-//   const cart = await Cart.findById(req.params.id);
-//   res.status(200).json({ message: "success", cart });
-// });
+const getCart = catchError(async (req, res, next) => {
+  const cart = await Cart.findOne({ user: req.user.id });
+  if (!cart) {
+    return next(new SystemError("Cart not found", 404));
+  }
+  res.status(200).json({ message: "success", cart });
+});
 
 // const updateCart = catchError(async (req, res) => {
 //   const cart = await Cart.findByIdAndUpdate(req.params.id, req.body, {
@@ -196,4 +199,4 @@ const removeProductFromCart = catchError(async (req, res, next) => {
 //   res.status(200).json({ message: "success", cart });
 // });
 
-export { addToCart, updateQuantity, removeProductFromCart };
+export { addToCart, updateQuantity, removeProductFromCart, getCart };
