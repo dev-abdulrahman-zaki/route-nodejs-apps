@@ -8,6 +8,7 @@ import reviewRoutes from "./review/review.routes.js";
 import wishlistRoutes from "./wishlist/wishlist.routes.js";
 import addressRoutes from "./address/address.routes.js";
 import couponRoutes from "./coupon/coupon.routes.js";
+import cartRoutes from "./cart/cart.routes.js";
 
 export const indexRoutes = (app) => {
   app.get("/", (req, res) => res.send("Hello World!"));
@@ -21,4 +22,5 @@ export const indexRoutes = (app) => {
   app.use("/api/v1/wishlists", wishlistRoutes);
   app.use("/api/v1/addresses", addressRoutes);
   app.use("/api/v1/coupons", couponRoutes);
+  app.use("/api/v1/cart", cartRoutes);
 };

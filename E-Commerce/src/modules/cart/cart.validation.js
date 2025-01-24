@@ -1,47 +1,45 @@
 import Joi from "joi";
+import { fileObject } from "../../utils/constants.js";
 import {
   handleValidValue,
   createDateFilterSchema,
 } from "../../utils/validationUtils.js";
 
-const addCouponValidationSchema = Joi.object({
+const addBrandValidationSchema = Joi.object({
   params: Joi.object().default({}),
   query: Joi.object().default({}),
   params: Joi.object().default({}),
   body: Joi.object({
-    code: Joi.string().required().trim().min(3),
-    expiresAt: Joi.date().required(),
-    discount: Joi.number().required().min(0).max(100).custom((value, helpers) => value / 100),
+    name: Joi.string().required().trim().min(3),
   }).default({}),
-  file: Joi.object().default({}),
+  file: fileObject.required().default({}),
   files: Joi.object().default({}),
 });
 
-const updateCouponValidationSchema = Joi.object({
+const updateBrandValidationSchema = Joi.object({
   params: Joi.object().default({}),
   query: Joi.object().default({}),
   params: Joi.object().default({}),
   body: Joi.object({
-    code: Joi.string().trim().min(3),
-    expiresAt: Joi.date(),
-    discount: Joi.number().min(0).max(100).custom((value, helpers) => value / 100),
+    name: Joi.string().trim().min(3),
   }).default({}),
-  file: Joi.object().default({}),
+  file: fileObject.default({}),
   files: Joi.object().default({}),
 });
 
-const validSortFields = ["expiresAt", "discount"];
+const validSortFields = ["name", "createdAt"];
 
-const validSelectFields = ["code", "expiresAt", "discount"];
+const validSelectFields = ["name", "slug", "logo", "createdBy", "createdAt"];
 
-const getAllCouponsValidationSchema = Joi.object({
+const getAllBrandsValidationSchema = Joi.object({
   params: Joi.object().default({}),
   body: Joi.object().default({}),
   file: Joi.object().default({}),
   files: Joi.object().default({}),
   query: Joi.object({
     // ===== 1- Filter =====
-    expiresAt: createDateFilterSchema()
+    createdBy: Joi.string().hex().length(24),
+    createdAt: createDateFilterSchema()
       // Additional validation for dates to be in the past
       .custom((value, helpers) => {
         const checkPastDate = (date) => date < new Date(); // equivalent to: .less("now") - Date Must be before current time
@@ -58,7 +56,6 @@ const getAllCouponsValidationSchema = Joi.object({
         }
         return value;
       }),
-    discount: Joi.number().min(0).max(100).custom((value, helpers) => value / 100),
     // ===== 2- Sort =====
     sort: Joi.string()
       .lowercase()
@@ -89,30 +86,8 @@ const getAllCouponsValidationSchema = Joi.object({
   }).default({}),
 });
 
-const getSingleCouponValidationSchema = Joi.object({
-  params: Joi.object({
-    code: Joi.string().required().trim().min(3),
-  }).default({}),
-  body: Joi.object().default({}),
-  file: Joi.object().default({}),
-  files: Joi.object().default({}),
-  query: Joi.object().default({}),
-});
-
-const deleteCouponValidationSchema = Joi.object({
-  params: Joi.object({
-    code: Joi.string().required().trim().min(3),
-  }).default({}),
-  body: Joi.object().default({}),
-  file: Joi.object().default({}),
-  files: Joi.object().default({}),
-  query: Joi.object().default({}),
-});
-
 export {
-  addCouponValidationSchema,
-  updateCouponValidationSchema,
-  getAllCouponsValidationSchema,
-  getSingleCouponValidationSchema,
-  deleteCouponValidationSchema,
+  addBrandValidationSchema,
+  updateBrandValidationSchema,
+  getAllBrandsValidationSchema,
 };

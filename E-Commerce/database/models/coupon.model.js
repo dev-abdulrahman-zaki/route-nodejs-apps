@@ -15,8 +15,10 @@ const couponSchema = new mongoose.Schema(
       required: true,
     },
     discount: {
-      type: String, // percentage
+      type: Number, // percentage
       required: true,
+      min: 0,
+      max: 100,
     },
   },
   {
