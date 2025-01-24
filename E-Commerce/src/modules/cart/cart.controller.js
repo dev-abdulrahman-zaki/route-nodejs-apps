@@ -101,6 +101,23 @@ const updateQuantity = catchError(async (req, res, next) => {
   res.status(200).json({ message: "success", cart });
 });
 
+const removeProductFromCart = catchError(async (req, res, next) => {
+  const cart = await Cart.findOneAndUpdate(
+    { user: req.user.id },
+    { $pull: { cartItems: { _id: req.params.id } } }, // faster than product: req.params.id because we use _id to find the product which is unique and indexed
+    { new: true }
+  );
+  if (!cart) {
+    return next(new SystemError("Cart not found", 404));
+  }
+  cart.totalPrice = calculateTotalPrice(cart.cartItems);
+  cart.discount = req.body.discount;
+  cart.totalPriceAfterDiscount =
+    cart.totalPrice - cart.totalPrice * req.body.discount;
+  await cart.save();
+  res.status(200).json({ message: "success", cart });
+});
+
 // const addCart = catchError(async (req, res) => {
 //   const cart = new Cart(req.body);
 //   await cart.save();
@@ -179,4 +196,4 @@ const updateQuantity = catchError(async (req, res, next) => {
 //   res.status(200).json({ message: "success", cart });
 // });
 
-export { addToCart, updateQuantity };
+export { addToCart, updateQuantity, removeProductFromCart };
