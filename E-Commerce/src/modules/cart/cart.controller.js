@@ -144,15 +144,13 @@ const getCart = catchError(async (req, res, next) => {
 //   res.status(200).json({ message: "success", cart });
 // });
 
-// const clearCart = catchError(async (req, res) => {
-//   const cart = await Cart.findByIdAndUpdate(req.params.id, {
-//     cartItems: [],
-//     totalPrice: 0,
-//     discount: 0,
-//     totalPriceAfterDiscount: 0,
-//   });
-//   res.status(200).json({ message: "success", cart });
-// });
+const clearCart = catchError(async (req, res, next) => {
+  const cart = await Cart.findOneAndDelete({ user: req.user.id });
+  if (!cart) {
+    return next(new SystemError("Cart not found", 404));
+  }
+  res.status(200).json({ message: "success" });
+});
 
 // const addProductToCart = catchError(async (req, res) => {
 //   const cart = await Cart.findByIdAndUpdate(req.params.id, {
@@ -199,4 +197,4 @@ const getCart = catchError(async (req, res, next) => {
 //   res.status(200).json({ message: "success", cart });
 // });
 
-export { addToCart, updateQuantity, removeProductFromCart, getCart };
+export { addToCart, updateQuantity, removeProductFromCart, getCart, clearCart };
