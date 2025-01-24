@@ -58,7 +58,6 @@ const createOrder = catchError(async (req, res, next) => {
   // await sendSms(req.user.phone, `Order ${order._id} created successfully`);
   // 10- send push notification
   // await sendPushNotification(req.user.id, "Order created", `Order ${order._id} created successfully`);
-
   // 11- update user points
   // await updateUserPoints(req.user.id, order.totalPrice);
   // 12- update user order count
@@ -69,16 +68,30 @@ const createOrder = catchError(async (req, res, next) => {
   // await updateUserTotalPoints(req.user.id, order.totalPrice);
 });
 
+// for user
+const getOrdersByUser = catchError(async (req, res, next) => {
+  const orders = await Order.find({ user: req.user.id }).populate("orderItems.product");
+  // or using mergeParams: users/:id/orders such as /categories/:categorySlug/subcategories
+  res.status(200).json({ message: "success", orders });
+});
+
+// for user
+const getSingleOrderByUser = catchError(async (req, res, next) => {
+  const order = await Order.findOne({ user: req.user.id, _id: req.params.id });
+  res.status(200).json({ message: "success", order });
+});
+
+// for admin
 const getOrders = catchError(async (req, res, next) => {
   const orders = await Order.find();
   res.status(200).json({ message: "success", orders });
 });
 
-const getOrder = catchError(async (req, res, next) => {
-  const { id } = req.params;
-  const order = await Order.findById(id)
-    .populate("user")
-    .populate("orderItems.product");
+// for admin
+const getSingleOrder = catchError(async (req, res, next) => {
+  const order = await Order.findById(req.params.id)
+    // .populate("user")
+    // .populate("orderItems.product");
   res.status(200).json({ message: "success", order });
 });
 
@@ -95,17 +108,12 @@ const deleteOrder = catchError(async (req, res, next) => {
   res.status(200).json({ message: "success" });
 });
 
-const getOrdersByUser = catchError(async (req, res, next) => {
-  const { id } = req.params;
-  const orders = await Order.find({ user: id });
-  res.status(200).json({ message: "success", orders });
-});
-
 export {
   createOrder,
   getOrders,
-  getOrder,
+  getSingleOrder,
+  getOrdersByUser,
+  getSingleOrderByUser,
   updateOrder,
   deleteOrder,
-  getOrdersByUser,
 };
