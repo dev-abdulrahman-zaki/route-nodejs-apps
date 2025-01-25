@@ -1,6 +1,7 @@
 import { Cart } from "../../../database/models/cart.model.js";
 import { Order } from "../../../database/models/order.model.js";
 import { Product } from "../../../database/models/product.model.js";
+import { User } from "../../../database/models/user.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import Stripe from "stripe";
@@ -18,7 +19,7 @@ const createCashOrder = catchError(async (req, res, next) => {
     user: req.user.id,
     orderItems: cart.cartItems,
     totalPrice: cart.totalPriceAfterDiscount || cart.totalPrice,
-    paymentMethod,
+    paymentMethod: "cash",
     shippingAddress,
   });
   // 3- update stock and sold count
@@ -70,7 +71,7 @@ const createCashOrder = catchError(async (req, res, next) => {
   // await updateUserTotalPoints(req.user.id, order.totalPrice);
 });
 
-const createCardOrder = catchError(async (req, res, next) => {
+const createCheckoutSession = catchError(async (req, res, next) => {
   // 1- get cart
   const cart = await Cart.findById(req.params.cartId);
   if (!cart) {
@@ -100,12 +101,47 @@ const createCardOrder = catchError(async (req, res, next) => {
   res.status(201).json({ message: "success", session });
 });
 
+// todo: express.raw({type: "application/json"})
 const stripeWebhook = catchError(async (req, res, next) => {
-  const event = req.body;
-  res.status(200).json({ message: "success", event });
-  // 1- update order
-  // 2- update stock and sold count
-  // 3- clear cart
+  const signature = req.headers["stripe-signature"].toString();
+  const event = stripe.webhooks.constructEvent(
+    req.body,
+    signature,
+    process.env.STRIPE_WEBHOOK_SECRET
+  );
+  const session = event.data.object;
+  const user = await User.findOne({ email: session.customer_email });
+  const cart = await Cart.findById(session.client_reference_id);
+  if (!user || !cart) {
+    return next(new SystemError("User or cart not found", 404));
+  }
+  const order = new Order({
+    user: user._id,
+    orderItems: cart.cartItems,
+    totalPrice: session.amount_total / 100,
+    paymentMethod: "card",
+    shippingAddress: session.metadata,
+  });
+  if (event.type === "checkout.session.completed") {
+    // 3- update stock and sold count
+    await Product.bulkWrite(
+      cart.cartItems.map((item) => ({
+        updateOne: {
+          filter: { _id: item.product },
+          update: { $inc: { stock: -item.quantity, sold: item.quantity } },
+        },
+      }))
+    );
+    // 4- clear cart
+    await Cart.findOneAndDelete({ user: req.user.id });
+    order.paymentStatus = "completed";
+    order.paidAt = new Date();
+    await order.save();
+  } else if (event.type === "checkout.session.async_payment_failed") {
+    order.paymentStatus = "failed";
+    await order.save();
+  }
+  res.status(200).json({ message: "success", event, order, session });
 });
 
 // for user
@@ -152,9 +188,10 @@ const getSingleOrder = catchError(async (req, res, next) => {
 
 export {
   createCashOrder,
-  createCardOrder,
+  createCheckoutSession,
   getOrders,
   getSingleOrder,
   getOrdersByUser,
   getSingleOrderByUser,
+  stripeWebhook,
 };

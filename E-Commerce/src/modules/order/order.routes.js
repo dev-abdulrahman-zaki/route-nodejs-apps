@@ -10,7 +10,7 @@ import {
   getSingleOrderByUser,
   getOrders,
   getSingleOrder,
-  createCardOrder,
+  createCheckoutSession,
 } from "./order.controller.js";
 
 const orderRoutes = express.Router();
@@ -25,10 +25,11 @@ orderRoutes.get(`/admin`, checkAuth, allowedTo("admin"), getOrders);
 orderRoutes.get(`/:id`, checkAuth, allowedTo("user"), getSingleOrderByUser);
 orderRoutes.get(`/admin/:id`, checkAuth, allowedTo("admin"), getSingleOrder);
 orderRoutes.post(
-  `/create-card-order/:cartId`,
+  `/create-checkout-session/:cartId`,
   checkAuth,
   allowedTo("user"),
-  createCardOrder
+  createCheckoutSession
 );
-
+// todo: express.raw({type: "application/json"})
+orderRoutes.post(`/stripe/webhook`, express.raw({ type: "application/json" }), stripeWebhook);
 export default orderRoutes;

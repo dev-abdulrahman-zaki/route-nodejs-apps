@@ -34,6 +34,7 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    // internal field
     paymentMethod: {
       type: String,
       required: true,
@@ -43,8 +44,13 @@ const orderSchema = new mongoose.Schema(
     // internal field (set by payment processing)
     paymentStatus: {
       type: String,
-      required: true,
-      enum: ["pending", "paid", "failed"],
+      validate: {
+        validator: function () {
+          return this.paymentMethod === "card" ? !!this.paymentStatus : true;
+        },
+        message: "paymentStatus is required when paymentMethod is 'card'.",
+      },
+      enum: ["pending", "completed", "failed"],
       default: "pending",
     },
     // Internal field (set when payment is confirmed)
