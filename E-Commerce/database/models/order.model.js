@@ -79,6 +79,24 @@ const orderSchema = new mongoose.Schema(
         message: "deliveredAt is required when status is 'delivered'.",
       },
     },
+    successUrl: {
+      type: String,
+      validate: {
+        validator: function () {
+          return this.paymentMethod === "card" ? !!this.successUrl : true;
+        },
+        message: "successUrl is required when paymentMethod is 'card'.",
+      },
+    },
+    cancelUrl: {
+      type: String,
+      validate: {
+        validator: function () {
+          return this.paymentMethod === "card" ? !!this.cancelUrl : true;
+        },
+        message: "cancelUrl is required when paymentMethod is 'card'.",
+      },
+    },
   },
   {
     timestamps: true,

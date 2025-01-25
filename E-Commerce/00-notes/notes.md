@@ -72,3 +72,9 @@ ref: https://poe.com/s/RItpDrn7a0ADzzEvhXV3
 7- The populate method takes a path and a reference to the collection to populate from.
 8- The path is the name of the virtual field to create, and the reference is the name of the collection to populate from.
 9- The populate method returns a promise that resolves to the populated document.
+<!-- ====================================================================== -->
+## 19-create checkout session
+https://dashboard.stripe.com/test/apikeys
+https://dashboard.stripe.com/test/workbench/webhooks/create
+https://www.npmjs.com/package/stripe
+https://docs.stripe.com/checkout/quickstart

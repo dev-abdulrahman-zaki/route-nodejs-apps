@@ -3,8 +3,10 @@ import { Order } from "../../../database/models/order.model.js";
 import { Product } from "../../../database/models/product.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
+import Stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-const createOrder = catchError(async (req, res, next) => {
+const createCashOrder = catchError(async (req, res, next) => {
   // 1- get cart
   const cart = await Cart.findOne({ user: req.user.id });
   if (!cart) {
@@ -68,9 +70,49 @@ const createOrder = catchError(async (req, res, next) => {
   // await updateUserTotalPoints(req.user.id, order.totalPrice);
 });
 
+const createCardOrder = catchError(async (req, res, next) => {
+  // 1- get cart
+  const cart = await Cart.findById(req.params.cartId);
+  if (!cart) {
+    return next(new SystemError("Cart not found", 404));
+  }
+  // 2- create checkout session
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price_data: {
+          currency: "egp",
+          unit_amount: (cart.totalPriceAfterDiscount || cart.totalPrice) * 100,
+          product_data: {
+            name: req.user.name,
+          },
+        },
+        quantity: 1,
+      },
+    ],
+    mode: "payment",
+    client_reference_id: req.params.cartId, // customer id, or order id, or cart id (Needed for Stripe to identify the order - for example, if the user cancels the payment, Stripe will use this id to identify the order and cancel it)
+    customer_email: req.user.email,
+    success_url: req.body.successUrl,
+    cancel_url: req.body.cancelUrl,
+    metadata: req.body.shippingAddress,
+  });
+  res.status(201).json({ message: "success", session });
+});
+
+const stripeWebhook = catchError(async (req, res, next) => {
+  const event = req.body;
+  res.status(200).json({ message: "success", event });
+  // 1- update order
+  // 2- update stock and sold count
+  // 3- clear cart
+});
+
 // for user
 const getOrdersByUser = catchError(async (req, res, next) => {
-  const orders = await Order.find({ user: req.user.id }).populate("orderItems.product");
+  const orders = await Order.find({ user: req.user.id }).populate(
+    "orderItems.product"
+  );
   // or using mergeParams: users/:id/orders such as /categories/:categorySlug/subcategories
   res.status(200).json({ message: "success", orders });
 });
@@ -89,9 +131,9 @@ const getOrders = catchError(async (req, res, next) => {
 
 // for admin
 const getSingleOrder = catchError(async (req, res, next) => {
-  const order = await Order.findById(req.params.id)
-    // .populate("user")
-    // .populate("orderItems.product");
+  const order = await Order.findById(req.params.id);
+  // .populate("user")
+  // .populate("orderItems.product");
   res.status(200).json({ message: "success", order });
 });
 
@@ -109,7 +151,8 @@ const getSingleOrder = catchError(async (req, res, next) => {
 // });
 
 export {
-  createOrder,
+  createCashOrder,
+  createCardOrder,
   getOrders,
   getSingleOrder,
   getOrdersByUser,
