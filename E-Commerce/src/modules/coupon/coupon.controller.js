@@ -2,6 +2,7 @@ import { Coupon } from "../../../database/models/coupon.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import { deleteOne, getAll } from "../../utils/factoryHandlers.js";
+import QRCode from "qrcode";
 
 const addCoupon = catchError(async (req, res, next) => {
   const isCouponExists = await Coupon.findOne({ code: req.body.code });
@@ -20,7 +21,8 @@ const getSingleCoupon = catchError(async (req, res, next) => {
   if (!coupon) {
     return next(new SystemError("Coupon not found", 404));
   }
-  res.status(200).json({ message: "success", coupon });
+  const qrcode = await QRCode.toDataURL(coupon.code);
+  res.status(200).json({ message: "success", coupon, qrcode });
 });
 
 const updateCoupon = catchError(async (req, res, next) => {
