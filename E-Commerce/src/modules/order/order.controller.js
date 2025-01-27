@@ -82,7 +82,7 @@ const createCheckoutSession = catchError(async (req, res, next) => {
     line_items: [
       {
         price_data: {
-          currency: "egp",
+          currency: "usd",
           unit_amount: (cart.totalPriceAfterDiscount || cart.totalPrice) * 100,
           product_data: {
             name: req.user.name,
@@ -96,7 +96,7 @@ const createCheckoutSession = catchError(async (req, res, next) => {
     customer_email: req.user.email,
     success_url: req.body.successUrl,
     cancel_url: req.body.cancelUrl,
-    metadata: req.body.shippingAddress,
+    metadata: { shippingAddress: req.body.shippingAddress },
   });
   res.status(201).json({ message: "success", session });
 });
@@ -120,7 +120,7 @@ const stripeWebhook = catchError(async (req, res, next) => {
     orderItems: cart.cartItems,
     totalPrice: session.amount_total / 100,
     paymentMethod: "card",
-    shippingAddress: session.metadata,
+    shippingAddress: session.metadata.shippingAddress,
   });
   if (event.type === "checkout.session.completed") {
     // 3- update stock and sold count
