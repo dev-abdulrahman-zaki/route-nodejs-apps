@@ -9,3 +9,5 @@ hint: use fs module to remove the old image from the folder.
 ## populate
 Can I use "this" with Mongoose's populate method?
 ===========
+in back-end, add startDate, and endDate filters
+===========
