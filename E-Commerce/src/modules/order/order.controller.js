@@ -1,7 +1,7 @@
-import { Cart } from "../../../database/models/cart.model.js";
-import { Order } from "../../../database/models/order.model.js";
-import { Product } from "../../../database/models/product.model.js";
-import { User } from "../../../database/models/user.model.js";
+import { Cart } from "../../database/models/cart.model.js";
+import { Order } from "../../database/models/order.model.js";
+import { Product } from "../../database/models/product.model.js";
+import { User } from "../../database/models/user.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import Stripe from "stripe";

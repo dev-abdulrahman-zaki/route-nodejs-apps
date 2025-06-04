@@ -1,6 +1,6 @@
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
-import { User } from "../../../database/models/user.model.js";
+import { User } from "../../database/models/user.model.js";
 
 const addAddress = catchError(async (req, res, next) => {
   const user = await User.findById(req.user.id);

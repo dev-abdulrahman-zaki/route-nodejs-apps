@@ -1,4 +1,4 @@
-import { Category } from "../../../database/models/category.model.js";
+import { Category } from "../../database/models/category.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import slugify from "slugify";

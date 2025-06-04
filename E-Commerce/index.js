@@ -8,7 +8,7 @@ process.on("uncaughtException", (err) => {
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-import { dbConnection } from "./database/dbConnection.js"; // Import the dbConnection to connect to MongoDB even if the dbConnection import is not used in the code.
+import { dbConnection } from "./src/database/dbConnection.js"; // Import the dbConnection to connect to MongoDB even if the dbConnection import is not used in the code.
 import { indexRoutes } from "./src/modules/index.routes.js";
 import { SystemError } from "./src/utils/systemError.js";
 import { globalError } from "./src/middlewares/globalError.js";

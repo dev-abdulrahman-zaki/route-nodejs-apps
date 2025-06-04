@@ -1,6 +1,6 @@
-import { Cart } from "../../../database/models/cart.model.js";
-import { Coupon } from "../../../database/models/coupon.model.js";
-import { Product } from "../../../database/models/product.model.js";
+import { Cart } from "../../database/models/cart.model.js";
+import { Coupon } from "../../database/models/coupon.model.js";
+import { Product } from "../../database/models/product.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 

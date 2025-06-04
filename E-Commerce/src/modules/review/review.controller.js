@@ -1,8 +1,8 @@
-import { Review } from "../../../database/models/review.model.js";
+import { Review } from "../../database/models/review.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import { getAll } from "../../utils/factoryHandlers.js";
-import { Product } from "../../../database/models/product.model.js";
+import { Product } from "../../database/models/product.model.js";
 
 const addReview = catchError(async (req, res, next) => {
   const isProductExist = await Product.findById(req.body.product);

@@ -1,4 +1,4 @@
-import { User } from "../../../database/models/user.model.js";
+import { User } from "../../database/models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 // import { sendEmail } from "../../services/emails/sendEmail.js";

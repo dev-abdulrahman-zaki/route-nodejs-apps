@@ -1,4 +1,4 @@
-import { Coupon } from "../../../database/models/coupon.model.js";
+import { Coupon } from "../../database/models/coupon.model.js";
 import { catchError } from "../../middlewares/catchError.js";
 import { SystemError } from "../../utils/systemError.js";
 import { deleteOne, getAll } from "../../utils/factoryHandlers.js";
