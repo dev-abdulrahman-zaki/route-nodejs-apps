@@ -4,20 +4,24 @@ process.on("uncaughtException", (err) => {
   console.error(err?.stack);
 });
 
-// 01. Importing the required modules
-import express from "express";
-import cors from "cors";
+// 01. Import Sentry first for proper instrumentation
+import "./instrument.js";
 import "dotenv/config";
+
+// 02. Import other modules
+import express from "express";
+import * as Sentry from "@sentry/node";
+import cors from "cors";
 import { dbConnection } from "./src/database/dbConnection.js"; // Import the dbConnection to connect to MongoDB even if the dbConnection import is not used in the code.
 import { indexRoutes } from "./src/modules/index.routes.js";
 import { SystemError } from "./src/utils/systemError.js";
 import { globalError } from "./src/middlewares/globalError.js";
 
-// 02. Creating the express app
+// 03. Creating the express app
 const app = express();
 const port = 4000;
 
-// 03. Middleware
+// 04. Middleware
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads")); // this means that when we go to http://localhost:4000/uploads/photo.jpg, it will serve the photo.jpg file from the uploads folder.
@@ -30,22 +34,25 @@ express.static("uploads")            => folder name
 So, it connects/anchors the route name to the folder name.
 */
 
-// 04. Define the base path
+// 05. Define the base path
 indexRoutes(app);
 
-// 05. Catch all routes
+// 06. Catch all routes
 app.use("*", (req, res, next) => {
   next(new SystemError(`Route not found: ${req.originalUrl}`, 404));
 });
 
-// 06. Error handling middleware
+// 07. The Sentry error handler must be before any other error middleware and after all controllers
+Sentry.setupExpressErrorHandler(app);
+
+// 08. Error handling middleware
 app.use(globalError);
 
-// 07. Unhandled Rejection - catches async errors
+// 09. Unhandled Rejection - catches async errors
 process.on("unhandledRejection", (err, promise) => {
   // console.error("Unhandled Rejection at:", promise, "error:", err);
   console.error("Unhandled Rejection =>", err?.stack);
 });
 
-// 08. Start the server
+// 10. Start the server
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
