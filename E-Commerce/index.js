@@ -2,6 +2,9 @@
 process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception =>", err);
   console.error(err?.stack);
+  if (process.env.NODE_ENV === "production") {
+    Sentry.captureException(err);
+  }
 });
 
 // 01. Import Sentry first for proper instrumentation
@@ -43,7 +46,9 @@ app.use("*", (req, res, next) => {
 });
 
 // 07. The Sentry error handler must be before any other error middleware and after all controllers
-Sentry.setupExpressErrorHandler(app);
+if (process.env.NODE_ENV === "production") {
+  Sentry.setupExpressErrorHandler(app);
+}
 
 // 08. Error handling middleware
 app.use(globalError);
@@ -52,7 +57,9 @@ app.use(globalError);
 process.on("unhandledRejection", (err, promise) => {
   // console.error("Unhandled Rejection at:", promise, "error:", err);
   console.error("Unhandled Rejection =>", err?.stack);
-  Sentry.captureException(err);
+  if (process.env.NODE_ENV === "production") {
+    Sentry.captureException(err);
+  }
 });
 
 // 10. Start the server
