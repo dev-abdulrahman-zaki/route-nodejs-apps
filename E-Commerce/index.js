@@ -52,6 +52,7 @@ app.use(globalError);
 process.on("unhandledRejection", (err, promise) => {
   // console.error("Unhandled Rejection at:", promise, "error:", err);
   console.error("Unhandled Rejection =>", err?.stack);
+  Sentry.captureException(err);
 });
 
 // 10. Start the server
