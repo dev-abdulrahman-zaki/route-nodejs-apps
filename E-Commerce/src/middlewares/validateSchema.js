@@ -11,7 +11,7 @@ export const validateSchema = (schema) => {
     };
 
     const { value, error } = schema.validate(dataToValidate, {
-      abortEarly: false,
+      abortEarly: false, // show all errors
       stripUnknown: true // removes unknown fields
     });
     if (error) {
