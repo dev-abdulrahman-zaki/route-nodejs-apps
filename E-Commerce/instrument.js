@@ -3,7 +3,7 @@ import { nodeProfilingIntegration } from "@sentry/profiling-node";
 
 // Ensure to call this before importing any other modules!
 Sentry.init({
-  dsn: process.env.SENTRY_DSN,
+  dsn: "https://9f458f7330ef5ba193103e25e1993cdd@o4509303329718272.ingest.de.sentry.io/4509447311851600",
 
   // Adds request headers and IP for users, for more info visit:
   // https://docs.sentry.io/platforms/javascript/guides/node/configuration/options/#sendDefaultPii
