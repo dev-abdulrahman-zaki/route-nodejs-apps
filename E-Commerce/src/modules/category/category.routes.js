@@ -18,8 +18,8 @@ import { authenticate } from "../../middlewares/auth/authenticate.middleware.js"
 import { authorize } from "../../middlewares/auth/authorize.middleware.js";
 const categoryRoutes = express.Router();
 
-// - for /categories/:categorySlug/subcategories routes
-categoryRoutes.use("/:categorySlug/subcategories", subCategoryRoutes);
+// - for /categories/:categoryId/subcategories routes
+categoryRoutes.use("/:categoryId/subcategories", subCategoryRoutes);
 
 // - for /categories routes
 categoryRoutes.post(

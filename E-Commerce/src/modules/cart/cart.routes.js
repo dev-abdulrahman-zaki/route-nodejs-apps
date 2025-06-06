@@ -1,7 +1,6 @@
 import express from "express";
-// import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
-// import {
-// } from "./cart.validation.js";
+import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
+import { addProductToCartValidationSchema, updateProductQuantityValidationSchema, removeProductFromCartValidationSchema } from "./cart.validation.js";
 import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
 import { authorize } from "../../middlewares/auth/authorize.middleware.js";
 import {
@@ -17,20 +16,37 @@ import {
 const cartRoutes = express.Router();
 
 cartRoutes.post(`/apply-coupon`, authenticate, authorize("user"), applyCoupon);
-cartRoutes.delete(`/remove-coupon`, authenticate, authorize("user"), removeCoupon);
+cartRoutes.delete(
+  `/remove-coupon`,
+  authenticate,
+  authorize("user"),
+  removeCoupon
+);
 
 cartRoutes.post(
   `/`,
   authenticate,
   authorize("user"),
-  // validateSchema(addBrandValidationSchema),
+  validateSchema(addProductToCartValidationSchema),
   addProductToCart
 );
 cartRoutes.get(`/`, authenticate, authorize("user"), getCart);
 cartRoutes.delete(`/`, authenticate, authorize("user"), clearCart);
 
-cartRoutes.delete(`/:id`, authenticate, authorize("user"), removeProductFromCart);
-cartRoutes.patch(`/:id`, authenticate, authorize("user"), updateProductQuantity);
+cartRoutes.delete(
+  `/:id`,
+  authenticate,
+  authorize("user"),
+  validateSchema(removeProductFromCartValidationSchema),
+  removeProductFromCart
+);
+cartRoutes.patch(
+  `/:id`,
+  authenticate,
+  authorize("user"),
+  validateSchema(updateProductQuantityValidationSchema), 
+  updateProductQuantity
+);
 
 /*
 Note:

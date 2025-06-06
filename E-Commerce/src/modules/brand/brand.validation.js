@@ -2,11 +2,10 @@ import Joi from "joi";
 import {
   handleValidValue,
   createDateFilterSchema,
-  fileObjectSchema
+  fileObjectSchema,
 } from "../../utils/validationUtils.js";
 
 const addBrandValidationSchema = Joi.object({
-  params: Joi.object().default({}),
   query: Joi.object().default({}),
   params: Joi.object().default({}),
   body: Joi.object({
@@ -17,9 +16,10 @@ const addBrandValidationSchema = Joi.object({
 });
 
 const updateBrandValidationSchema = Joi.object({
-  params: Joi.object().default({}),
   query: Joi.object().default({}),
-  params: Joi.object().default({}),
+  params: Joi.object({
+    slug: Joi.string().trim().required(),
+  }).default({}),
   body: Joi.object({
     name: Joi.string().trim().min(3),
   }).default({}),

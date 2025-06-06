@@ -7,6 +7,9 @@ query: Joi.object().default({}),
 file: Joi.object().default({}),
 files: Joi.object().default({}),
 <!-- ====================================================================== -->
+id: Joi.string().hex().length(24).trim().required()
+slug: Joi.string().trim().required()
+<!-- ====================================================================== -->
 ## 3-database implementation
 1- Add createdBy in all models.
 

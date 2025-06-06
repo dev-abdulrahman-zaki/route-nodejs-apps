@@ -1,7 +1,6 @@
 import Joi from "joi";
 
 const addAddressValidationSchema = Joi.object({
-  params: Joi.object().default({}),
   query: Joi.object().default({}),
   params: Joi.object().default({}),
   body: Joi.object({
@@ -18,7 +17,6 @@ const addAddressValidationSchema = Joi.object({
 });
 
 const removeAddressValidationSchema = Joi.object({
-  params: Joi.object().default({}),
   query: Joi.object().default({}),
   params: Joi.object({
     id: Joi.string().hex().length(24).trim().required(),

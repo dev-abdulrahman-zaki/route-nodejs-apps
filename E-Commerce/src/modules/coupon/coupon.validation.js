@@ -5,7 +5,6 @@ import {
 } from "../../utils/validationUtils.js";
 
 const addCouponValidationSchema = Joi.object({
-  params: Joi.object().default({}),
   query: Joi.object().default({}),
   params: Joi.object().default({}),
   body: Joi.object({
@@ -18,9 +17,10 @@ const addCouponValidationSchema = Joi.object({
 });
 
 const updateCouponValidationSchema = Joi.object({
-  params: Joi.object().default({}),
   query: Joi.object().default({}),
-  params: Joi.object().default({}),
+  params: Joi.object({
+    code: Joi.string().trim().min(3).required(),
+  }).default({}),
   body: Joi.object({
     code: Joi.string().trim().min(3),
     expiresAt: Joi.date(),
@@ -58,7 +58,7 @@ const getAllCouponsValidationSchema = Joi.object({
         }
         return value;
       }),
-      discountPercentage: Joi.number().min(0).max(100),
+    discountPercentage: Joi.number().min(0).max(100),
     // ===== 2- Sort =====
     sort: Joi.string()
       .lowercase()

@@ -149,7 +149,7 @@ const getOrdersByUser = catchError(async (req, res, next) => {
   const orders = await Order.find({ user: req.user.id }).populate(
     "orderItems.product"
   );
-  // or using mergeParams: users/:id/orders such as /categories/:categorySlug/subcategories
+  // or using mergeParams: users/:id/orders such as /categories/:categoryId/subcategories
   res.status(200).json({ message: "success", orders });
 });
 

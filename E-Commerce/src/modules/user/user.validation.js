@@ -7,23 +7,27 @@ import {
 } from "../../utils/validationUtils.js";
 
 const addUserValidationSchema = Joi.object({
-  params: Joi.object().default({}),
   query: Joi.object().default({}),
   params: Joi.object().default({}),
   body: Joi.object({
     name: Joi.string().trim().min(3).required(),
     email: Joi.string().email().trim().lowercase().required(),
     password: Joi.string().trim().min(8).required(),
-    role: Joi.string().valid("user", "admin").lowercase().default("user").optional(),
+    role: Joi.string()
+      .valid("user", "admin")
+      .lowercase()
+      .default("user")
+      .optional(),
   }).default({}),
   file: Joi.object().default({}),
   files: Joi.object().default({}),
 });
 
 const updateUserValidationSchema = Joi.object({
-  params: Joi.object().default({}),
   query: Joi.object().default({}),
-  params: Joi.object().default({}),
+  params: Joi.object({
+    id: Joi.string().hex().length(24).trim().required(),
+  }).default({}),
   body: Joi.object({
     name: Joi.string().trim().min(3),
     email: Joi.string().email().trim().lowercase(),

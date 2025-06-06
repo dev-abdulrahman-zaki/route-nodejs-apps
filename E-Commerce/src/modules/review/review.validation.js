@@ -19,9 +19,10 @@ const addReviewValidationSchema = Joi.object({
 });
 
 const updateReviewValidationSchema = Joi.object({
-  params: Joi.object().default({}),
   query: Joi.object().default({}),
-  params: Joi.object().default({}),
+  params: Joi.object({
+    id: Joi.string().hex().length(24).trim().required(),
+  }).default({}),
   body: Joi.object({
     comment: Joi.string().trim().min(3),
     rating: Joi.number().min(0).max(5),

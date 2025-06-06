@@ -46,7 +46,9 @@ const addProductValidationSchema = Joi.object({
 });
 
 const updateProductValidationSchema = Joi.object({
-  params: Joi.object().default({}),
+  params: Joi.object({
+    slug: Joi.string().trim().required()
+  }).default({}),
   query: Joi.object().default({}),
   body: Joi.object({
     name: Joi.string().trim().min(3),

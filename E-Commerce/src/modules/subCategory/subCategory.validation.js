@@ -21,7 +21,9 @@ const updateSubCategoryValidationSchema = Joi.object({
     name: Joi.string().trim().min(3),
     category: Joi.string().hex().length(24),
   }).default({}),
-  params: Joi.object().default({}),
+  params: Joi.object({
+    slug: Joi.string().trim().required(),
+  }).default({}),
   query: Joi.object().default({}),
   file: Joi.object().default({}),
   files: Joi.object().default({}),
@@ -38,9 +40,7 @@ const validSelectFields = [
 ];
 
 const getAllSubCategoriesValidationSchema = Joi.object({
-  params: Joi.object({
-    categorySlug: Joi.string().hex().length(24),
-  }).default({}),
+  params: Joi.object().default({}),
   body: Joi.object().default({}),
   file: Joi.object().default({}),
   files: Joi.object().default({}),

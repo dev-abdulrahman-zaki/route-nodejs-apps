@@ -9,6 +9,10 @@ hint: use fs module to remove the old image from the folder.
 add startDate, and endDate filters
 ===========
 - % بحد أقصى فى الكوبون لكن
+وحد أدنى أيضاً
+
+الكوبون أو الخصم  يكون متضاف على الكارت كلها
+مش على منتج منتج
 ===========
 // todo:
 ===========
