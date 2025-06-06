@@ -2,6 +2,7 @@ import express from "express";
 import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
 import {
   createCashOrderValidationSchema,
+  getSingleOrderValidationSchema,
 } from "./cart.validation.js";
 import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
 import { authorize } from "../../middlewares/auth/authorize.middleware.js";
@@ -25,8 +26,20 @@ orderRoutes.post(
 );
 orderRoutes.get(`/`, authenticate, authorize("user"), getOrdersByUser);
 orderRoutes.get(`/admin`, authenticate, authorize("admin"), getOrders);
-orderRoutes.get(`/:id`, authenticate, authorize("user"), getSingleOrderByUser);
-orderRoutes.get(`/admin/:id`, authenticate, authorize("admin"), getSingleOrder);
+orderRoutes.get(
+  `/:id`,
+  authenticate,
+  authorize("user"),
+  validateSchema(getSingleOrderValidationSchema),
+  getSingleOrderByUser
+);
+orderRoutes.get(
+  `/admin/:id`,
+  authenticate,
+  authorize("admin"),
+  validateSchema(getSingleOrderValidationSchema),
+  getSingleOrder
+);
 orderRoutes.post(
   `/create-checkout-session/:cartId`,
   authenticate,
@@ -34,5 +47,9 @@ orderRoutes.post(
   createCheckoutSession
 );
 // todo: express.raw({type: "application/json"})
-orderRoutes.post(`/stripe/webhook`, express.raw({ type: "application/json" }), stripeWebhook);
+orderRoutes.post(
+  `/stripe/webhook`,
+  express.raw({ type: "application/json" }),
+  stripeWebhook
+);
 export default orderRoutes;

@@ -23,6 +23,16 @@ const createCashOrderValidationSchema = Joi.object({
   files: Joi.object().default({}),
 });
 
+const getSingleOrderValidationSchema = Joi.object({
+  body: Joi.object({}).default({}),
+  params: Joi.object({
+    id: Joi.string().hex().length(24).trim().required(),
+  }).default({}),
+  query: Joi.object().default({}),
+  file: Joi.object().default({}),
+  files: Joi.object().default({}),
+});
+
 // const validSortFields = ["name", "createdAt"];
 
 // const validSelectFields = ["name", "slug", "logo", "createdBy", "createdAt"];
@@ -82,4 +92,4 @@ const createCashOrderValidationSchema = Joi.object({
 //   }).default({}),
 // });
 
-export { createCashOrderValidationSchema };
+export { createCashOrderValidationSchema, getSingleOrderValidationSchema };
