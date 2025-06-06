@@ -24,7 +24,7 @@ const addProductToCart = catchError(async (req, res, next) => {
   // Check if the product is in stock
   if (req.body.quantity > product.stock) {
     req.body.quantity = product.stock; // Set the quantity to the maximum available stock
-    return next(new SystemError("Product is out of stock", 400));
+    // return next(new SystemError("Product is out of stock", 400));
   }
   // Check if the cart is exist
   if (!cart) {
@@ -54,7 +54,7 @@ const addProductToCart = catchError(async (req, res, next) => {
       // Check if the product is in stock
       if (cartItem.quantity > product.stock) {
         cartItem.quantity = product.stock; // Set the quantity to the maximum available stock
-        return next(new SystemError("Product is out of stock", 400));
+        // return next(new SystemError("Product is out of stock", 400));
       }
     } else {
       cart.cartItems.push({
@@ -90,7 +90,7 @@ const updateProductQuantity = catchError(async (req, res, next) => {
   // Check if the product is in stock
   if (req.body.quantity > product.stock) {
     req.body.quantity = product.stock; // Set the quantity to the maximum available stock
-    return next(new SystemError("Product is out of stock", 400));
+    // return next(new SystemError("Product is out of stock", 400));
   }
   cartItem.quantity = req.body.quantity;
   // Calculate total price and apply discount
