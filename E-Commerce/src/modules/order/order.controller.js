@@ -14,13 +14,12 @@ const createCashOrder = catchError(async (req, res, next) => {
     return next(new SystemError("Cart not found", 404));
   }
   // 2- create order
-  const { shippingAddress } = req.body;
   const order = await Order.create({
     user: req.user.id,
     orderItems: cart.cartItems,
     totalPrice: cart.totalPriceAfterDiscount || cart.totalPrice,
     paymentMethod: "cash",
-    shippingAddress,
+    shippingAddress: req.body.shippingAddress,
   });
   // 3- update stock and sold count
   /*
@@ -39,7 +38,7 @@ const createCashOrder = catchError(async (req, res, next) => {
     { $inc: { stock: -cart.cartItems.reduce((acc, item) => acc + item.quantity, 0) } }
   );
   */
-  // or: bulkWrite (better performance)
+  // or: bulkWrite (better performance) - accepts an array of operations
   await Product.bulkWrite(
     cart.cartItems.map((item) => ({
       updateOne: {

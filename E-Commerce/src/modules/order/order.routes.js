@@ -1,7 +1,8 @@
 import express from "express";
-// import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
-// import {
-// } from "./cart.validation.js";
+import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
+import {
+  createCashOrderValidationSchema,
+} from "./cart.validation.js";
 import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
 import { authorize } from "../../middlewares/auth/authorize.middleware.js";
 import {
@@ -19,6 +20,7 @@ orderRoutes.post(
   `/create-cash-order`,
   authenticate,
   authorize("user"),
+  validateSchema(createCashOrderValidationSchema),
   createCashOrder
 );
 orderRoutes.get(`/`, authenticate, authorize("user"), getOrdersByUser);

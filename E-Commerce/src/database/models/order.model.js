@@ -64,9 +64,41 @@ const orderSchema = new mongoose.Schema(
       },
     },
     shippingAddress: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Address",
-      required: true,
+      phone: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      city: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      street: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      building: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      floor: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      flat: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      postalCode: {
+        type: String,
+        // required: true,
+        trim: true,
+      },
     },
     // Internal field (set by system/admin)
     status: {

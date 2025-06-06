@@ -58,6 +58,11 @@ const userSchema = new mongoose.Schema(
     ],
     addresses: [
       {
+        phone: {
+          type: String,
+          required: true,
+          trim: true,
+        },
         city: {
           type: String,
           required: true,
@@ -68,24 +73,19 @@ const userSchema = new mongoose.Schema(
           required: true,
           trim: true,
         },
-        phone: {
+        building: {
           type: String,
           required: true,
           trim: true,
         },
-        building: {
-          type: String,
-          // required: true,
-          trim: true,
-        },
         floor: {
           type: String,
-          // required: true,
+          required: true,
           trim: true,
         },
         flat: {
           type: String,
-          // required: true,
+          required: true,
           trim: true,
         },
         postalCode: {
