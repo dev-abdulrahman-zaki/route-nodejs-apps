@@ -1,9 +1,9 @@
 import express from "express";
-// import { validateSchema } from "../../middlewares/validateSchema.js";
+// import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
 // import {
 // } from "./cart.validation.js";
-import { checkAuth } from "../../middlewares/checkAuth.js";
-import { allowedTo } from "../../middlewares/allowedTo.js";
+import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
+import { authorize } from "../../middlewares/auth/authorize.middleware.js";
 import {
   createCashOrder,
   getOrdersByUser,
@@ -17,18 +17,18 @@ import {
 const orderRoutes = express.Router();
 orderRoutes.post(
   `/create-cash-order`,
-  checkAuth,
-  allowedTo("user"),
+  authenticate,
+  authorize("user"),
   createCashOrder
 );
-orderRoutes.get(`/`, checkAuth, allowedTo("user"), getOrdersByUser);
-orderRoutes.get(`/admin`, checkAuth, allowedTo("admin"), getOrders);
-orderRoutes.get(`/:id`, checkAuth, allowedTo("user"), getSingleOrderByUser);
-orderRoutes.get(`/admin/:id`, checkAuth, allowedTo("admin"), getSingleOrder);
+orderRoutes.get(`/`, authenticate, authorize("user"), getOrdersByUser);
+orderRoutes.get(`/admin`, authenticate, authorize("admin"), getOrders);
+orderRoutes.get(`/:id`, authenticate, authorize("user"), getSingleOrderByUser);
+orderRoutes.get(`/admin/:id`, authenticate, authorize("admin"), getSingleOrder);
 orderRoutes.post(
   `/create-checkout-session/:cartId`,
-  checkAuth,
-  allowedTo("user"),
+  authenticate,
+  authorize("user"),
   createCheckoutSession
 );
 // todo: express.raw({type: "application/json"})

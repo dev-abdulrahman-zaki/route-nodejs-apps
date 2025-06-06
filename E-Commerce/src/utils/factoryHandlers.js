@@ -1,4 +1,4 @@
-import { catchError } from "../middlewares/catchError.js";
+import { catchError } from "../middlewares/error/catchError.middleware.js";
 import ApiFeatures from "./apiFeatures.js";
 import { SystemError } from "./systemError.js";
 

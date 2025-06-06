@@ -1,5 +1,5 @@
 import express from "express";
-import { validateSchema } from "../../middlewares/validateSchema.js";
+import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
 import {
   addCouponValidationSchema,
   updateCouponValidationSchema,
@@ -7,8 +7,8 @@ import {
   getSingleCouponValidationSchema,
   deleteCouponValidationSchema,
 } from "./coupon.validation.js";
-import { checkAuth } from "../../middlewares/checkAuth.js";
-import { allowedTo } from "../../middlewares/allowedTo.js";
+import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
+import { authorize } from "../../middlewares/auth/authorize.middleware.js";
 import {
   addCoupon,
   getAllCoupons,
@@ -18,7 +18,7 @@ import {
 } from "./coupon.controller.js";
 
 const couponRoutes = express.Router();
-couponRoutes.use(checkAuth, allowedTo("admin"));
+couponRoutes.use(authenticate, authorize("admin"));
 couponRoutes.post(`/`, validateSchema(addCouponValidationSchema), addCoupon);
 couponRoutes.get(
   `/`,

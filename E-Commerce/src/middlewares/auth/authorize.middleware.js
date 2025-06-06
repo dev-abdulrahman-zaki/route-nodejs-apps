@@ -1,6 +1,6 @@
-import { SystemError } from "../utils/systemError.js";
+import { SystemError } from "../../utils/systemError.js";
 
-export const allowedTo = (...roles) => {
+export const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(

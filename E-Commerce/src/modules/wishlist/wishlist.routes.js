@@ -1,11 +1,11 @@
 import express from "express";
-import { validateSchema } from "../../middlewares/validateSchema.js";
+import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
 import {
   addToWishlistValidationSchema,
   removeFromWishlistValidationSchema,
 } from "./wishlist.validation.js";
-import { checkAuth } from "../../middlewares/checkAuth.js";
-import { allowedTo } from "../../middlewares/allowedTo.js";
+import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
+import { authorize } from "../../middlewares/auth/authorize.middleware.js";
 import {
   addToWishlist,
   getWishlist,
@@ -16,20 +16,20 @@ const wishlistRoutes = express.Router();
 
 wishlistRoutes.patch(
   `/`,
-  checkAuth,
-  allowedTo("user"),
+  authenticate,
+  authorize("user"),
   validateSchema(addToWishlistValidationSchema),
   addToWishlist
 );
 
 wishlistRoutes.delete(
   `/:id`,
-  checkAuth,
-  allowedTo("user"),
+  authenticate,
+  authorize("user"),
   validateSchema(removeFromWishlistValidationSchema),
   removeFromWishlist
 );
 
-wishlistRoutes.get(`/`, checkAuth, allowedTo("user"), getWishlist);
+wishlistRoutes.get(`/`, authenticate, authorize("user"), getWishlist);
 
 export default wishlistRoutes;

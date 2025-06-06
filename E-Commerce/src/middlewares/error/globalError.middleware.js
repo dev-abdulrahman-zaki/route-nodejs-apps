@@ -1,4 +1,4 @@
-import { SystemError } from "../utils/systemError.js";
+import { SystemError } from "../../utils/systemError.js";
 
 // MongoDB duplicate key error handling
 const handleDuplicateKeyError = (err) => {
@@ -8,8 +8,8 @@ const handleDuplicateKeyError = (err) => {
 
 // MongoDB validation error handling
 const handleValidationError = (err) => {
-  const errors = Object.values(err.errors).map((el) => el.message);
-  return new SystemError(`Invalid input: ${errors.join(". ")}`, 400);
+  const errorMessages = Object.values(err.errors).map((el) => el.message);
+  return new SystemError(`Invalid input: ${errorMessages.join(". ")}`, 400);
 };
 
 export const globalError = (err, req, res, next) => {

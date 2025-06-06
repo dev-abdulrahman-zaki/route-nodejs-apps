@@ -10,9 +10,9 @@ import {
   signinValidationSchema,
   changePasswordValidationSchema,
 } from "./auth.validation.js";
-import { validateSchema } from "../../middlewares/validateSchema.js";
-import { isUserExist } from "../../middlewares/isUserExist.js";
-import { checkAuth } from "../../middlewares/checkAuth.js";
+import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
+import { isUserExist } from "../../middlewares/isUserExist.middleware.js";
+import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
 
 const authRoutes = express.Router();
 authRoutes.post(
@@ -25,7 +25,7 @@ authRoutes.post(`/signin`, validateSchema(signinValidationSchema), signin);
 authRoutes.get(`/verify/:token`, verifyEmail);
 authRoutes.patch(
   `/change-password`,
-  checkAuth,
+  authenticate,
   validateSchema(changePasswordValidationSchema),
   changePassword
 );

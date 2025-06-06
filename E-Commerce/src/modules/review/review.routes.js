@@ -1,13 +1,13 @@
 import express from "express";
 import fileUpload from "../../services/fileUpload/fileUpload.js";
-import { validateSchema } from "../../middlewares/validateSchema.js";
+import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
 import {
   addReviewValidationSchema,
   updateReviewValidationSchema,
   getAllReviewsValidationSchema,
 } from "./review.validation.js";
-import { checkAuth } from "../../middlewares/checkAuth.js";
-import { allowedTo } from "../../middlewares/allowedTo.js";
+import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
+import { authorize } from "../../middlewares/auth/authorize.middleware.js";
 import {
   addReview,
   getAllReviews,
@@ -19,8 +19,8 @@ import {
 const reviewRoutes = express.Router();
 reviewRoutes.post(
   `/`,
-  checkAuth,
-  allowedTo("user"),
+  authenticate,
+  authorize("user"),
   validateSchema(addReviewValidationSchema),
   addReview
 );
@@ -32,15 +32,15 @@ reviewRoutes.get(
 reviewRoutes.get(`/:id`, getSingleReview);
 reviewRoutes.put(
   `/:id`,
-  checkAuth,
-  allowedTo("user"),
+  authenticate,
+  authorize("user"),
   validateSchema(updateReviewValidationSchema),
   updateReview
 );
 reviewRoutes.delete(
   `/:id`,
-  checkAuth,
-  allowedTo("user", "admin"),
+  authenticate,
+  authorize("user", "admin"),
   deleteReview
 );
 

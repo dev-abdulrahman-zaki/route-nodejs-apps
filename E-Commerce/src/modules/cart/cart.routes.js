@@ -1,9 +1,9 @@
 import express from "express";
-// import { validateSchema } from "../../middlewares/validateSchema.js";
+// import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
 // import {
 // } from "./cart.validation.js";
-import { checkAuth } from "../../middlewares/checkAuth.js";
-import { allowedTo } from "../../middlewares/allowedTo.js";
+import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
+import { authorize } from "../../middlewares/auth/authorize.middleware.js";
 import {
   addProductToCart,
   updateProductQuantity,
@@ -16,21 +16,21 @@ import {
 
 const cartRoutes = express.Router();
 
-cartRoutes.post(`/apply-coupon`, checkAuth, allowedTo("user"), applyCoupon);
-cartRoutes.delete(`/remove-coupon`, checkAuth, allowedTo("user"), removeCoupon);
+cartRoutes.post(`/apply-coupon`, authenticate, authorize("user"), applyCoupon);
+cartRoutes.delete(`/remove-coupon`, authenticate, authorize("user"), removeCoupon);
 
 cartRoutes.post(
   `/`,
-  checkAuth,
-  allowedTo("user"),
+  authenticate,
+  authorize("user"),
   // validateSchema(addBrandValidationSchema),
   addProductToCart
 );
-cartRoutes.get(`/`, checkAuth, allowedTo("user"), getCart);
-cartRoutes.delete(`/`, checkAuth, allowedTo("user"), clearCart);
+cartRoutes.get(`/`, authenticate, authorize("user"), getCart);
+cartRoutes.delete(`/`, authenticate, authorize("user"), clearCart);
 
-cartRoutes.delete(`/:id`, checkAuth, allowedTo("user"), removeProductFromCart);
-cartRoutes.patch(`/:id`, checkAuth, allowedTo("user"), updateProductQuantity);
+cartRoutes.delete(`/:id`, authenticate, authorize("user"), removeProductFromCart);
+cartRoutes.patch(`/:id`, authenticate, authorize("user"), updateProductQuantity);
 
 /*
 Note:

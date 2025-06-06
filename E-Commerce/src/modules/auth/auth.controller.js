@@ -2,7 +2,7 @@ import { User } from "../../database/models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 // import { sendEmail } from "../../services/emails/sendEmail.js";
-import { catchError } from "../../middlewares/catchError.js";
+import { catchError } from "../../middlewares/error/catchError.middleware.js";
 import { SystemError } from "../../utils/systemError.js";
 
 const signup = catchError(async (req, res) => {

@@ -10,6 +10,9 @@ import addressRoutes from "./address/address.routes.js";
 import couponRoutes from "./coupon/coupon.routes.js";
 import cartRoutes from "./cart/cart.routes.js";
 import orderRoutes from "./order/order.routes.js";
+import * as Sentry from "@sentry/node";
+import { SystemError } from "../utils/systemError.js";
+import { globalError } from "../middlewares/error/globalError.middleware.js";
 
 export const indexRoutes = (app) => {
   app.get("/", (req, res) => res.send("Hello World!"));
@@ -25,4 +28,14 @@ export const indexRoutes = (app) => {
   app.use("/api/v1/coupons", couponRoutes);
   app.use("/api/v1/cart", cartRoutes);
   app.use("/api/v1/orders", orderRoutes);
+  // Catch all routes
+  app.use("*", (req, res, next) => {
+    next(new SystemError(`Route not found: ${req.originalUrl}`, 404));
+  });
+  // The Sentry error handler must be before any other error middleware and after all controllers
+  if (process.env.NODE_ENV === "production") {
+    Sentry.setupExpressErrorHandler(app);
+  }
+  // Error handling middleware
+  app.use(globalError);
 };

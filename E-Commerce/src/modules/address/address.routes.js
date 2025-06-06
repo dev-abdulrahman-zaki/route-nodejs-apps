@@ -1,11 +1,11 @@
 import express from "express";
-import { validateSchema } from "../../middlewares/validateSchema.js";
+import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
 import {
   addAddressValidationSchema,
   removeAddressValidationSchema,
 } from "./address.validation.js";
-import { checkAuth } from "../../middlewares/checkAuth.js";
-import { allowedTo } from "../../middlewares/allowedTo.js";
+import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
+import { authorize } from "../../middlewares/auth/authorize.middleware.js";
 import {
   addAddress,
   getAddresses,
@@ -16,20 +16,20 @@ const addressRoutes = express.Router();
 
 addressRoutes.patch(
   `/`,
-  checkAuth,
-  allowedTo("user"),
+  authenticate,
+  authorize("user"),
   validateSchema(addAddressValidationSchema),
   addAddress
 );
 
 addressRoutes.delete(
   `/:id`,
-  checkAuth,
-  allowedTo("user", "admin"),
+  authenticate,
+  authorize("user", "admin"),
   validateSchema(removeAddressValidationSchema),
   removeAddress
 );
 
-addressRoutes.get(`/`, checkAuth, allowedTo("user"), getAddresses);
+addressRoutes.get(`/`, authenticate, authorize("user"), getAddresses);
 
 export default addressRoutes;

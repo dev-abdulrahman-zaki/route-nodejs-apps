@@ -1,12 +1,12 @@
 import express from "express"; // or: import {Router} from "express";
-import { validateSchema } from "../../middlewares/validateSchema.js";
+import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
 import {
   addSubCategoryValidationSchema,
   updateSubCategoryValidationSchema,
   getAllSubCategoriesValidationSchema,
 } from "./subCategory.validation.js";
-import { checkAuth } from "../../middlewares/checkAuth.js";
-import { allowedTo } from "../../middlewares/allowedTo.js";
+import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
+import { authorize } from "../../middlewares/auth/authorize.middleware.js";
 const subCategoryRoutes = express.Router({ mergeParams: true });
 
 import {
@@ -19,8 +19,8 @@ import {
 
 subCategoryRoutes.post(
   `/`,
-  checkAuth,
-  allowedTo("admin"),
+  authenticate,
+  authorize("admin"),
   validateSchema(addSubCategoryValidationSchema),
   addSubCategory
 );
@@ -32,11 +32,11 @@ subCategoryRoutes.get(
 subCategoryRoutes.get(`/:slug`, getSingleSubCategory);
 subCategoryRoutes.put(
   `/:slug`,
-  checkAuth,
-  allowedTo("admin"),
+  authenticate,
+  authorize("admin"),
   validateSchema(updateSubCategoryValidationSchema),
   updateSubCategory
 );
-subCategoryRoutes.delete(`/:slug`, checkAuth, allowedTo("admin"), deleteSubCategory);
+subCategoryRoutes.delete(`/:slug`, authenticate, authorize("admin"), deleteSubCategory);
 
 export default subCategoryRoutes;

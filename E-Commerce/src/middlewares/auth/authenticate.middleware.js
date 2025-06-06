@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
-import { SystemError } from "../utils/systemError.js";
-import { User } from "../database/models/user.model.js";
+import { SystemError } from "../../utils/systemError.js";
+import { User } from "../../database/models/user.model.js";
 
 // check auth / verify token
-export const checkAuth = async (req, res, next) => {
+export const authenticate = async (req, res, next) => {
   let decodedToken;
   // 01- get token from headers
   const authHeader = req.headers.authorization || req.headers.Authorization;

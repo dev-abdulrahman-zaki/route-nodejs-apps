@@ -2,7 +2,7 @@ import { Product } from "../../database/models/product.model.js";
 import { Category } from "../../database/models/category.model.js";
 import { SubCategory } from "../../database/models/subCategory.model.js";
 import { Brand } from "../../database/models/brand.model.js";
-import { catchError } from "../../middlewares/catchError.js";
+import { catchError } from "../../middlewares/error/catchError.middleware.js";
 import { SystemError } from "../../utils/systemError.js";
 import { deleteOne, getAll } from "../../utils/factoryHandlers.js";
 import slugify from "slugify";

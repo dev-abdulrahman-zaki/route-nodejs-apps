@@ -1,13 +1,13 @@
 import express from "express";
 import fileUpload from "../../services/fileUpload/fileUpload.js";
-import { validateSchema } from "../../middlewares/validateSchema.js";
+import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
 import {
   addBrandValidationSchema,
   updateBrandValidationSchema,
   getAllBrandsValidationSchema,
 } from "./brand.validation.js";
-import { checkAuth } from "../../middlewares/checkAuth.js";
-import { allowedTo } from "../../middlewares/allowedTo.js";
+import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
+import { authorize } from "../../middlewares/auth/authorize.middleware.js";
 const brandRoutes = express.Router();
 
 import {
@@ -20,8 +20,8 @@ import {
 
 brandRoutes.post(
   `/`,
-  checkAuth,
-  allowedTo("admin"),
+  authenticate,
+  authorize("admin"),
   fileUpload("brands").single("logo"),
   validateSchema(addBrandValidationSchema),
   addBrand
@@ -34,12 +34,12 @@ brandRoutes.get(
 brandRoutes.get(`/:slug`, getSingleBrand);
 brandRoutes.put(
   `/:slug`,
-  checkAuth,
-  allowedTo("admin"),
+  authenticate,
+  authorize("admin"),
   fileUpload("brands").single("logo"),
   validateSchema(updateBrandValidationSchema),
   updateBrand
 );
-brandRoutes.delete(`/:slug`, checkAuth, allowedTo("admin"), deleteBrand);
+brandRoutes.delete(`/:slug`, authenticate, authorize("admin"), deleteBrand);
 
 export default brandRoutes;

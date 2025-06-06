@@ -1,5 +1,5 @@
 import { Review } from "../../database/models/review.model.js";
-import { catchError } from "../../middlewares/catchError.js";
+import { catchError } from "../../middlewares/error/catchError.middleware.js";
 import { SystemError } from "../../utils/systemError.js";
 import { getAll } from "../../utils/factoryHandlers.js";
 import { Product } from "../../database/models/product.model.js";

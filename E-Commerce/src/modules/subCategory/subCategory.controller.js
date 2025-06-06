@@ -1,6 +1,6 @@
 import { SubCategory } from "../../database/models/subCategory.model.js";
 import { Category } from "../../database/models/category.model.js";
-import { catchError } from "../../middlewares/catchError.js";
+import { catchError } from "../../middlewares/error/catchError.middleware.js";
 import { SystemError } from "../../utils/systemError.js";
 import slugify from "slugify";
 import { deleteOne, getAll } from "../../utils/factoryHandlers.js";

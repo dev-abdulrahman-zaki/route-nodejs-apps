@@ -1,13 +1,13 @@
 import express from "express";
-import { validateSchema } from "../../middlewares/validateSchema.js";
+import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
 import {
   addUserValidationSchema,
   updateUserValidationSchema,
   getAllUsersValidationSchema,
 } from "./user.validation.js";
-import { isUserExist } from "../../middlewares/isUserExist.js";
-import { checkAuth } from "../../middlewares/checkAuth.js";
-import { allowedTo } from "../../middlewares/allowedTo.js";
+import { isUserExist } from "../../middlewares/isUserExist.middleware.js";
+import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
+import { authorize } from "../../middlewares/auth/authorize.middleware.js";
 const userRoutes = express.Router();
 
 import {
@@ -20,15 +20,15 @@ import {
 
 userRoutes.post(
   `/`,
-  checkAuth,
-  allowedTo("admin"),
+  authenticate,
+  authorize("admin"),
   validateSchema(addUserValidationSchema),
   isUserExist,
   addUser
 );
-userRoutes.get(`/`, checkAuth, allowedTo("admin"), validateSchema(getAllUsersValidationSchema), getAllUsers);
-userRoutes.get(`/:id`, checkAuth, allowedTo("admin"), getSingleUser);
-userRoutes.put(`/:id`, checkAuth, allowedTo("admin"), validateSchema(updateUserValidationSchema), updateUser);
-userRoutes.delete(`/:id`, checkAuth, allowedTo("admin"), deleteUser);
+userRoutes.get(`/`, authenticate, authorize("admin"), validateSchema(getAllUsersValidationSchema), getAllUsers);
+userRoutes.get(`/:id`, authenticate, authorize("admin"), getSingleUser);
+userRoutes.put(`/:id`, authenticate, authorize("admin"), validateSchema(updateUserValidationSchema), updateUser);
+userRoutes.delete(`/:id`, authenticate, authorize("admin"), deleteUser);
 
 export default userRoutes;
