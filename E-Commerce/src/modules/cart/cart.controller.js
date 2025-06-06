@@ -95,7 +95,7 @@ const updateProductQuantity = catchError(async (req, res, next) => {
   cartItem.quantity = req.body.quantity;
   // Calculate total price and apply discount
   updateCartDetails(cart, cart.discount);
-  await cart.save(); // new?
+  await cart.save();
   res.status(200).json({ message: "success", cart });
 });
 
@@ -110,7 +110,7 @@ const removeProductFromCart = catchError(async (req, res, next) => {
   }
   // Calculate total price and apply discount
   updateCartDetails(cart, cart.discount);
-  await cart.save(); // new?
+  await cart.save();
   res.status(200).json({ message: "success", cart });
 });
 
