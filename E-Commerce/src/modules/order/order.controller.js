@@ -49,7 +49,7 @@ const createCashOrder = catchError(async (req, res, next) => {
     }))
   );
   // 4- clear cart
-  await Cart.findOneAndDelete({ user: req.user.id });
+  await Cart.findByIdAndDelete(cart._id);
   res.status(201).json({ message: "success", order });
   // 6- send email
   // await sendEmail(req.user.email, "Order created", `Order ${order._id} created successfully`);

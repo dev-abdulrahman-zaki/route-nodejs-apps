@@ -1,6 +1,11 @@
 import express from "express";
 import { validateSchema } from "../../middlewares/validateSchema.middleware.js";
-import { addProductToCartValidationSchema, updateProductQuantityValidationSchema, removeProductFromCartValidationSchema } from "./cart.validation.js";
+import {
+  addProductToCartValidationSchema,
+  updateProductQuantityValidationSchema,
+  removeProductFromCartValidationSchema,
+  applyCouponValidationSchema,
+} from "./cart.validation.js";
 import { authenticate } from "../../middlewares/auth/authenticate.middleware.js";
 import { authorize } from "../../middlewares/auth/authorize.middleware.js";
 import {
@@ -15,7 +20,14 @@ import {
 
 const cartRoutes = express.Router();
 
-cartRoutes.post(`/apply-coupon`, authenticate, authorize("user"), applyCoupon);
+cartRoutes.post(
+  `/apply-coupon`,
+  authenticate,
+  authorize("user"),
+
+  validateSchema(applyCouponValidationSchema),
+  applyCoupon
+);
 cartRoutes.delete(
   `/remove-coupon`,
   authenticate,
@@ -44,7 +56,7 @@ cartRoutes.patch(
   `/:id`,
   authenticate,
   authorize("user"),
-  validateSchema(updateProductQuantityValidationSchema), 
+  validateSchema(updateProductQuantityValidationSchema),
   updateProductQuantity
 );
 
