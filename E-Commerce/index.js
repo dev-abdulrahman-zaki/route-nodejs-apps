@@ -1,4 +1,9 @@
-// 00. Uncaught Exception - catches synchronous errors
+// 00. Import Sentry first for proper instrumentation
+import "./instrument.js";
+import "dotenv/config";
+import * as Sentry from "@sentry/node";
+
+// 01. Uncaught Exception - catches synchronous errors
 process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception =>", err);
   console.error(err?.stack);
@@ -7,13 +12,8 @@ process.on("uncaughtException", (err) => {
   }
 });
 
-// 01. Import Sentry first for proper instrumentation
-import "./instrument.js";
-
 // 02. Import other modules
-import "dotenv/config";
 import express from "express";
-import * as Sentry from "@sentry/node";
 import cors from "cors";
 import { dbConnection } from "./src/database/dbConnection.js"; // Import the dbConnection to connect to MongoDB even if the dbConnection import is not used in the code.
 import { indexRoutes } from "./src/modules/index.routes.js";

@@ -20,3 +20,5 @@ Calculates average ratings and review count automatically
 user can review once only.
 user can review bought products only (order first).
 user can delete his review only or the admin.
+===========
+dotenv and sentry: make it works on production only is broken.
