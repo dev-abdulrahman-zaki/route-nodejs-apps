@@ -1,6 +1,5 @@
 // 00. Import Sentry first for proper instrumentation
 import "./instrument.js";
-import "dotenv/config";
 import * as Sentry from "@sentry/node";
 
 // 01. Uncaught Exception - catches synchronous errors

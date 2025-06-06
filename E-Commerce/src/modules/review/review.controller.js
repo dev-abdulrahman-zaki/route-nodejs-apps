@@ -54,7 +54,7 @@ const deleteReview = catchError(async (req, res, next) => {
   const review = await Review.findOneAndDelete(
     {
       _id: req.params.id,
-      ...(req.user.role === "user" && { createdBy: req.user.id }),
+      ...(req.user.role === "user" && { createdBy: req.user.id }), // Only the user who created the review can delete it, or an admin can delete any review
     },
     req.body,
     {
