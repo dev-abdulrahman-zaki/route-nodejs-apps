@@ -1,14 +1,14 @@
 import Joi from "joi";
-import { fileObject } from "../../utils/constants.js";
 import {
   handleValidValue,
   createDateFilterSchema,
+  fileObjectSchema
 } from "../../utils/validationUtils.js";
 
 const addCategoryValidationSchema = Joi.object({
   params: Joi.object().default({}),
   query: Joi.object().default({}),
-  file: fileObject.required().default({}),
+  file: fileObjectSchema.required().default({}),
   files: Joi.object().default({}),
   body: Joi.object({
     name: Joi.string().required().trim().min(3),
@@ -18,7 +18,7 @@ const addCategoryValidationSchema = Joi.object({
 const updateCategoryValidationSchema = Joi.object({
   params: Joi.object().default({}),
   query: Joi.object().default({}),
-  file: fileObject.default({}),
+  file: fileObjectSchema.default({}),
   files: Joi.object().default({}),
   body: Joi.object({
     name: Joi.string().trim().min(3),

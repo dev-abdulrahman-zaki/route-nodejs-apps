@@ -63,4 +63,4 @@ process.on("unhandledRejection", (err, promise) => {
 });
 
 // 10. Start the server
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () => console.log(`E-commerce app listening on port ${port}!`));

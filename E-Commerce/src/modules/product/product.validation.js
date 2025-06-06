@@ -4,8 +4,8 @@ import {
   createNumberFilterSchema,
   createStringFilterSchema,
   createDateFilterSchema,
+  fileObjectSchema
 } from "../../utils/validationUtils.js";
-import { fileObject } from "../../utils/constants.js";
 
 const addProductValidationSchema = Joi.object({
   params: Joi.object().default({}),
@@ -38,10 +38,10 @@ const addProductValidationSchema = Joi.object({
   // Handle multiple file upload (.fields in this case)
   files: Joi.object({
     imageCover: Joi.array()
-      .items(fileObject)
+      .items(fileObjectSchema)
       .length(1) // Must have exactly 1 file
       .required(),
-    images: Joi.array().items(fileObject).min(1).max(10).required(),
+    images: Joi.array().items(fileObjectSchema).min(1).max(10).required(),
   }).default({}),
 });
 
@@ -74,8 +74,8 @@ const updateProductValidationSchema = Joi.object({
   file: Joi.object().default({}),
   // Handle multiple file upload (.fields or .array)
   files: Joi.object({
-    imageCover: Joi.array().items(fileObject).length(1), // Must have exactly 1 file
-    images: Joi.array().items(fileObject).min(1).max(10),
+    imageCover: Joi.array().items(fileObjectSchema).length(1), // Must have exactly 1 file
+    images: Joi.array().items(fileObjectSchema).min(1).max(10),
   }).default({}),
 });
 

@@ -83,10 +83,24 @@ const createBooleanFilterSchema = () =>
     }).min(1)
   );
 
+const fileObjectSchema = Joi.object({
+  fieldname: Joi.string().required(),
+  originalname: Joi.string().required(),
+  destination: Joi.string().required(),
+  filename: Joi.string().required(),
+  mimetype: Joi.string()
+    .valid("image/jpeg", "image/png", "image/jpg")
+    .required(),
+  encoding: Joi.string().required(),
+  size: Joi.number().max(1000000).required(),
+  path: Joi.string().required(),
+});
+
 export {
   handleValidValue,
   createNumberFilterSchema,
   createStringFilterSchema,
   createDateFilterSchema,
   createBooleanFilterSchema,
+  fileObjectSchema,
 };
