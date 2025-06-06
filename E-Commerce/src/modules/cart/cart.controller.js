@@ -20,7 +20,7 @@ const addProductToCart = catchError(async (req, res, next) => {
   if (!product) {
     return next(new SystemError("Product not found", 404));
   }
-  req.body.price = product.priceAfterDiscount;
+
   // Check if the product is in stock
   if (req.body.quantity > product.stock) {
     req.body.quantity = product.stock; // Set the quantity to the maximum available stock
@@ -34,7 +34,7 @@ const addProductToCart = catchError(async (req, res, next) => {
         {
           product: req.body.product,
           quantity: req.body.quantity || 1,
-          price: req.body.price,
+          price: product.priceAfterDiscount,
         },
       ],
       discount: 0,
@@ -60,7 +60,7 @@ const addProductToCart = catchError(async (req, res, next) => {
       cart.cartItems.push({
         product: req.body.product,
         quantity: req.body.quantity || 1,
-        price: req.body.price,
+        price: product.priceAfterDiscount,
       });
     }
     // Calculate total price and apply discount
