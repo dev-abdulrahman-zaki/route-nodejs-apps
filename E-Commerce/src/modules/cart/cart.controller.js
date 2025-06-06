@@ -4,10 +4,10 @@ import { Product } from "../../database/models/product.model.js";
 import { catchError } from "../../middlewares/error/catchError.middleware.js";
 import { SystemError } from "../../utils/systemError.js";
 
-const updateCartDetails = (cart, discount = cart.discount) => {
+const updateCartDetails = (cart, discount) => {
   cart.discount = discount;
   cart.totalPrice = cart.cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total, cartItem) => total + cartItem.price * cartItem.quantity,
     0
   );
   cart.totalPriceAfterDiscount = cart.totalPrice * (1 - cart.discount / 100);
@@ -20,10 +20,10 @@ const addProductToCart = catchError(async (req, res, next) => {
   if (!product) {
     return next(new SystemError("Product not found", 404));
   }
-  // todo: Why user send price "and discount" but we get it from the product model?
-  req.body.price = product.price;
+  req.body.price = product.priceAfterDiscount;
   // Check if the product is in stock
   if (req.body.quantity > product.stock) {
+    req.body.quantity = product.stock; // Set the quantity to the maximum available stock
     return next(new SystemError("Product is out of stock", 400));
   }
   // Check if the cart is exist
@@ -37,23 +37,23 @@ const addProductToCart = catchError(async (req, res, next) => {
           price: req.body.price,
         },
       ],
-      discount: req.body.discount || 0,
+      discount: 0,
     });
     // Calculate total price and apply discount
-    updateCartDetails(newCart, req.body.discount);
+    updateCartDetails(newCart, 0);
     await newCart.save();
     res.status(201).json({ message: "success", cart: newCart });
   } else {
-    const product = cart.cartItems.find(
-      (item) => item.product.toString() === req.body.product // convert to string because the product is an ObjectId
+    const cartItem = cart.cartItems.find(
+      (cartItem) => cartItem.product.toString() === req.body.product // convert to string because the product is an ObjectId
     );
     // Check if the product is in cart
-    if (product) {
-      // todo: is it update += or set as =
-      product.quantity += req.body.quantity || 1;
+    if (cartItem) {
+      cartItem.quantity += req.body.quantity || 1;
       // todo: how to make sure the product stock is updated (in real time)?
       // Check if the product is in stock
-      if (product.quantity > product.stock) {
+      if (cartItem.quantity > product.stock) {
+        cartItem.quantity = product.stock; // Set the quantity to the maximum available stock
         return next(new SystemError("Product is out of stock", 400));
       }
     } else {
@@ -64,7 +64,7 @@ const addProductToCart = catchError(async (req, res, next) => {
       });
     }
     // Calculate total price and apply discount
-    updateCartDetails(cart, req.body.discount);
+    updateCartDetails(cart, cart.discount);
     await cart.save();
     res.status(200).json({ message: "success", cart });
   }
@@ -82,19 +82,20 @@ const updateProductQuantity = catchError(async (req, res, next) => {
     return next(new SystemError("Product not found", 404));
   }
   const cartItem = cart.cartItems.find(
-    (item) => item.product.toString() === req.params.id
+    (cartItem) => cartItem.product.toString() === req.params.id
   );
   if (!cartItem) {
     return next(new SystemError("Product not found in cart", 404));
   }
   // Check if the product is in stock
   if (req.body.quantity > product.stock) {
+    req.body.quantity = product.stock; // Set the quantity to the maximum available stock
     return next(new SystemError("Product is out of stock", 400));
   }
   cartItem.quantity = req.body.quantity;
   // Calculate total price and apply discount
-  updateCartDetails(cart, req.body.discount);
-  await cart.save();
+  updateCartDetails(cart, cart.discount);
+  await cart.save(); // new?
   res.status(200).json({ message: "success", cart });
 });
 
@@ -108,8 +109,8 @@ const removeProductFromCart = catchError(async (req, res, next) => {
     return next(new SystemError("Cart not found", 404));
   }
   // Calculate total price and apply discount
-  updateCartDetails(cart, req.body.discount);
-  await cart.save();
+  updateCartDetails(cart, cart.discount);
+  await cart.save(); // new?
   res.status(200).json({ message: "success", cart });
 });
 
