@@ -2,7 +2,7 @@ import { SystemError } from "../utils/systemError.js";
 
 export const validateSchema = (schema) => {
   return (req, res, next) => {
-    let dataToValidate = {
+    const dataToValidate = {
       body: req.body,
       params: req.params,
       query: req.query,
