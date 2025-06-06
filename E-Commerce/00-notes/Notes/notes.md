@@ -1,9 +1,17 @@
+- Don't forget .js when import files "xxx.js".
+<!-- ====================================================================== -->
 - Validation Schema Boilerplate: 
 body: Joi.object().default({}),
 params: Joi.object().default({}),
 query: Joi.object().default({}),
 file: Joi.object().default({}),
 files: Joi.object().default({}),
+<!-- ====================================================================== -->
+## 3-database implementation
+1- Add createdBy in all models.
+
+CreatedBy > userId is took by token, not send in JSON body
+from checkAuth Middleware
 <!-- ====================================================================== -->
 ## 18-mergParams
 1- Parent Route: category.routes.js

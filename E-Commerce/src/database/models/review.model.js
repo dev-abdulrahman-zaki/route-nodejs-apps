@@ -34,5 +34,9 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+reviewSchema.pre(/^find/, function () {
+  this.populate("createdBy", "name");
+});
+
 // 02. Define the model
 export const Review = mongoose.model("Review", reviewSchema); // Note is the name of the collection in the "localhost:27017/e-commerce" database, which is "reviews" by default.

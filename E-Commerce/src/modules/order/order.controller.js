@@ -14,7 +14,7 @@ const createCashOrder = catchError(async (req, res, next) => {
     return next(new SystemError("Cart not found", 404));
   }
   // 2- create order
-  const { paymentMethod, shippingAddress } = req.body;
+  const { shippingAddress } = req.body;
   const order = await Order.create({
     user: req.user.id,
     orderItems: cart.cartItems,

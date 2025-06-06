@@ -1,3 +1,4 @@
+// protects routes by checking if the user is authenticated
 import jwt from "jsonwebtoken";
 import { SystemError } from "../../utils/systemError.js";
 import { User } from "../../database/models/user.model.js";
