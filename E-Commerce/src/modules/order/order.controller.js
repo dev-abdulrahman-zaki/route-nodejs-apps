@@ -160,15 +160,17 @@ const getSingleOrderByUser = catchError(async (req, res, next) => {
 
 // for admin
 const getOrders = catchError(async (req, res, next) => {
-  const orders = await Order.find();
+  const orders = await Order.find()
+    .populate("user")
+    .populate("orderItems.product");
   res.status(200).json({ message: "success", orders });
 });
 
 // for admin
 const getSingleOrder = catchError(async (req, res, next) => {
-  const order = await Order.findById(req.params.id);
-  // .populate("user")
-  // .populate("orderItems.product");
+  const order = await Order.findById(req.params.id)
+    .populate("user")
+    .populate("orderItems.product");
   res.status(200).json({ message: "success", order });
 });
 
